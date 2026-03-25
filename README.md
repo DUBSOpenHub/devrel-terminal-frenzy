@@ -59,7 +59,7 @@ That's it. 60 seconds. How many can you clear?
 
 ## 👥 The Team
 
-All 96 members of the GitHub DevRel organization are featured in the game — their GitHub avatars appear on review cards, in urgent requests, and in the animated title screen. Each person has a custom typing phrase that cycles on the home screen.
+All members of the GitHub DevRel organization are featured in the game — their GitHub avatars appear on review cards, in urgent requests, and in the animated title screen. Each person has a custom typing phrase that cycles on the home screen.
 
 ---
 
