@@ -1322,8 +1322,11 @@
   }
 
   // --- Boss logic ---
+  const BOSS_COMMANDS_EASY = ['/approve', 'LGTM', '/yolo', 'ACK'];
+  const BOSS_COMMANDS_MED = ['/ship-it', '/merge', 'SGTM', '/approve'];
+  const BOSS_COMMANDS_HARD = ['/ship-it-now', 'APPROVED', '/deploy-prod', '/merge-main'];
   const BOSS_INTERVAL_MS = 10000;
-  const BOSS_DURATION_MS = 5500;
+  const BOSS_DURATION_BASE = 5500;
 
   function spawnBoss(opts={}){
     bossActive = true;
@@ -1331,8 +1334,15 @@
 
     const person = opts.person || pickPerson();
     const prTitle = opts.prTitle || pick(PR_TITLES);
-    const target = opts.target || pick(BOSS_COMMANDS);
-    const durationMs = opts.durationMs || BOSS_DURATION_MS;
+    // Difficulty ramps with each defeated request
+    const difficulty = Math.min(bossesDefeated, 5);
+    let cmdPool;
+    if (difficulty <= 1) cmdPool = BOSS_COMMANDS_EASY;
+    else if (difficulty <= 3) cmdPool = BOSS_COMMANDS_MED;
+    else cmdPool = BOSS_COMMANDS_HARD;
+    const target = opts.target || pick(cmdPool);
+    // Timer gets tighter: 5.5s → 3.5s over 5 rounds
+    const durationMs = opts.durationMs || Math.max(3500, BOSS_DURATION_BASE - difficulty * 400);
     const final = !!opts.final;
 
     boss = { person, prTitle, target, typed:'', durationMs, timeLeftMs: durationMs, final };
@@ -1657,7 +1667,10 @@
     bossTimerAccum += dt;
     if (bossTimerAccum >= BOSS_INTERVAL_MS && !bossActive && timeLeft > 10){
       bossTimerAccum = 0;
-      const cmd = pick(BOSS_COMMANDS);
+      // Difficulty-based command selection
+      const d = Math.min(bossesDefeated, 5);
+      const pool = d <= 1 ? BOSS_COMMANDS_EASY : d <= 3 ? BOSS_COMMANDS_MED : BOSS_COMMANDS_HARD;
+      const cmd = pick(pool);
       const prTitle = pick([
         'chore: copilot wrote my commit message',
         'feat: /explain fixed the bug i created',
