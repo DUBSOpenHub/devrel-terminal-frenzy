@@ -106,4 +106,6 @@ This is a team fun project! Ideas welcome:
 
 ---
 
-<sub>🎮 DevRel Terminal Frenzy — built by AI, played by legends.</sub>
+🐙 Created with 💜 by [@DUBSOpenHub](https://github.com/DUBSOpenHub) with the [GitHub Copilot CLI](https://docs.github.com/copilot/concepts/agents/about-copilot-cli).
+
+Let's play! 🎮✨
