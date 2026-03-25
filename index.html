@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
+  <title>🎮 DevRel Terminal Frenzy</title>
+  <style>
+    :root{
+      --bg:#0a0a0f;
+      --panel:#0b1220;
+      --panel2:#161b22;
+      --border:#30363d;
+      --fg:#e6edf3;
+      --muted:#7d8590;
+      --purple:#6e40c9;
+      --purple2:#8b5cf6;
+      --green:#3fb950;
+      --red:#f85149;
+      --gold:#d29922;
+      --orange:#f0883e;
+      --glow-purple: rgba(110,64,201,.35);
+      --glow-gold: rgba(210,153,34,.25);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{width:100%;height:100%;overflow:auto;background:var(--bg);color:var(--fg);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    a{color:inherit}
+
+    /* Blurred gradient orbs (Hoot/Dark Factory sizzle) */
+    .orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:1;animation:orbFloat 8s ease-in-out infinite}
+    .orb-1{width:600px;height:600px;background:rgba(124,58,237,.3);top:-200px;left:-200px;animation-delay:0s}
+    .orb-2{width:500px;height:500px;background:rgba(37,99,235,.25);bottom:-150px;right:-150px;animation-delay:-3s}
+    .orb-3{width:400px;height:400px;background:rgba(6,182,212,.2);top:30%;left:55%;animation-delay:-6s}
+    @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-40px) scale(1.05)}66%{transform:translate(-20px,30px) scale(.95)}}
+
+    /* Grid lines overlay */
+    .grid-lines{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%)}
+
+    /* Background */
+    #matrix{position:fixed;inset:0;z-index:0;opacity:0.55}
+    #scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.09) 2px,rgba(0,0,0,0.09) 4px);pointer-events:none;z-index:5}
+    #fx{position:fixed;inset:0;pointer-events:none;z-index:6}
+
+    #game{position:relative;z-index:10;width:100%;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .screen{display:none;width:100%;min-height:100vh;padding:12px;align-items:center;justify-content:center}
+    .screen.active{display:flex}
+
+    /* Terminal window */
+    .term{width:min(720px,92vw);border:1px solid rgba(139,92,246,.2);border-radius:16px;background:linear-gradient(180deg,rgba(16,20,28,0.96),rgba(10,12,18,0.98));box-shadow:0 0 80px rgba(110,64,201,0.15), 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(139,92,246,.1);overflow:hidden;backdrop-filter:blur(12px)}
+    .termbar{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;background:rgba(22,26,35,0.95);border-bottom:1px solid rgba(139,92,246,.1)}
+    .dot{width:11px;height:11px;border-radius:50%}
+    .dot.r{background:#ff5f56}
+    .dot.y{background:#ffbd2e}
+    .dot.g{background:#27c93f}
+    .termbar .title{margin-left:10px;color:var(--muted);font-size:12px;letter-spacing:1.5px;}
+    .termbody{padding:32px 28px;text-align:center}
+
+    .bigtitle{font-size:clamp(32px,7vw,64px);letter-spacing:2px;line-height:1;font-weight:900;margin-bottom:4px}
+    .bigtitle .title-text{background:linear-gradient(135deg, #ffffff 0%, #c4b5fd 35%, #8b5cf6 65%, #6e40c9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 30px rgba(139,92,246,0.3))}
+    .sub{margin-top:10px;color:rgba(139,92,246,0.6);letter-spacing:5px;font-size:11px;font-weight:400}
+
+    .promptline{margin-top:14px;font-size:clamp(13px,2.2vw,18px);line-height:1.7;white-space:pre-wrap}
+    .prompt{color:var(--green)}
+    .cmd{color:var(--fg)}
+    .cursor{display:inline-block;width:10px;height:18px;transform:translateY(3px);background:var(--fg);margin-left:2px;animation:blink 1s steps(1,end) infinite}
+    @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    .kbd{display:inline-flex;align-items:center;justify-content:center;min-width:22px;padding:3px 6px;margin:0 2px;border-radius:6px;border:1px solid var(--border);background:rgba(22,27,34,0.9);box-shadow:0 2px 0 rgba(0,0,0,0.35);font-weight:700}
+    .kbd.p{border-color:rgba(110,64,201,0.7);box-shadow:0 0 0 1px rgba(110,64,201,0.35) inset, 0 2px 0 rgba(0,0,0,0.35);color:#f0eaff}
+
+    .hint{margin-top:20px;color:rgba(125,133,144,0.9);font-size:13px;line-height:2.2;text-align:left;max-width:520px;margin-left:auto;margin-right:auto}
+    .hint b{color:var(--fg)}
+    .cop{color:var(--purple2)}
+
+    .loadbox{margin-top:12px;border:1px solid var(--border);border-radius:8px;background:rgba(13,17,23,0.75);padding:10px}
+    .loadline{font-size:12px;color:var(--muted);line-height:1.6}
+    .loadline strong{color:var(--fg)}
+
+    .start-btn{font-family:inherit;font-size:clamp(16px,2.5vw,22px);padding:16px 56px;background:linear-gradient(135deg, #7c3aed, #6e40c9, #8b5cf6);color:#fff;border:none;border-radius:12px;cursor:pointer;letter-spacing:3px;font-weight:700;box-shadow:0 0 40px rgba(124,58,237,0.3),0 4px 0 #4c2889;transition:all 0.2s ease}
+    .start-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 0 60px rgba(124,58,237,0.45),0 12px 40px rgba(110,64,201,0.25),0 4px 0 #4c2889}
+    .start-btn:active{transform:translateY(1px);box-shadow:0 0 20px rgba(124,58,237,0.3),0 1px 0 #4c2889}
+
+    .startline{margin-top:24px;display:none;text-align:center}
+    .startline.show{display:block}
+
+    .divider{width:80px;height:1px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.3),transparent);margin:20px auto}
+
+    .highscore-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;border:1px solid rgba(210,153,34,0.2);background:rgba(210,153,34,0.06);color:#d29922;font-size:13px;letter-spacing:.03em}
+
+    /* Help */
+    #help .termbody{padding:0}
+    .helpwrap{padding:16px}
+    .helphead{padding:16px;border-bottom:1px solid var(--border);background:rgba(22,27,34,0.85)}
+    .helphead .hcmd{color:var(--fg);font-size:14px}
+    .helphead .hcmd .prompt{color:var(--green)}
+    .helpgrid{display:grid;grid-template-columns:1fr;gap:12px}
+    .helpbox{border:1px solid var(--border);border-radius:10px;background:rgba(13,17,23,0.7);padding:12px}
+    .helpbox h3{font-size:12px;letter-spacing:2px;;color:var(--purple2);margin-bottom:8px}
+    .helpbox p{font-size:12px;line-height:1.65;color:var(--muted)}
+    .helpbox p b{color:var(--fg)}
+    .helpkeys{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .helpfooter{padding:14px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .helpfooter .green{color:var(--green)}
+
+    /* Play HUD */
+    #play{flex-direction:column;justify-content:flex-start;height:100vh}
+    #hud{width:min(980px,96vw);display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:4px}
+    .stat{font-size:12px;letter-spacing:2px;;color:var(--muted)}
+    .stat b{color:var(--fg)}
+    #timer{font-size:clamp(28px,6vw,44px);font-weight:900;min-width:72px;text-align:center;color:var(--red);text-shadow:0 0 10px rgba(248,81,73,0.22)}
+    #timer.urgent{animation:panic 0.5s infinite}
+    @keyframes panic{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+
+    #pipelineWrap{width:min(980px,96vw);margin-top:4px;border:1px solid var(--border);border-radius:8px;background:rgba(22,27,34,0.72);overflow:hidden}
+    #pipelineTop{display:flex;justify-content:space-between;align-items:center;padding:4px 12px;border-bottom:1px solid rgba(48,54,61,0.6)}
+    #pipelineTop .label{letter-spacing:3px;;font-size:12px;color:var(--muted)}
+    #pipelineTop .label b{color:var(--gold)}
+    #pipelineTop .right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    #powerStatus{color:var(--purple2);font-size:12px;letter-spacing:1.5px}
+    #bossStreak{color:var(--gold);font-size:12px;letter-spacing:1.5px}
+
+    #pipelineBar{height:8px;background:rgba(13,17,23,0.7);position:relative}
+    #pipelineFill{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),var(--green),var(--gold));transition:width 120ms linear}
+    #pipelineStages{display:flex;justify-content:space-between;padding:3px 12px;color:var(--muted);font-size:10px;letter-spacing:1.5px}
+    #pipelineStages span.active{color:var(--fg);text-shadow:0 0 10px rgba(63,185,80,0.18)}
+
+    #tips{width:min(980px,96vw);margin-top:2px;color:var(--muted);font-size:11px;letter-spacing:1px;min-height:14px}
+    #tips b{color:var(--fg)}
+    #tips .cop{color:var(--purple2)}
+
+    /* Grid */
+    #grid{width:min(980px,96vw);flex:1;max-height:calc(100vh - 120px);min-height:500px;margin-top:4px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:clamp(4px,0.8vw,8px);padding-bottom:4px}
+
+    .slot{position:relative;border:1px solid rgba(30,30,46,.6);border-radius:14px;background:rgba(17,17,24,.55);backdrop-filter:blur(6px);overflow:hidden;transition:transform 120ms, border-color 120ms, background 120ms, box-shadow 120ms}
+    .slot::before{content:'';position:absolute;left:0;right:0;top:0;height:16px;background:rgba(22,26,35,0.9);border-bottom:1px solid rgba(30,30,46,.5)}
+    .slot::after{content:'● ● ●';position:absolute;top:1px;left:10px;font-size:8px;letter-spacing:3px;color:rgba(90,90,120,.5)}
+
+    .slot.active{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.06);box-shadow:0 0 20px rgba(124,58,237,.1)}
+    .slot.approved{border-color:rgba(16,185,129,.6);background:rgba(16,185,129,.08);box-shadow:0 0 20px rgba(16,185,129,.1)}
+    .slot.missed{border-color:rgba(248,81,73,.5);background:rgba(248,81,73,.06)}
+    .slot.power{border-color:rgba(210,153,34,.5);background:rgba(210,153,34,.06);box-shadow:0 0 20px rgba(210,153,34,.1)}
+    .slot.explainGlow{box-shadow:0 0 30px rgba(124,58,237,.2)}
+
+    .card{position:absolute;inset:16px 0 0 0;padding:10px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+    .slot.active .card{display:flex}
+
+    .avatar{width:clamp(36px,6vw,60px);height:clamp(36px,6vw,60px);border-radius:50%;border:2px solid rgba(110,64,201,0.85);object-fit:cover;background:rgba(13,17,23,0.7)}
+    .slot.power .avatar{border-color:rgba(210,153,34,0.85)}
+
+    .who{font-size:11px;color:var(--purple2);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:95%}
+    .who .role{color:var(--muted)}
+    .pr{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:96%}
+
+    .key{margin-top:6px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(110,64,201,0.95);border:1px solid rgba(0,0,0,0.35);color:white;font-size:22px;font-weight:900;box-shadow:0 4px 0 #4c2889, 0 0 18px rgba(110,64,201,0.35);text-shadow:0 1px 2px rgba(0,0,0,0.45)}
+    .slot.power .key{background:rgba(210,153,34,0.95);box-shadow:0 4px 0 #7a5714, 0 0 18px rgba(210,153,34,0.25)}
+    .key.flash{animation:keyflash 140ms}
+    @keyframes keyflash{0%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+    .timerbar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(110,64,201,0.95);transition:width 120ms linear}
+    .timerbar.urgent{background:rgba(248,81,73,0.95)}
+
+    .result{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);font-size:12px;font-weight:900;letter-spacing:2px;;display:none;text-shadow:0 2px 4px rgba(0,0,0,0.65)}
+    .result.show{display:block;animation:pop 420ms ease-out}
+    @keyframes pop{0%{transform:translate(-50%,-50%) scale(0)}65%{transform:translate(-50%,-50%) scale(1.2)}100%{transform:translate(-50%,-50%) scale(1)}}
+
+    .scorepop{position:absolute;left:50%;top:42%;transform:translateX(-50%);font-size:16px;font-weight:900;pointer-events:none;animation:float 720ms ease-out forwards;text-shadow:0 2px 4px rgba(0,0,0,0.75)}
+    @keyframes float{0%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-34px) scale(1.3)}}
+
+    /* Boss overlay */
+    #boss{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(13,17,23,0.86)}
+    #boss.active{display:flex}
+    .bossCard{width:min(880px,94vw);border:3px solid rgba(210,153,34,0.85);border-radius:14px;background:linear-gradient(180deg,rgba(22,27,34,0.92),rgba(13,17,23,0.92));box-shadow:0 0 70px rgba(210,153,34,0.18), 0 0 120px rgba(110,64,201,0.16);padding:16px}
+    .bossTop{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .bossTag{letter-spacing:4px;;font-size:12px;color:var(--gold)}
+    .bossMeta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .bossAvatar{width:72px;height:72px;border-radius:50%;border:3px solid rgba(210,153,34,0.95);object-fit:cover;background:rgba(13,17,23,0.7)}
+    .bossName{color:var(--purple2);letter-spacing:1px;font-size:12px}
+    .bossName .role{color:var(--muted)}
+
+    .bossPR{margin-top:10px;color:var(--muted);font-size:12px;letter-spacing:1px}
+    .bossPR b{color:var(--fg)}
+
+    .bossCmd{margin-top:12px;border:1px solid var(--border);border-radius:12px;background:rgba(13,17,23,0.7);padding:12px}
+    .bossCmd .line{font-size:14px;line-height:1.75;white-space:pre-wrap}
+    .bossCmd .ghost{color:rgba(230,237,243,0.28)}
+    .bossCmd .typed{color:var(--green);text-shadow:0 0 18px rgba(63,185,80,0.24)}
+
+    .bossHint{margin-top:10px;color:var(--fg);letter-spacing:2px;;font-size:12px}
+    .bossHint .p{color:var(--purple2)}
+
+    .bossBar{height:6px;margin-top:12px;border-radius:999px;background:rgba(48,54,61,0.9);overflow:hidden}
+    .bossFill{height:100%;width:100%;background:linear-gradient(90deg,rgba(210,153,34,0.95),rgba(110,64,201,0.95));transition:width 80ms linear}
+
+    .bossFinal{border-color:rgba(248,212,94,0.95);box-shadow:0 0 90px rgba(248,212,94,0.20), 0 0 160px rgba(110,64,201,0.16)}
+    .bossFinal .bossTag{color:#f8d45e}
+
+    /* Toasts */
+    #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+    .toast{min-width:min(760px,94vw);border:1px solid var(--border);border-radius:12px;background:rgba(13,17,23,0.92);padding:10px 12px;box-shadow:0 0 30px rgba(0,0,0,0.35)}
+    .toast .t1{color:var(--purple2);letter-spacing:2px;;font-size:11px}
+    .toast .t2{color:var(--fg);font-size:12px;line-height:1.5}
+    .toast .t2 b{color:var(--green)}
+
+    /* Footer watermark */
+    #wm{position:fixed;right:12px;bottom:10px;z-index:50;color:rgba(125,133,144,0.85);font-size:10px;letter-spacing:1.8px;user-select:none}
+    #wm b{color:rgba(230,237,243,0.85)}
+
+    /* Game over */
+    .center{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+    .overTitle{font-size:clamp(24px,6vw,52px);letter-spacing:-.02em;font-weight:900;background:linear-gradient(135deg,#f85149,#ff7b72);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .finalScore{font-size:clamp(48px,12vw,96px);font-weight:900;background:linear-gradient(135deg,#ffffff 0%,#c4b5fd 40%,#8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 40px rgba(139,92,246,0.3))}
+    .stats{color:#a0a0c0;font-size:13px;line-height:2.2;text-align:center}
+    .stats b{color:#e2e2f0}
+    .rank{letter-spacing:2px;font-size:14px;font-weight:700;padding:8px 20px;border:1px solid rgba(210,153,34,.3);border-radius:100px;background:rgba(210,153,34,.08);color:#d29922}
+    .again{margin-top:12px;color:#a0a0c0;font-size:13px;letter-spacing:.03em}
+
+    /* Handle input */
+    .handle-wrap{margin-top:16px;display:flex;align-items:center;gap:8px;justify-content:center}
+    .handle-wrap label{color:#a0a0c0;font-size:13px}
+    .handle-input{font-family:inherit;font-size:16px;padding:8px 14px;background:rgba(17,17,24,.8);border:1px solid rgba(124,58,237,.4);border-radius:8px;color:#e2e2f0;outline:none;width:180px;letter-spacing:.5px}
+    .handle-input:focus{border-color:rgba(124,58,237,.8);box-shadow:0 0 12px rgba(124,58,237,.2)}
+    .handle-input::placeholder{color:#4a4a6a}
+    .handle-save{font-family:inherit;font-size:14px;padding:8px 18px;background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;transition:all .15s}
+    .handle-save:hover{transform:scale(1.05);box-shadow:0 0 16px rgba(124,58,237,.3)}
+
+    /* Leaderboard */
+    .leaderboard{width:100%;max-width:420px;margin-top:16px}
+    .lb-title{font-size:12px;color:#4a4a6a;letter-spacing:2px;margin-bottom:8px;text-align:center}
+    .lb-row{display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:8px;margin-bottom:4px;background:rgba(17,17,24,.4);border:1px solid rgba(30,30,46,.4)}
+    .lb-row:first-child{border-color:rgba(210,153,34,.3);background:rgba(210,153,34,.06)}
+    .lb-pos{font-size:14px;font-weight:900;color:#4a4a6a;min-width:24px;text-align:center}
+    .lb-row:first-child .lb-pos{color:#d29922}
+    .lb-avatar{width:28px;height:28px;border-radius:50%;border:2px solid rgba(124,58,237,.3);object-fit:cover}
+    .lb-row:first-child .lb-avatar{border-color:rgba(210,153,34,.5)}
+    .lb-name{flex:1;font-size:13px;color:#c4b5fd;font-weight:600}
+    .lb-score{font-size:14px;font-weight:900;color:#e2e2f0}
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      .cursor{animation:none;opacity:1}
+      #timer.urgent{animation:none}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div id="scanlines"></div>
+  <canvas id="fx"></canvas>
+
+  <div id="wm"><b>GitHub Copilot CLI</b> // DevRel Terminal Frenzy</div>
+
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div id="game">
+    <!-- TITLE -->
+    <div id="title" class="screen active">
+      <div style="position:relative;z-index:1;max-width:680px;width:92vw;text-align:center;display:flex;flex-direction:column;align-items:center;padding:24px 0">
+
+        <!-- Badge -->
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid rgba(124,58,237,.35);border-radius:100px;background:rgba(124,58,237,.08);font-size:13px;color:#a78bfa;letter-spacing:.04em;margin-bottom:28px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:pulse 2s infinite"></span>
+          GitHub Copilot CLI · DevRel Terminal Frenzy
+        </div>
+
+        <!-- Title -->
+        <h1 style="font-size:clamp(3rem,9vw,5.5rem);font-weight:900;letter-spacing:-.03em;line-height:1;margin:0 0 16px">
+          <span style="background:linear-gradient(135deg, #ffffff 0%, #c4b5fd 35%, #8b5cf6 65%, #06b6d4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">🎮 DevRel Terminal Frenzy</span>
+        </h1>
+
+        <!-- Typing animations with faces - 4 LINES crossing -->
+        <div style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:4px;margin-bottom:24px">
+          <div style="font-size:clamp(.8rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
+            <img id="typedAvatar" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(124,58,237,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <span id="typedText" style="color:#06b6d4;font-family:ui-monospace,monospace;font-size:.9em"></span>
+            <span class="cursor"></span>
+          </div>
+          <div style="font-size:clamp(.8rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
+            <img id="typedAvatar2" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(6,182,212,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <span id="typedText2" style="color:#a78bfa;font-family:ui-monospace,monospace;font-size:.9em"></span>
+            <span class="cursor" style="background:#a78bfa"></span>
+          </div>
+          <div style="font-size:clamp(.8rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
+            <img id="typedAvatar3" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(16,185,129,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <span id="typedText3" style="color:#10b981;font-family:ui-monospace,monospace;font-size:.9em"></span>
+            <span class="cursor" style="background:#10b981"></span>
+          </div>
+          <div style="font-size:clamp(.8rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
+            <img id="typedAvatar4" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(245,158,11,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <span id="typedText4" style="color:#f59e0b;font-family:ui-monospace,monospace;font-size:.9em"></span>
+            <span class="cursor" style="background:#f59e0b"></span>
+          </div>
+          <div style="font-size:clamp(.8rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
+            <img id="typedAvatar5" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(239,68,68,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <span id="typedText5" style="color:#ef4444;font-family:ui-monospace,monospace;font-size:.9em"></span>
+            <span class="cursor" style="background:#ef4444"></span>
+          </div>
+          <div style="font-size:clamp(.8rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
+            <img id="typedAvatar6" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(56,189,248,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <span id="typedText6" style="color:#38bdf8;font-family:ui-monospace,monospace;font-size:.9em"></span>
+            <span class="cursor" style="background:#38bdf8"></span>
+          </div>
+        </div>
+
+        <!-- Instructions card -->
+        <div style="width:100%;max-width:580px;border:1px solid rgba(124,58,237,.15);border-radius:16px;background:linear-gradient(135deg,rgba(17,17,24,.7),rgba(22,18,35,.5));backdrop-filter:blur(16px);padding:28px 32px;margin-bottom:28px;text-align:center;position:relative;overflow:hidden">
+          <!-- Subtle glow accent -->
+          <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(124,58,237,.08);filter:blur(40px);pointer-events:none"></div>
+          <div style="font-size:16px;color:#e2e2f0;font-weight:800;margin-bottom:20px;letter-spacing:-.01em">Can you survive the terminal frenzy?</div>
+          <div style="display:flex;flex-direction:column;gap:16px;text-align:left">
+            <!-- Step 1 -->
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#6e40c9);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 0 16px rgba(124,58,237,.2)">1</div>
+              <div style="font-size:14px;color:#a0a0c0;line-height:1.5">Press the <b style="color:#e2e2f0">key shown</b> on each card to approve it</div>
+            </div>
+            <!-- Step 2 -->
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#d29922,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 0 16px rgba(210,153,34,.2)">2</div>
+              <div style="font-size:14px;color:#a0a0c0;line-height:1.5">Type the <b style="color:#d29922">Copilot CLI command</b> when urgent requests appear</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Start button -->
+        <div class="startline show" id="startLine">
+          <button id="startBtn" class="start-btn">▶ Start Game</button>
+        </div>
+
+        <!-- Warm-up hint -->
+        <div class="startline show" id="startLineWarm" style="margin-top:14px">
+          <span style="color:#4a4a6a;font-size:12px;letter-spacing:.03em">or press <span style="display:inline-flex;padding:2px 8px;border:1px solid rgba(30,30,46,.8);border-radius:5px;background:rgba(17,17,24,.6);font-weight:700;font-size:11px;color:#a0a0c0">W</span> for warm-up mode</span>
+        </div>
+
+        <!-- High score -->
+        <div style="margin-top:20px">
+          <span class="highscore-badge">🏆 High Score: <b id="highScoreTitle">0</b></span>
+        </div>
+
+        <div class="loadbox" id="loadBox" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- HELP / TUTORIAL -->
+    <div id="help" class="screen">
+      <div style="position:relative;z-index:1;max-width:520px;width:92vw;text-align:center;display:flex;flex-direction:column;align-items:center">
+        <h2 style="font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;color:#c4b5fd;margin-bottom:20px">How to Play</h2>
+        <div style="width:100%;border:1px solid rgba(30,30,46,.8);border-radius:12px;background:rgba(17,17,24,.6);backdrop-filter:blur(12px);padding:24px;text-align:left;font-size:14px;color:#a0a0c0;line-height:2.2">
+          <b style="color:#e2e2f0">Press the key</b> shown on each card to approve it<br>
+          <b style="color:#d29922">Urgent Requests</b> pop up — type the Copilot CLI command to clear them<br>
+          <b style="color:#10b981">W</b> from title screen starts warm-up (easy) mode
+        </div>
+        <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+          <button class="start-btn" onclick="if(imagesLoaded){ensureAudio();startGame(false);clack();}">▶ Start Game</button>
+        </div>
+        <div style="margin-top:14px;color:#4a4a6a;font-size:12px">Press <b style="color:#a0a0c0">ESC</b> to go back</div>
+      </div>
+    </div>
+
+    <!-- PLAY -->
+    <div id="play" class="screen">
+      <!-- Terminal title bar -->
+      <div style="width:min(980px,96vw);height:32px;display:flex;align-items:center;gap:8px;padding:0 14px;background:rgba(22,26,35,0.95);border:1px solid rgba(30,30,46,.4);border-bottom:none;border-radius:12px 12px 0 0;margin-top:4px">
+        <div style="width:10px;height:10px;border-radius:50%;background:#ff5f56"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#ffbd2e"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#27c93f"></div>
+        <span style="margin-left:8px;color:#4a4a6a;font-size:11px;letter-spacing:1px">🎮 DevRel Terminal Frenzy</span>
+      </div>
+      <div id="hud" style="border-left:1px solid rgba(30,30,46,.4);border-right:1px solid rgba(30,30,46,.4)">
+        <div class="stat">SCORE <b id="score">0</b> <span style="color:var(--muted)">/ HIGH</span> <b id="highScore">0</b></div>
+        <div id="timer">60</div>
+        <div class="stat" style="text-align:right">RANK <b id="rankNow">Junior Dev</b></div>
+      </div>
+
+      <div id="pipelineWrap">
+        <div id="pipelineTop">
+          <div class="label">PIPELINE <b id="mult">x1</b></div>
+          <div class="right">
+            <div id="powerStatus"></div>
+            <div id="bossStreak">LGTM STREAK: <b id="bossStreakVal">0</b></div>
+          </div>
+        </div>
+        <div id="pipelineBar"><div id="pipelineFill"></div></div>
+        <div id="pipelineStages">
+          <span id="stg0" class="active">BUILD</span>
+          <span id="stg1">TEST</span>
+          <span id="stg2">SECURITY</span>
+          <span id="stg3">DEPLOY</span>
+          <span id="stg4">SHIP</span>
+        </div>
+      </div>
+
+      <div id="tips"></div>
+      <div id="grid"></div>
+    </div>
+
+    <!-- BOSS -->
+    <div id="boss">
+      <div class="bossCard" id="bossCard">
+        <div class="bossTop">
+          <div class="bossTag" id="bossTag">★ Urgent Request ★</div>
+          <div class="bossMeta">
+            <img class="bossAvatar" id="bossAvatar" alt="">
+            <div>
+              <div class="bossName" id="bossName"></div>
+              <div class="bossPR" id="bossPR"></div>
+            </div>
+          </div>
+        </div>
+        <div class="bossCmd">
+          <div class="line"><span class="prompt">$</span> <span class="cmd">gh pr review</span> <span id="bossCmd"></span></div>
+          <div class="line" id="bossTypedLine"></div>
+          <div class="line" style="margin-top:6px"><span class="cop">Copilot Suggestion:</span> <span class="ghost" id="bossGhost"></span></div>
+        </div>
+        <div class="bossHint">⌨️ TYPE IT NOW • <span class="p">bonus</span> for speed • <span class="p">no backspacing</span></div>
+        <div class="bossBar"><div class="bossFill" id="bossFill"></div></div>
+      </div>
+    </div>
+
+    <!-- GAMEOVER -->
+    <div id="gameover" class="screen">
+      <div style="position:relative;z-index:1;max-width:500px;width:92vw;text-align:center;display:flex;flex-direction:column;align-items:center;overflow-y:auto;max-height:100vh;padding:20px 0">
+          <div class="overTitle">Game Over</div>
+          <div class="finalScore" id="finalScore">0</div>
+          <div class="stats" id="finalStats"></div>
+          <div class="rank" id="finalRank">Junior Dev</div>
+
+          <div class="again" id="againLine">Press Enter to play again</div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+  </div>
+
+  <script>
+  // ============================================================
+  // ⚡ DEVREL TERMINAL FRENZY ⚡  — GitHub Copilot CLI Retro Game
+  // Single-file HTML, 60-second rounds, keyboard only.
+  // ============================================================
+
+  // --- DevRel faces (79 total) ---
+  // Format: https://avatars.githubusercontent.com/u/USER_ID?v=4
+  const DEVREL = [
+    {name:'aaronpowell',url:'https://avatars.githubusercontent.com/u/434140?v=4'},
+    {name:'abbycabs',url:'https://avatars.githubusercontent.com/u/617994?v=4'},
+    {name:'amynic',url:'https://avatars.githubusercontent.com/u/13828867?v=4'},
+    {name:'andreagriffiths11',url:'https://avatars.githubusercontent.com/u/20666190?v=4'},
+    {name:'andrewmflick',url:'https://avatars.githubusercontent.com/u/1985743?v=4'},
+    {name:'anipind',url:'https://avatars.githubusercontent.com/u/11860491?v=4'},
+    {name:'annasoracco',url:'https://avatars.githubusercontent.com/u/40306400?v=4'},
+    {name:'aprilgittens',url:'https://avatars.githubusercontent.com/u/34195866?v=4'},
+    {name:'ashleymcnamara',url:'https://avatars.githubusercontent.com/u/3139143?v=4'},
+    {name:'ashleywolf',url:'https://avatars.githubusercontent.com/u/10735907?v=4'},
+    {name:'avni',url:'https://avatars.githubusercontent.com/u/47825?v=4'},
+    {name:'ayangupt',url:'https://avatars.githubusercontent.com/u/74832088?v=4'},
+    {name:'BethanyJep',url:'https://avatars.githubusercontent.com/u/44121227?v=4'},
+    {name:'bryanrichter',url:'https://avatars.githubusercontent.com/u/98053556?v=4'},
+    {name:'brunoborges',url:'https://avatars.githubusercontent.com/u/129743?v=4'},
+    {name:'burkeholland',url:'https://avatars.githubusercontent.com/u/686963?v=4'},
+    {name:'carlotta94c',url:'https://avatars.githubusercontent.com/u/82521518?v=4'},
+    {name:'cassidoo',url:'https://avatars.githubusercontent.com/u/1454517?v=4'},
+    {name:'chrisreddington',url:'https://avatars.githubusercontent.com/u/791642?v=4'},
+    {name:'ChrisSfanos',url:'https://avatars.githubusercontent.com/u/1334951?v=4'},
+    {name:'codemillmatt',url:'https://avatars.githubusercontent.com/u/2053639?v=4'},
+    {name:'coltenwoo',url:'https://avatars.githubusercontent.com/u/59583863?v=4'},
+    {name:'crazy4pi314',url:'https://avatars.githubusercontent.com/u/6486256?v=4'},
+    {name:'csharpfritz',url:'https://avatars.githubusercontent.com/u/78577?v=4'},
+    {name:'cyz',url:'https://avatars.githubusercontent.com/u/2198735?v=4'},
+    {name:'daisychaussee',url:'https://avatars.githubusercontent.com/u/45178151?v=4'},
+    {name:'damovisa',url:'https://avatars.githubusercontent.com/u/1887732?v=4'},
+    {name:'DanWahlin',url:'https://avatars.githubusercontent.com/u/1767249?v=4'},
+    {name:'DaveBurnisonMS',url:'https://avatars.githubusercontent.com/u/53453038?v=4'},
+    {name:'dubsopenhub',url:'https://avatars.githubusercontent.com/u/158339470?v=4'},
+    {name:'elbruno',url:'https://avatars.githubusercontent.com/u/3533489?v=4'},
+    {name:'filmgirl',url:'https://avatars.githubusercontent.com/u/110683?v=4'},
+    {name:'gbcal',url:'https://avatars.githubusercontent.com/u/114707342?v=4'},
+    {name:'gcordido',url:'https://avatars.githubusercontent.com/u/24947208?v=4'},
+    {name:'GeekTrainer',url:'https://avatars.githubusercontent.com/u/6109729?v=4'},
+    {name:'gloveboxes',url:'https://avatars.githubusercontent.com/u/9853509?v=4'},
+    {name:'helmanke',url:'https://avatars.githubusercontent.com/u/50427335?v=4'},
+    {name:'hnky',url:'https://avatars.githubusercontent.com/u/13765316?v=4'},
+    {name:'howard-lio',url:'https://avatars.githubusercontent.com/u/169101666?v=4'},
+    {name:'ItalianInSeattle',url:'https://avatars.githubusercontent.com/u/100787901?v=4'},
+    {name:'jamesiri',url:'https://avatars.githubusercontent.com/u/22601145?v=4'},
+    {name:'jamesmontemagno',url:'https://avatars.githubusercontent.com/u/1676321?v=4'},
+    {name:'jaqster',url:'https://avatars.githubusercontent.com/u/22108954?v=4'},
+    {name:'jdooley-clt',url:'https://avatars.githubusercontent.com/u/4121105?v=4'},
+    {name:'jdubois',url:'https://avatars.githubusercontent.com/u/316835?v=4'},
+    {name:'Jeffrey-Luszcz',url:'https://avatars.githubusercontent.com/u/160953253?v=4'},
+    {name:'jeffwilcox',url:'https://avatars.githubusercontent.com/u/427913?v=4'},
+    {name:'jhofman',url:'https://avatars.githubusercontent.com/u/79563?v=4'},
+    {name:'jldeen',url:'https://avatars.githubusercontent.com/u/7676214?v=4'},
+    {name:'johnpapa',url:'https://avatars.githubusercontent.com/u/1202528?v=4'},
+    {name:'juliamuiruri4',url:'https://avatars.githubusercontent.com/u/40116776?v=4'},
+    {name:'justingosses',url:'https://avatars.githubusercontent.com/u/11600445?v=4'},
+    {name:'justinyoo',url:'https://avatars.githubusercontent.com/u/1538528?v=4'},
+    {name:'jvverd',url:'https://avatars.githubusercontent.com/u/54186262?v=4'},
+    {name:'jyoungpak',url:'https://avatars.githubusercontent.com/u/134352325?v=4'},
+    {name:'katiejliu',url:'https://avatars.githubusercontent.com/u/78124298?v=4'},
+    {name:'katiesavage',url:'https://avatars.githubusercontent.com/u/20649242?v=4'},
+    {name:'KevinCrosby',url:'https://avatars.githubusercontent.com/u/6313838?v=4'},
+    {name:'kirkland1118',url:'https://avatars.githubusercontent.com/u/169091620?v=4'},
+    {name:'LadyKerr',url:'https://avatars.githubusercontent.com/u/47188731?v=4'},
+    {name:'LaurenBuchman',url:'https://avatars.githubusercontent.com/u/5233102?v=4'},
+    {name:'lcho',url:'https://avatars.githubusercontent.com/u/5395775?v=4'},
+    {name:'leereilly',url:'https://avatars.githubusercontent.com/u/121322?v=4'},
+    {name:'liamchampton',url:'https://avatars.githubusercontent.com/u/42477259?v=4'},
+    {name:'madebygps',url:'https://avatars.githubusercontent.com/u/6733686?v=4'},
+    {name:'martinwoodward',url:'https://avatars.githubusercontent.com/u/856858?v=4'},
+    {name:'marzann',url:'https://avatars.githubusercontent.com/u/20343629?v=4'},
+    {name:'MetzinAround',url:'https://avatars.githubusercontent.com/u/65838556?v=4'},
+    {name:'morganersery1',url:'https://avatars.githubusercontent.com/u/107881423?v=4'},
+    {name:'mvkaran',url:'https://avatars.githubusercontent.com/u/8726608?v=4'},
+    {name:'olguzzar',url:'https://avatars.githubusercontent.com/u/95261576?v=4'},
+    {name:'paverame',url:'https://avatars.githubusercontent.com/u/44303432?v=4'},
+    {name:'phoebequincy',url:'https://avatars.githubusercontent.com/u/28737850?v=4'},
+    {name:'pierceboggan',url:'https://avatars.githubusercontent.com/u/1091304?v=4'},
+    {name:'predatorgoose',url:'https://avatars.githubusercontent.com/u/84738307?v=4'},
+    {name:'reneenoble',url:'https://avatars.githubusercontent.com/u/7269759?v=4'},
+    {name:'revodavid',url:'https://avatars.githubusercontent.com/u/152948?v=4'},
+    {name:'ricky-diep',url:'https://avatars.githubusercontent.com/u/26590242?v=4'},
+    {name:'roryp',url:'https://avatars.githubusercontent.com/u/6388864?v=4'},
+    {name:'SandraAhlgrimm',url:'https://avatars.githubusercontent.com/u/5214683?v=4'},
+    {name:'scubaninja',url:'https://avatars.githubusercontent.com/u/26086919?v=4'},
+    {name:'sethjuarez',url:'https://avatars.githubusercontent.com/u/115409?v=4'},
+    {name:'shanselman',url:'https://avatars.githubusercontent.com/u/2892?v=4'},
+    {name:'slincoln75',url:'https://avatars.githubusercontent.com/u/86328983?v=4'},
+    {name:'softchris',url:'https://avatars.githubusercontent.com/u/4598064?v=4'},
+    {name:'stahaff',url:'https://avatars.githubusercontent.com/u/222254525?v=4'},
+    {name:'swilson15',url:'https://avatars.githubusercontent.com/u/86739163?v=4'},
+    {name:'thegovind',url:'https://avatars.githubusercontent.com/u/18152044?v=4'},
+    {name:'thereynald',url:'https://avatars.githubusercontent.com/u/100732140?v=4'},
+    {name:'ticachica',url:'https://avatars.githubusercontent.com/u/1085586?v=4'},
+    {name:'tonybaloney',url:'https://avatars.githubusercontent.com/u/1532417?v=4'},
+    {name:'v-candice',url:'https://avatars.githubusercontent.com/u/255018247?v=4'},
+    {name:'VanLyHoosier',url:'https://avatars.githubusercontent.com/u/107507541?v=4'},
+    {name:'wirelesslife',url:'https://avatars.githubusercontent.com/u/17089114?v=4'},
+    {name:'yoshioterada',url:'https://avatars.githubusercontent.com/u/1871266?v=4'},
+    {name:'2ley',url:'https://avatars.githubusercontent.com/u/107950541?v=4'}
+  ];
+
+  // Special titles
+  const SPECIAL_TITLES = {
+    martinwoodward: 'VP DevRel 👑',
+    cassidoo: 'Sr. Dir, Developer Advocacy ⌨️',
+    filmgirl: 'Senior Developer Advocate 📖',
+    tonybaloney: 'Principal Cloud Advocate 🐍',
+    LadyKerr: 'Senior Developer Advocate 🤖',
+    elbruno: 'Principal Cloud Advocate 🧠',
+    madebygps: 'Sr. Cloud Advocate ☁️',
+    softchris: 'Senior Cloud Advocate 📚',
+    shanselman: 'VP, Technical Staff 🎙️',
+    ashleymcnamara: 'Sr. Dir, Developer Advocacy 🎨',
+    anipind: 'Sr. Dir, Developer Programs 🌟',
+    'jdooley-clt': 'Sr. Dir, Enterprise Advocacy 🏢',
+    dubsopenhub: 'Staff Program Manager 🎮',
+    kirkland1118: 'VP, Engagement, CoreAI 🧠',
+    gbcal: 'Product Marketing Director, Copilot 📢'
+  };
+
+  // PR jokes (Copilot CLI themed)
+  const PR_TITLES = [
+    'fix: copilot suggested this and I trusted it',
+    'feat: /explain made me realize my code was garbage',
+    'chore: copilot wrote my commit message',
+    'feat: replaced stackoverflow with @terminal',
+    'fix: typed "gh copilot" and it worked somehow',
+    'refactor: turned callbacks into feelings',
+    'fix: CI was mad so I bribed it with whitespace',
+    'feat: used /explain, removed 2000 lines, shipped',
+    'chore: replaced documentation with `--help` output',
+    'fix: AI confidence: 47% (merged anyway)',
+    'feat: taught copilot the codebase (it taught me fear)',
+    'fix: wrote tests (copilot wrote the apology)',
+    'feat: added "--turbo" to the vibes pipeline',
+    'chore: squashed 19 commits into one regret',
+    'fix: removed console.log (added console.table)',
+    'feat: autocompleted a feature I don\'t understand',
+    'fix: resolved merge conflict with interpretive dance',
+    'chore: rebase -i until it feels right',
+    'feat: /suggest turned me into a code reviewer',
+    'fix: my PR title is my therapy session'
+  ];
+
+  const POWERUPS = [
+    {id:'turbo', label:'copilot --turbo', color:'gold'},
+    {id:'stash', label:'git stash', color:'purple'},
+    {id:'cherry', label:'git cherry-pick', color:'green'},
+    {id:'explain', label:'copilot explain', color:'purple'}
+  ];
+
+  const APPROVE_MSGS = [
+    'MERGED', 'LGTM', 'SGTM', 'AUTOMERGE', 'SHIP IT', 'GREEN CHECKS', 'NO CONFLICTS', 'DEPLOYED', 'APPROVED', 'YOLO MERGE'
+  ];
+  const MISS_MSGS = [
+    'STALE', 'NEEDS REBASE', 'BUILD FAILED', 'MERGE CONFLICT', 'TIMEOUT', 'BLOCKED', 'CHANGES REQUESTED', 'CI RED', 'CLOSED', 'RERUN JOBS'
+  ];
+
+  const BOSS_COMMANDS = [
+    '/approve', '/ship-it', '/merge', '/yolo', 'LGTM', 'SGTM'
+  ];
+
+  const KEYSET = ['A','S','D','F','J','K','L',';'];
+  const GAME_DURATION = 60;
+  const GRID_SIZE = 12;
+
+  // --- DOM ---
+  const screens = {
+    title: document.getElementById('title'),
+    help: document.getElementById('help'),
+    play: document.getElementById('play'),
+    gameover: document.getElementById('gameover')
+  };
+  const gridEl = document.getElementById('grid');
+  const tipsEl = document.getElementById('tips');
+
+  const scoreEl = document.getElementById('score');
+  const highScoreEl = document.getElementById('highScore');
+  const highScoreTitleEl = document.getElementById('highScoreTitle');
+  const timerEl = document.getElementById('timer');
+  const rankNowEl = document.getElementById('rankNow');
+
+  const multEl = document.getElementById('mult');
+  const pipelineFillEl = document.getElementById('pipelineFill');
+  const stageEls = [
+    document.getElementById('stg0'),document.getElementById('stg1'),document.getElementById('stg2'),document.getElementById('stg3'),document.getElementById('stg4')
+  ];
+
+  const powerStatusEl = document.getElementById('powerStatus');
+  const bossStreakValEl = document.getElementById('bossStreakVal');
+
+  // Boss DOM
+  const bossOverlay = document.getElementById('boss');
+  const bossCard = document.getElementById('bossCard');
+  const bossAvatarEl = document.getElementById('bossAvatar');
+  const bossNameEl = document.getElementById('bossName');
+  const bossPREl = document.getElementById('bossPR');
+  const bossCmdEl = document.getElementById('bossCmd');
+  const bossTypedLineEl = document.getElementById('bossTypedLine');
+  const bossGhostEl = document.getElementById('bossGhost');
+  const bossFillEl = document.getElementById('bossFill');
+  const bossTagEl = document.getElementById('bossTag');
+
+  // Over DOM
+  const finalScoreEl = document.getElementById('finalScore');
+  const finalStatsEl = document.getElementById('finalStats');
+  const finalRankEl = document.getElementById('finalRank');
+
+  // Toast
+  const toastEl = document.getElementById('toast');
+
+  // Help keys
+  const helpKeysEl = document.getElementById('helpKeys');
+  if (helpKeysEl) {
+    KEYSET.forEach(k => {
+      const s = document.createElement('span');
+      s.className = 'kbd' + (k === ';' ? ' p' : '');
+      s.textContent = k;
+      helpKeysEl.appendChild(s);
+    });
+  }
+
+  // --- Storage ---
+  const STORAGE_KEY = 'copilot-frenzy-v2';
+  function loadStore(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') || {}; }
+    catch { return {}; }
+  }
+  function saveStore(data){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  }
+  const store = loadStore();
+  let highScore = Number(store.highScore || 0);
+  highScoreEl.textContent = String(highScore);
+  highScoreTitleEl.textContent = String(highScore);
+
+  // Achievements
+  const achievements = store.achievements || {};
+  function unlock(id, title, desc){
+    if (achievements[id]) return;
+    achievements[id] = {title, desc, at: Date.now()};
+    store.achievements = achievements;
+    saveStore(store);
+    toast('ACHIEVEMENT UNLOCKED', title + ' — ' + desc);
+    sfxAchievement();
+  }
+
+  // --- Helpers ---
+  const pick = arr => arr[(Math.random()*arr.length)|0];
+  const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+  function showScreen(id){
+    Object.values(screens).forEach(s => s.classList.remove('active'));
+    screens[id].classList.add('active');
+  }
+  function titleFor(name){
+    return SPECIAL_TITLES[name] ? SPECIAL_TITLES[name] : '';
+  }
+  function displayName(person){
+    return '@' + person.name;
+  }
+  function rankFor(score){
+    if (score < 400) return '$ exit 1';
+    if (score < 1200) return 'Junior Dev';
+    if (score < 2400) return 'Senior Dev';
+    if (score < 4000) return 'Staff Engineer';
+    if (score < 6500) return 'VP of Vibes';
+    return '🤖 COPILOT SINGULARITY';
+  }
+
+  // --- Audio (beeps + keyboard clacks) ---
+  let audioCtx;
+  let audioOn = true;
+  function ensureAudio(){
+    if (!audioOn) return;
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  function beep(freq, dur, type='square', vol=0.07){
+    if (!audioOn) return;
+    if (!audioCtx) return;
+    try{
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      g.gain.setValueAtTime(vol, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(); o.stop(audioCtx.currentTime + dur);
+    } catch {}
+  }
+  function clack(){
+    if (!audioOn) return;
+    if (!audioCtx) return;
+    try{
+      const bufSize = 0.015;
+      const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate*bufSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i=0;i<data.length;i++) data[i] = (Math.random()*2-1) * (1 - i/data.length);
+      const src = audioCtx.createBufferSource();
+      src.buffer = buffer;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + bufSize);
+      const hp = audioCtx.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 1200;
+      src.connect(hp); hp.connect(g); g.connect(audioCtx.destination);
+      src.start();
+    } catch {}
+  }
+  function sfxPop(){ beep(660,0.05); setTimeout(()=>beep(880,0.04), 20); }
+  function sfxApprove(){ beep(523,0.07); setTimeout(()=>beep(659,0.07), 60); setTimeout(()=>beep(784,0.11), 120); }
+  function sfxMiss(){ beep(200,0.12,'sawtooth',0.06); setTimeout(()=>beep(150,0.18,'sawtooth',0.05), 60); }
+  function sfxBossAppear(){ beep(220,0.14,undefined,0.09); setTimeout(()=>beep(330,0.14,undefined,0.09), 90); setTimeout(()=>beep(440,0.18,undefined,0.09), 180); }
+  function sfxBossWin(){ beep(523,0.07,undefined,0.11); setTimeout(()=>beep(659,0.07,undefined,0.11), 80); setTimeout(()=>beep(784,0.07,undefined,0.11), 160); setTimeout(()=>beep(1047,0.22,undefined,0.11), 240); }
+  function sfxTick(){ beep(800,0.03,'square',0.04); }
+  function sfxPower(){ beep(988,0.06,'sine',0.08); setTimeout(()=>beep(1319,0.08,'sine',0.08), 70); }
+  function sfxAchievement(){ beep(880,0.08,'triangle',0.10); setTimeout(()=>beep(1174,0.10,'triangle',0.10), 90); }
+
+  // --- Particles ---
+  const fxCanvas = document.getElementById('fx');
+  const fxCtx = fxCanvas.getContext('2d');
+  const particles = [];
+  function resizeFx(){ fxCanvas.width = innerWidth; fxCanvas.height = innerHeight; }
+  addEventListener('resize', resizeFx);
+  resizeFx();
+
+  function spawnParticles(x,y,color,count=18,spread=10){
+    for (let i=0;i<count;i++){
+      particles.push({
+        x,y,
+        vx:(Math.random()-0.5)*spread,
+        vy:(Math.random()-0.6)*spread - 2,
+        life:1,
+        decay:0.014+Math.random()*0.02,
+        size:2+Math.random()*5,
+        color
+      });
+    }
+  }
+  function renderParticles(){
+    fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height);
+    for (let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.18;
+      p.life -= p.decay;
+      if (p.life <= 0){ particles.splice(i,1); continue; }
+      fxCtx.globalAlpha = p.life;
+      fxCtx.fillStyle = p.color;
+      const s = Math.max(1, Math.ceil(p.size * p.life));
+      fxCtx.fillRect(p.x|0, p.y|0, s, s);
+    }
+    fxCtx.globalAlpha = 1;
+  }
+
+  // --- Matrix background ---
+  const matrixCanvas = document.getElementById('matrix');
+  const mctx = matrixCanvas.getContext('2d');
+  let mW=0,mH=0;
+  function resizeMatrix(){
+    mW = matrixCanvas.width = innerWidth;
+    mH = matrixCanvas.height = innerHeight;
+    cols = Math.floor(mW / fontSize);
+    drops = new Array(cols).fill(1);
+  }
+  let fontSize = 14;
+  let cols = 0;
+  let drops = [];
+  const chars = '0123456789abcdef$|&;<>[](){}~@#*/\\=+-_ghcopilotPRmergeLGTM'.split('');
+  addEventListener('resize', resizeMatrix);
+  resizeMatrix();
+
+  function drawMatrix(){
+    mctx.fillStyle = 'rgba(13,17,23,0.12)';
+    mctx.fillRect(0,0,mW,mH);
+    mctx.font = fontSize+'px monospace';
+    for (let i=0;i<drops.length;i++){
+      const text = chars[(Math.random()*chars.length)|0];
+      const x = i * fontSize;
+      const y = drops[i] * fontSize;
+      const bright = Math.random() < 0.04;
+      mctx.fillStyle = bright ? 'rgba(63,185,80,0.95)' : 'rgba(63,185,80,0.35)';
+      mctx.fillText(text, x, y);
+      if (y > mH && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+
+  // --- Preload avatars (title loading) ---
+  const imageCache = {};
+  let imagesLoaded = false;
+  async function preloadImages(){
+    const total = DEVREL.length;
+    let loaded = 0;
+
+    await Promise.all(DEVREL.map(p => new Promise(res => {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        loaded++;
+        imageCache[p.name] = img;
+        res();
+      };
+      img.crossOrigin = 'anonymous';
+      img.src = p.url;
+    })));
+
+    imagesLoaded = true;
+  }
+
+  // Fallback: force ready after 5 seconds even if images stall
+  setTimeout(() => {
+    if (!imagesLoaded) {
+      imagesLoaded = true;
+    }
+  }, 5000);
+
+  // --- Game state ---
+  let state = 'title';
+  let warmup = false;
+
+  let timeLeft = GAME_DURATION;
+  let score = 0;
+  let approvals = 0;
+  let misses = 0;
+  let maxMult = 1;
+
+  // pipeline / combo
+  let pipeline = 0; // 0..100
+  let mult = 1;
+
+  // boss
+  let bossActive = false;
+  let boss = null; // {person, prTitle, target, typed, durationMs, timeLeftMs, final}
+  let bossTimerAccum = 0;
+  let bossStreak = 0;
+  let bossesDefeated = 0;
+  let megaTriggered = false;
+  let finalTriggered = false;
+
+  // slots
+  const slots = new Array(GRID_SIZE).fill(null); // {type:'pr'|'power', person, key, timeLeftMs, maxTimeMs, prTitle, powerId}
+  let slotEls = [];
+
+  // timers
+  let lastT = 0;
+  let spawnAccum = 0;
+  let keyChangeAccum = 0;
+  let timerAccum = 0;
+  let suggestionAccum = 0;
+
+  // powerup effects
+  const effects = {
+    turbo: 0,
+    freeze: 0,
+    cherry: 0,
+    explain: 0
+  };
+
+  function effectActive(){
+    const a = [];
+    if (effects.turbo > 0) a.push('copilot --turbo');
+    if (effects.freeze > 0) a.push('git stash');
+    if (effects.cherry > 0) a.push('git cherry-pick x' + effects.cherry);
+    if (effects.explain > 0) a.push('copilot explain');
+    powerStatusEl.textContent = a.length ? ('POWER: ' + a.join(' | ')) : '';
+  }
+
+  // Copilot suggestion
+  let suggestion = null; // {kind:'tab-approve', targetIdx, bonus}
+
+  function getDifficulty(){
+    const elapsed = GAME_DURATION - timeLeft;
+    const base = clamp(Math.floor(elapsed / 7), 0, 8);
+    return warmup ? Math.max(0, base-2) : base;
+  }
+  function getSpawnRateMs(){
+    const d = getDifficulty();
+    const base = 1200 - d*110;
+    return warmup ? base + 250 : base;
+  }
+  function getKeyChangeRateMs(){
+    const d = getDifficulty();
+    const base = 900 - d*75;
+    return warmup ? base + 280 : base;
+  }
+  function getCardDurationMs(){
+    const d = getDifficulty();
+    const base = 3200 - d*240;
+    return warmup ? base + 700 : base;
+  }
+  function getMaxActive(){
+    const d = getDifficulty();
+    return clamp(2 + Math.floor(d*0.85), 2, KEYSET.length);
+  }
+
+  function screenShake(){
+    const el = document.getElementById('game');
+    if (!el) return;
+    el.style.transform = 'translate(-4px, 2px)';
+    setTimeout(() => { el.style.transform = 'translate(3px, -3px)'; }, 50);
+    setTimeout(() => { el.style.transform = ''; }, 100);
+  }
+
+  function createGrid(){
+    gridEl.innerHTML = '';
+    slotEls = [];
+    for (let i=0;i<GRID_SIZE;i++){
+      const el = document.createElement('div');
+      el.className = 'slot';
+      el.innerHTML = `
+        <div class="card">
+          <img class="avatar" alt="">
+          <div class="who"></div>
+          <div class="pr"></div>
+          <div class="key"></div>
+        </div>
+        <div class="result"></div>
+        <div class="timerbar"></div>
+      `;
+      gridEl.appendChild(el);
+      slotEls.push(el);
+    }
+  }
+
+  function availableKey(used){
+    const keys = KEYSET.filter(k => !used.includes(k));
+    return keys.length ? pick(keys) : pick(KEYSET);
+  }
+
+  function toast(title, msg){
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = `<div class="t1">${escapeHtml(title)}</div><div class="t2">${escapeHtml(msg)}</div>`;
+    toastEl.appendChild(t);
+    setTimeout(()=>{ t.style.opacity = '0'; t.style.transition = 'opacity 260ms'; }, 1650);
+    setTimeout(()=>t.remove(), 2000);
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function setTip(line){
+    tipsEl.innerHTML = line;
+  }
+
+  function updateHUD(){
+    scoreEl.textContent = String(score);
+    timerEl.textContent = String(timeLeft);
+    timerEl.className = timeLeft <= 10 ? 'urgent' : '';
+    rankNowEl.textContent = rankFor(score);
+
+    multEl.textContent = 'x' + mult;
+    maxMult = Math.max(maxMult, mult);
+
+    pipelineFillEl.style.width = clamp(pipeline,0,100) + '%';
+
+    // Stage highlighting
+    const stage = pipeline >= 92 ? 4 : pipeline >= 70 ? 3 : pipeline >= 45 ? 2 : pipeline >= 20 ? 1 : 0;
+    for (let i=0;i<stageEls.length;i++) stageEls[i].className = i <= stage ? 'active' : '';
+
+    bossStreakValEl.textContent = String(bossStreak);
+
+    effectActive();
+  }
+
+  function setPipelineFromCombo(){
+    // Mult goes 1..10; pipeline is a smooth meter
+    pipeline = clamp(pipeline, 0, 100);
+    mult = clamp(1 + Math.floor(pipeline/10), 1, 10);
+  }
+
+  function decayPipeline(onMiss=false){
+    pipeline = onMiss ? Math.max(0, pipeline - 22) : Math.max(0, pipeline - 10);
+    setPipelineFromCombo();
+  }
+
+  function pumpPipeline(amount){
+    pipeline = clamp(pipeline + amount, 0, 100);
+    setPipelineFromCombo();
+  }
+
+  function bestActiveSlotByKey(key){
+    let best = -1;
+    let bestT = Infinity;
+    for (let i=0;i<GRID_SIZE;i++){
+      const s = slots[i];
+      if (s && s.key === key){
+        const t = s.timeLeftMs;
+        if (t < bestT){ bestT = t; best = i; }
+      }
+    }
+    return best;
+  }
+
+  function pickPerson(excludeName){
+    if (!excludeName) return pick(DEVREL);
+    for (let tries=0;tries<20;tries++){
+      const p = pick(DEVREL);
+      if (p.name !== excludeName) return p;
+    }
+    return pick(DEVREL);
+  }
+
+  function spawnCard(){
+    const active = slots.filter(Boolean).length;
+    if (active >= getMaxActive()) return;
+
+    const empties = [];
+    for (let i=0;i<GRID_SIZE;i++) if (!slots[i]) empties.push(i);
+    if (!empties.length) return;
+
+    const idx = pick(empties);
+
+    // powerup chance increases slightly as time goes on
+    const d = getDifficulty();
+    const powerChance = warmup ? 0.16 : 0.13;
+    const willPower = Math.random() < (powerChance + d*0.006);
+
+    const usedKeys = slots.filter(Boolean).map(s => s.key);
+    const key = availableKey(usedKeys);
+
+    if (willPower){
+      const pow = pick(POWERUPS);
+      const dur = Math.max(1600, getCardDurationMs() - 600);
+      slots[idx] = {type:'power', powerId: pow.id, person: pick(DEVREL), key, timeLeftMs: dur, maxTimeMs: dur, prTitle: pow.label};
+      renderSlot(idx);
+      sfxPop();
+      return;
+    }
+
+    const person = pickPerson();
+    const prTitle = pick(PR_TITLES);
+    const dur = getCardDurationMs();
+    slots[idx] = {type:'pr', person, key, timeLeftMs: dur, maxTimeMs: dur, prTitle};
+
+    // cherry-pick effect: auto-approve new PRs
+    if (effects.cherry > 0){
+      // let it render briefly, then approve with bonus
+      setTimeout(()=>{
+        if (state !== 'playing') return;
+        if (!slots[idx]) return;
+        if (slots[idx].type !== 'pr') return;
+        approveSlot(idx, {auto:true});
+        effects.cherry = Math.max(0, effects.cherry - 1);
+      }, 60);
+    }
+
+    renderSlot(idx);
+    sfxPop();
+  }
+
+  function renderSlot(idx){
+    const el = slotEls[idx];
+    const s = slots[idx];
+    el.className = 'slot';
+
+    const card = el.querySelector('.card');
+    const avatar = el.querySelector('.avatar');
+    const who = el.querySelector('.who');
+    const pr = el.querySelector('.pr');
+    const keyEl = el.querySelector('.key');
+
+    if (!s){
+      el.querySelector('.timerbar').style.width = '0%';
+      card.style.display = 'none';
+      return;
+    }
+
+    el.classList.add('active');
+
+    if (s.type === 'power'){
+      el.classList.add('power');
+      avatar.src = s.person.url;
+      who.textContent = '⭐ ' + displayName(s.person);
+      pr.textContent = s.prTitle;
+      keyEl.textContent = s.key;
+    } else {
+      avatar.src = s.person.url;
+      who.textContent = displayName(s.person);
+      pr.textContent = s.prTitle;
+      keyEl.textContent = s.key;
+    }
+
+    keyEl.classList.remove('flash');
+    el.querySelector('.result').className = 'result';
+    el.querySelector('.timerbar').style.width = '100%';
+  }
+
+  function powerSvg(id){
+    const p = {
+      turbo:{t:'--turbo',c:'#d29922'},
+      stash:{t:'stash',c:'#8b5cf6'},
+      cherry:{t:'pick',c:'#3fb950'},
+      explain:{t:'explain',c:'#6e40c9'}
+    }[id] || {t:'cmd',c:'#d29922'};
+    return `
+      <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+        <rect x="8" y="18" width="64" height="44" rx="10" fill="#0d1117" stroke="${p.c}" stroke-width="3"/>
+        <text x="16" y="42" font-family="monospace" font-size="12" fill="${p.c}">$</text>
+        <text x="24" y="42" font-family="monospace" font-size="12" fill="#e6edf3">gh</text>
+        <text x="16" y="56" font-family="monospace" font-size="12" fill="#e6edf3">${p.t}</text>
+      </svg>`;
+  }
+
+  function changeKeys(){
+    const used = [];
+    for (let i=0;i<GRID_SIZE;i++){
+      const s = slots[i];
+      if (!s) continue;
+      s.key = availableKey(used);
+      used.push(s.key);
+      const el = slotEls[i].querySelector('.key');
+      el.textContent = s.key;
+      el.classList.remove('flash');
+      void el.offsetWidth;
+      el.classList.add('flash');
+    }
+    beep(520,0.02,'square',0.025);
+  }
+
+  function expireSlot(idx){
+    const s = slots[idx];
+    if (!s) return;
+    slots[idx] = null;
+
+    const el = slotEls[idx];
+    el.classList.remove('active');
+    el.classList.add('missed');
+
+    const msg = el.querySelector('.result');
+    msg.textContent = pick(MISS_MSGS);
+    msg.style.color = 'var(--red)';
+    msg.className = 'result show';
+
+    misses++;
+    suggestion = null;
+    decayPipeline(true);
+
+    sfxMiss();
+
+    setTimeout(()=>{
+      el.className = 'slot';
+      msg.className = 'result';
+      el.querySelector('.timerbar').style.width = '0%';
+    }, 420);
+
+    updateHUD();
+  }
+
+  function approveSlot(idx, opts={}){
+    const s = slots[idx];
+    if (!s) return;
+
+    const el = slotEls[idx];
+
+    if (s.type === 'power'){
+      // consume power
+      applyPower(s.powerId);
+      slots[idx] = null;
+      el.className = 'slot approved';
+      const msg = el.querySelector('.result');
+      msg.textContent = s.prTitle.toUpperCase();
+      msg.style.color = 'var(--gold)';
+      msg.className = 'result show';
+      sfxPower();
+      const rect = el.getBoundingClientRect();
+      spawnParticles(rect.left+rect.width/2, rect.top+rect.height/2, 'rgba(210,153,34,0.95)', 26, 13);
+      setTimeout(()=>{ el.className = 'slot'; msg.className = 'result'; }, 420);
+      updateHUD();
+      return;
+    }
+
+    approvals++;
+
+    const base = 100;
+    const turboMult = effects.turbo > 0 ? 2 : 1;
+    const bonus = opts.suggestion ? 80 : (opts.auto ? 40 : 0);
+    const pts = (base * mult * turboMult) + bonus;
+    score += pts;
+
+    pumpPipeline(10 + Math.min(12, mult*2));
+
+    const msg = el.querySelector('.result');
+    msg.textContent = pick(APPROVE_MSGS);
+    msg.style.color = 'var(--green)';
+    msg.className = 'result show';
+
+    const pop = document.createElement('div');
+    pop.className = 'scorepop';
+    pop.style.color = (mult >= 6 || effects.turbo>0 || opts.suggestion) ? 'var(--gold)' : 'var(--green)';
+    pop.textContent = '+' + pts + (mult>1 ? ' x'+mult : '') + (effects.turbo>0 ? ' TURBO' : '') + (opts.suggestion ? ' TAB' : '') + (opts.auto ? ' PICK' : '');
+    el.appendChild(pop);
+    setTimeout(()=>pop.remove(), 750);
+
+    slots[idx] = null;
+
+    el.classList.remove('active');
+    el.classList.add('approved');
+
+    const rect = el.getBoundingClientRect();
+    spawnParticles(rect.left+rect.width/2, rect.top+rect.height/2, 'rgba(110,64,201,0.95)', 14, 12);
+    spawnParticles(rect.left+rect.width/2, rect.top+rect.height/2, 'rgba(63,185,80,0.95)', 12, 10);
+    if (mult >= 7) spawnParticles(rect.left+rect.width/2, rect.top+rect.height/2, 'rgba(210,153,34,0.95)', 18, 12);
+
+    sfxApprove();
+
+    // achievements
+    if (approvals === 1) unlock('first-commit', 'First Commit!', 'Approved your first PR.');
+    if (mult >= 10) unlock('force-push', 'Force Push!', 'Hit PIPELINE x10.');
+
+    // tipline
+    setTip(`<span class="cop">Copilot says:</span> AI confidence: <b>${(Math.random()*90+5)|0}%</b> • bonus points with <b>TAB</b>`);
+
+    setTimeout(()=>{
+      el.className = 'slot';
+      msg.className = 'result';
+      el.querySelector('.timerbar').style.width = '0%';
+    }, 420);
+
+    updateHUD();
+  }
+
+  function applyPower(id){
+    if (id === 'turbo'){
+      effects.turbo = 6000;
+      toast('POWER-UP', 'copilot --turbo engaged. Double points!');
+      unlock('turbo', 'Turbo Mode!', 'Engaged copilot --turbo.');
+    } else if (id === 'stash'){
+      effects.freeze = 2500;
+      toast('POWER-UP', 'git stash — timers frozen.');
+    } else if (id === 'cherry'){
+      effects.cherry = Math.min(6, effects.cherry + 3);
+      toast('POWER-UP', 'git cherry-pick — auto-approving next PRs.');
+      const picks = (store._picks || 0) + 1;
+      store._picks = picks;
+      if (picks >= 3) unlock('cherry-pick-pro', 'Cherry Pick Pro!', 'Collected cherry-pick 3 times.');
+      saveStore(store);
+    } else if (id === 'explain'){
+      effects.explain = 5200;
+      toast('POWER-UP', 'copilot explain — highlights the key you should press.');
+    }
+    updateHUD();
+  }
+
+  function maybeSuggestion(dt){
+    if (suggestion) return;
+    suggestionAccum += dt;
+    if (suggestionAccum < (warmup ? 1200 : 1500)) return;
+    suggestionAccum = 0;
+
+    if (Math.random() < (warmup ? 0.28 : 0.18)){
+      // choose a slot likely to expire soon
+      let best=-1, t=Infinity;
+      for (let i=0;i<GRID_SIZE;i++){
+        const s = slots[i];
+        if (s && s.type==='pr' && s.timeLeftMs < t){ best=i; t=s.timeLeftMs; }
+      }
+      if (best >= 0){
+        suggestion = {kind:'tab-approve', targetIdx: best, bonus: 80};
+        const k = slots[best].key;
+        setTip(`<span class="cop">Copilot Suggestion:</span> Press <b>TAB</b> to auto-approve the next PR (key: <span class="kbd p">${escapeHtml(k)}</span>) for bonus.`);
+      }
+    }
+  }
+
+  function acceptSuggestion(){
+    if (!suggestion) return false;
+    if (suggestion.kind === 'tab-approve'){
+      const idx = suggestion.targetIdx;
+      suggestion = null;
+      if (idx >= 0 && slots[idx] && slots[idx].type==='pr'){
+        approveSlot(idx, {suggestion:true});
+        toast('COPILOT SUGGESTION', 'TAB accepted. Bonus points!');
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  // --- Boss logic ---
+  const BOSS_INTERVAL_MS = 10000;
+  const BOSS_DURATION_MS = 5500;
+
+  function spawnBoss(opts={}){
+    bossActive = true;
+    state = 'boss';
+
+    const person = opts.person || pickPerson();
+    const prTitle = opts.prTitle || pick(PR_TITLES);
+    const target = opts.target || pick(BOSS_COMMANDS);
+    const durationMs = opts.durationMs || BOSS_DURATION_MS;
+    const final = !!opts.final;
+
+    boss = { person, prTitle, target, typed:'', durationMs, timeLeftMs: durationMs, final };
+
+    bossOverlay.classList.add('active');
+    bossCard.classList.toggle('bossFinal', final);
+    bossTagEl.textContent = final ? '★ Final Urgent Request ★' : '★ Urgent Request ★';
+    bossAvatarEl.src = person.url;
+    bossNameEl.textContent = displayName(person);
+    bossPREl.innerHTML = 'PR: <b>' + escapeHtml(prTitle) + '</b>';
+
+    bossCmdEl.textContent = ''; // keep prompt tight
+    bossGhostEl.textContent = target;
+    bossTypedLineEl.innerHTML = renderBossTyped(target, '');
+    bossFillEl.style.width = '100%';
+
+    sfxBossAppear();
+    setTip(`<span class="cop">Copilot says:</span> Urgent request incoming. Type <b>${escapeHtml(target)}</b> fast.`);
+
+    // achievements
+    if (final) unlock('rebase-master', 'Rebase Master!', 'Survived long enough to meet the final urgent request.');
+  }
+
+  function renderBossTyped(target, typed){
+    const a = typed;
+    const b = target.slice(typed.length);
+    return `<span class="typed">${escapeHtml(a)}</span><span class="ghost">${escapeHtml(b)}</span>`;
+  }
+
+  function handleBossKey(rawKey){
+    if (!bossActive || !boss) return;
+    // Disallow backspace as per on-screen hint
+    if (rawKey === 'Backspace' || rawKey === 'Delete') return;
+
+    const k = rawKey.length === 1 ? rawKey : '';
+    if (!k) return;
+
+    const next = boss.target[boss.typed.length];
+    const want = next;
+    const got = k;
+
+    // Case-insensitive for letters
+    const ok = (want && got) && (
+      (/[a-z]/i.test(want) ? want.toLowerCase() === got.toLowerCase() : want === got)
+    );
+
+    if (ok){
+      boss.typed += want;
+      bossTypedLineEl.innerHTML = renderBossTyped(boss.target, boss.typed);
+      beep(440 + boss.typed.length*70, 0.05, 'square', 0.06);
+
+      if (boss.typed.length >= boss.target.length){
+        winBoss();
+      }
+    } else {
+      // small penalty: shake via particles + pipeline decay
+      decayPipeline(true);
+      beep(160,0.06,'sawtooth',0.05);
+      const rect = bossCard.getBoundingClientRect();
+      spawnParticles(rect.left+rect.width/2, rect.top+rect.height/2, 'rgba(248,81,73,0.95)', 16, 12);
+      updateHUD();
+    }
+  }
+
+  function winBoss(){
+    if (!bossActive || !boss) return;
+
+    const speedPct = boss.timeLeftMs / boss.durationMs; // 0..1
+    const speedBonus = Math.round(400 * clamp(speedPct, 0, 1));
+    const megaBonus = boss.final ? 1500 : 600;
+    const pts = megaBonus + speedBonus + (mult * 120);
+    score += pts;
+
+    bossesDefeated++;
+    bossStreak++;
+
+    pumpPipeline(26 + (boss.final ? 24 : 10));
+
+    // achievements
+    if (bossesDefeated >= 5) unlock('rebase-master-2', 'Rebase Master!', 'Defeated 5 urgent requests.');
+
+    sfxBossWin();
+    toast('URGENT REQUEST APPROVED', boss.target + ' • +' + pts);
+
+    const rect = bossCard.getBoundingClientRect();
+    spawnParticles(rect.left+rect.width/2, rect.top+rect.height/2, 'rgba(210,153,34,0.95)', boss.final ? 60 : 40, 18);
+    spawnParticles(rect.left+rect.width/2, rect.top+rect.height/2, 'rgba(110,64,201,0.95)', boss.final ? 50 : 30, 16);
+    spawnParticles(rect.left+rect.width/2, rect.top+rect.height/2, 'rgba(63,185,80,0.95)', boss.final ? 40 : 25, 14);
+
+    hideBoss();
+    updateHUD();
+  }
+
+  function failBoss(){
+    if (!bossActive) return;
+    bossStreak = 0;
+    misses++;
+    decayPipeline(true);
+    // Big buzzer sound
+    beep(120, 0.3, 'sawtooth', 0.15);
+    setTimeout(() => beep(90, 0.4, 'sawtooth', 0.12), 150);
+    screenShake();
+    toast('REQUEST FAILED', 'CI says no.');
+    hideBoss();
+    updateHUD();
+  }
+
+  function hideBoss(){
+    bossActive = false;
+    boss = null;
+    state = 'playing';
+    bossOverlay.classList.remove('active');
+  }
+
+  // --- Game start/end ---
+  function resetGame(){
+    timeLeft = GAME_DURATION;
+    score = 0;
+    approvals = 0;
+    misses = 0;
+    pipeline = 0;
+    mult = 1;
+    maxMult = 1;
+
+    bossActive = false;
+    boss = null;
+    bossTimerAccum = 0;
+    bossStreak = 0;
+    bossesDefeated = 0;
+    megaTriggered = false;
+    finalTriggered = false;
+
+    spawnAccum = 0;
+    keyChangeAccum = 0;
+    timerAccum = 0;
+    suggestionAccum = 0;
+
+    suggestion = null;
+
+    effects.turbo = 0;
+    effects.freeze = 0;
+    effects.cherry = 0;
+    effects.explain = 0;
+
+    for (let i=0;i<GRID_SIZE;i++) slots[i] = null;
+    createGrid();
+    updateHUD();
+
+    setTip(`<span class="cop">Copilot says:</span> Type <b>gh copilot</b>... just kidding. Press the key on the PR card.`);
+  }
+
+  function startGame(modeWarmup){
+    ensureAudio();
+    warmup = !!modeWarmup;
+    resetGame();
+    showScreen('play');
+    state = 'playing';
+    lastT = 0;
+    beep(440,0.09,undefined,0.08);
+    setTimeout(()=>beep(880,0.14,undefined,0.08), 90);
+  }
+
+  function endGame(){
+    state = 'gameover';
+    if (bossActive) hideBoss();
+
+    finalScoreEl.textContent = String(score);
+
+    const total = approvals + misses;
+    const rate = total ? Math.round((approvals/total)*100) : 0;
+    finalStatsEl.innerHTML =
+      'PRs APPROVED: <b style="color:var(--green)">' + approvals + '</b><br>' +
+      'PRs MISSED: <b style="color:var(--red)">' + misses + '</b><br>' +
+      'MAX PIPELINE: <b style="color:var(--gold)">x' + maxMult + '</b><br>' +
+      'LGTM STREAK: <b style="color:var(--gold)">' + bossStreak + '</b><br>' +
+      'APPROVAL RATE: <b>' + rate + '%</b>';
+
+    const r = rankFor(score);
+    finalRankEl.textContent = r;
+
+    if (score > highScore){
+      highScore = score;
+      store.highScore = highScore;
+      saveStore(store);
+      highScoreEl.textContent = String(highScore);
+      highScoreTitleEl.textContent = String(highScore);
+      toast('NEW HIGH SCORE', String(highScore));
+    }
+
+    showScreen('gameover');
+
+    // Victory jingle — triumphant NES-style chiptune fanfare
+    function victoryJingle() {
+      if (!audioCtx) return;
+      const t = audioCtx.currentTime;
+      const vol = 0.1;
+      function note(freq, start, dur, type='square') {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = type;
+        o.frequency.setValueAtTime(freq, t + start);
+        g.gain.setValueAtTime(vol, t + start);
+        g.gain.exponentialRampToValueAtTime(0.001, t + start + dur);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(t + start); o.stop(t + start + dur);
+      }
+      // Rapid ascending run (flagpole slide feel)
+      note(523, 0.00, 0.08);    // C5
+      note(587, 0.06, 0.08);    // D5
+      note(659, 0.12, 0.08);    // E5
+      note(698, 0.18, 0.08);    // F5
+      note(784, 0.24, 0.08);    // G5
+      note(880, 0.30, 0.08);    // A5
+      note(988, 0.36, 0.08);    // B5
+      note(1047, 0.42, 0.15);   // C6 (hold)
+
+      // Brief pause then triumphant fanfare
+      note(784, 0.65, 0.12);    // G5
+      note(831, 0.77, 0.12);    // Ab5
+      note(880, 0.89, 0.12);    // A5
+      note(1047, 1.01, 0.20);   // C6
+
+      // Final chord hits
+      note(1047, 1.30, 0.10);   // C6
+      note(1175, 1.40, 0.10);   // D6
+      note(1319, 1.50, 0.35);   // E6 (big finish)
+
+      // Bass notes underneath
+      note(262, 0.65, 0.25, 'triangle');  // C4
+      note(330, 1.01, 0.25, 'triangle');  // E4
+      note(392, 1.30, 0.55, 'triangle');  // G4
+
+      // Sparkle on top
+      note(2093, 1.55, 0.15, 'sine');     // C7 shimmer
+      note(2637, 1.65, 0.20, 'sine');     // E7 shimmer
+    }
+    victoryJingle();
+  }
+
+  // --- Loop ---
+  function gameLoop(now){
+    requestAnimationFrame(gameLoop);
+    drawMatrix();
+    renderParticles();
+
+    if (state !== 'playing' && state !== 'boss') { lastT = 0; return; }
+    if (!lastT) { lastT = now; return; }
+    const dt = Math.min(now - lastT, 100);
+    lastT = now;
+
+    // effect timers
+    if (effects.turbo > 0) effects.turbo = Math.max(0, effects.turbo - dt);
+    if (effects.freeze > 0) effects.freeze = Math.max(0, effects.freeze - dt);
+    if (effects.explain > 0) effects.explain = Math.max(0, effects.explain - dt);
+
+    // explain highlight
+    if (effects.explain > 0){
+      for (let i=0;i<GRID_SIZE;i++){
+        if (slots[i]) slotEls[i].classList.add('explainGlow');
+      }
+    } else {
+      for (let i=0;i<GRID_SIZE;i++) slotEls[i].classList.remove('explainGlow');
+    }
+
+    updateHUD();
+
+    // Boss state
+    if (state === 'boss'){
+      if (!boss) return;
+      boss.timeLeftMs -= dt;
+      bossFillEl.style.width = clamp((boss.timeLeftMs / boss.durationMs) * 100, 0, 100) + '%';
+      if (boss.timeLeftMs <= 0) failBoss();
+
+      // main timer continues during boss
+      timerAccum += dt;
+      while (timerAccum >= 1000){
+        timerAccum -= 1000;
+        timeLeft--;
+        if (timeLeft <= 10 && timeLeft > 0) sfxTick();
+        if (timeLeft <= 0){ endGame(); return; }
+      }
+      return;
+    }
+
+    // PLAYING state
+
+    // Timer
+    timerAccum += dt;
+    while (timerAccum >= 1000){
+      timerAccum -= 1000;
+      timeLeft--;
+      if (timeLeft <= 10 && timeLeft > 0) sfxTick();
+      if (timeLeft <= 0){ endGame(); return; }
+
+      // MEGA PR at 30s
+      if (timeLeft === 30 && !megaTriggered){
+        megaTriggered = true;
+        spawnBoss({
+          target: 'APPROVED',
+          prTitle: 'MEGA PR: APPROVED',
+          durationMs: 6500
+        });
+        toast('MEGA PR', 'Type APPROVED to survive.');
+      }
+
+      // FINAL URGENT REQUEST last 10s
+      if (timeLeft === 10 && !finalTriggered){
+        finalTriggered = true;
+        const mw = DEVREL.find(p => p.name === 'martinwoodward') || pick(DEVREL);
+        spawnBoss({
+          person: mw,
+          target: 'LGTM'.repeat(3),
+          prTitle: 'feat: the PR to end all PRs',
+          durationMs: 7500,
+          final: true
+        });
+        toast('FINAL URGENT REQUEST', 'Martin Woodward • LGTM x3');
+      }
+    }
+
+    // Boss interval
+    bossTimerAccum += dt;
+    if (bossTimerAccum >= BOSS_INTERVAL_MS && !bossActive && timeLeft > 10){
+      bossTimerAccum = 0;
+      const cmd = pick(BOSS_COMMANDS);
+      const prTitle = pick([
+        'chore: copilot wrote my commit message',
+        'feat: /explain fixed the bug i created',
+        'fix: trusted the autocomplete, shipped it',
+        'feat: replaced stackoverflow with @terminal',
+        'chore: running "gh copilot" in production'
+      ]);
+      spawnBoss({target: cmd, prTitle});
+    }
+
+    // Spawns
+    spawnAccum += dt;
+    if (spawnAccum >= getSpawnRateMs()){
+      spawnAccum = 0;
+      spawnCard();
+    }
+
+    // Key changes
+    keyChangeAccum += dt;
+    if (keyChangeAccum >= getKeyChangeRateMs()){
+      keyChangeAccum = 0;
+      if (effects.freeze <= 0) changeKeys();
+    }
+
+    // Copilot suggestions
+    maybeSuggestion(dt);
+
+    // Slot timers (freeze pauses)
+    for (let i=0;i<GRID_SIZE;i++){
+      const s = slots[i];
+      if (!s) continue;
+      if (effects.freeze <= 0) s.timeLeftMs -= dt;
+      const pct = clamp((s.timeLeftMs / s.maxTimeMs) * 100, 0, 100);
+      const bar = slotEls[i].querySelector('.timerbar');
+      bar.style.width = pct + '%';
+      bar.className = 'timerbar' + (pct < 25 ? ' urgent' : '');
+      if (s.timeLeftMs <= 0) expireSlot(i);
+    }
+
+    // Small pipeline decay when idle
+    if (Math.random() < 0.01 && state==='playing'){
+      decayPipeline(false);
+    }
+  }
+
+  // --- Input ---
+  document.addEventListener('keydown', (e) => {
+    if (e.repeat) return;
+
+    if (state === 'title'){
+      ensureAudio();
+      const up = e.key.toUpperCase();
+      if (up === 'H') { showScreen('help'); state='help'; clack(); return; }
+      if (up === 'W') { if (!imagesLoaded) return; startGame(true); clack(); return; }
+      if (!imagesLoaded) { clack(); return; }
+      // any other key starts
+      startGame(false);
+      clack();
+      return;
+    }
+
+    if (state === 'help'){
+      ensureAudio();
+      if (e.key === 'Escape') { showScreen('title'); state='title'; clack(); return; }
+      if (e.key.toUpperCase() === 'H') { showScreen('title'); state='title'; clack(); return; }
+      if (e.key.toUpperCase() === 'W') { if (!imagesLoaded) return; startGame(true); clack(); return; }
+      if (e.key === 'Enter') { if (!imagesLoaded) return; startGame(false); clack(); return; }
+      clack();
+      return;
+    }
+
+    if (state === 'gameover'){
+      ensureAudio();
+      if (e.key === 'Enter') { showScreen('title'); state='title'; clack(); return; }
+      if (e.key.toUpperCase() === 'H') { showScreen('help'); state='help'; clack(); return; }
+      clack();
+      return;
+    }
+
+    if (e.key.toUpperCase() === 'M' && state !== 'playing' && state !== 'boss'){
+      audioOn = !audioOn;
+      if (!audioOn) { toast('AUDIO', 'Muted. Press M to unmute.'); }
+      else { ensureAudio(); toast('AUDIO', 'Unmuted.'); }
+      return;
+    }
+
+    ensureAudio();
+    clack();
+
+    if (state === 'boss'){
+      handleBossKey(e.key);
+      return;
+    }
+
+    if (state !== 'playing') return;
+
+    if (e.key === 'Tab'){
+      e.preventDefault();
+      if (acceptSuggestion()){
+        // pipeline bump and tiny reward
+        pumpPipeline(8);
+        updateHUD();
+      }
+      return;
+    }
+
+    const key = (e.key === ';' ? ';' : e.key.toUpperCase());
+    if (!KEYSET.includes(key)) return;
+
+    const idx = bestActiveSlotByKey(key);
+    if (idx >= 0){
+      approveSlot(idx);
+    } else {
+      // WRONG KEY — harsh penalty to stop button mashing
+      const penalty = Math.max(50, Math.floor(score * 0.05));
+      score = Math.max(0, score - penalty);
+      mult = Math.max(1, mult - 1);
+      decayPipeline(true);
+      decayPipeline(true);
+      screenShake();
+      beep(150,0.12,'sawtooth',0.08);
+      const tips = [
+        'Wrong key! -' + penalty + ' points',
+        'Mashing won\'t save you. -' + penalty,
+        'CI rejected that keystroke. -' + penalty,
+        'That key deployed to nowhere. -' + penalty,
+        'Review denied. -' + penalty + ' points',
+      ];
+      setTip(`<span style="color:var(--red)">${tips[Math.floor(Math.random()*tips.length)]}</span>`);
+      updateHUD();
+    }
+  }, {passive:false});
+
+  // --- Init ---
+  createGrid();
+  requestAnimationFrame(gameLoop);
+  preloadImages();
+
+  // Start button click
+  document.getElementById('startBtn').addEventListener('click', () => {
+    if (state === 'title' && imagesLoaded) { ensureAudio(); startGame(false); clack(); }
+  });
+
+  // fun idle tips
+  const idleTips = [
+    'Try pressing the purple key 💜',
+    'AI confidence: 47%',
+    'Pro tip: TAB accepts ghost text for bonus.',
+    'If CI is red, add a README badge (works 12% of the time).',
+    'Boss commands: /approve /ship-it /merge /yolo + LGTM/SGTM'
+  ];
+  setInterval(()=>{
+    if (state !== 'playing' && state !== 'boss') return;
+    if (Math.random() < 0.25) setTip(`<span class="cop">Copilot says:</span> ${escapeHtml(pick(idleTips))}`);
+  }, 2400);
+
+  // --- Title screen typing animation ---
+  const TYPING_PHRASES_ALL = [
+    {text:"Gregg just unleashed a swarm of agents on your repo", who:'dubsopenhub'},
+    {text:"Martin needs the keynote demo approved by 5pm today", who:'martinwoodward'},
+    {text:"Cassidy needs her talk slides reviewed before rehearsal", who:'cassidoo'},
+    {text:"Scott needs the live demo fixed before he goes on stage", who:'shanselman'},
+    {text:"Jeramiah needs this enterprise PR reviewed before the call", who:'jdooley-clt'},
+    {text:"Ashley needs the repo audit done before her flight boards", who:'ashleymcnamara'},
+    {text:"Anisha needs these PRs reviewed before the morning standup", who:'anipind'},
+    {text:"Stacey needs your sign-off on the spec before 3pm", who:'stahaff'},
+    {text:"Kevin needs the open source funding report reviewed by Friday", who:'KevinCrosby'},
+    {text:"Jacqueline needs her review queue cleared before the sprint ends", who:'jaqster'},
+    {text:"Avni needs the curriculum reviewed before the workshop starts", who:'avni'},
+    {text:"Calvin needs the launch blog approved before the tweet goes out", who:'gbcal'},
+    {text:"Lauren needs the press release reviewed before the embargo lifts", who:'LaurenBuchman'},
+    {text:"Aaron needs the cloud architecture PR approved before deploy", who:'aaronpowell'},
+    {text:"Abby needs the community proposal reviewed before the board meeting", who:'abbycabs'},
+    {text:"Amy needs the keynote script reviewed before rehearsal at 2pm", who:'amynic'},
+    {text:"Andrea needs her demo repo checked before her session at 4pm", who:'andreagriffiths11'},
+    {text:"Andrew needs the security patch reviewed before the release window", who:'andrewmflick'},
+    {text:"Anna needs the workshop outline approved by tomorrow morning", who:'annasoracco'},
+    {text:"April G. needs the tutorial signed off before it publishes tonight", who:'aprilgittens'},
+    {text:"Ashley W. needs the sample app reviewed before the meetup tonight", who:'ashleywolf'},
+    {text:"Ayan needs the advocacy roadmap approved before planning kicks off", who:'ayangupt'},
+    {text:"Bethany needs the blog post reviewed before it goes live at noon", who:'BethanyJep'},
+    {text:"Bruno needs the Java migration PR approved before Friday's release", who:'brunoborges'},
+    {text:"Bryan needs the CI pipeline change reviewed before the merge window", who:'bryanrichter'},
+    {text:"Burke needs the VS Code extension reviewed before marketplace publish", who:'burkeholland'},
+    {text:"Carlotta needs the AI workshop reviewed before registration opens", who:'carlotta94c'},
+    {text:"Chris R. needs the DevOps runbook approved before the sprint ends", who:'chrisreddington'},
+    {text:"Chris S. needs the product demo reviewed before the exec meeting", who:'ChrisSfanos'},
+    {text:"Matt needs the migration PR reviewed before the cutover date", who:'codemillmatt'},
+    {text:"Colten needs the docs approved before the release notes ship", who:'coltenwoo'},
+    {text:"Sarah needs the quantum talk reviewed before the CFP closes tonight", who:'crazy4pi314'},
+    {text:"Jeff Fritz needs the live coding PR merged before his stream starts", who:'csharpfritz'},
+    {text:"Cynthia needs the cloud workshop reviewed before the event page goes up", who:'cyz'},
+    {text:"Daisy needs the program strategy reviewed before the offsite Monday", who:'daisychaussee'},
+    {text:"Damian needs the DevOps demo approved before the conference tomorrow", who:'damovisa'},
+    {text:"Dan needs the tutorial reviewed before it gets promoted on socials", who:'DanWahlin'},
+    {text:"Dave B. needs the enterprise demo reviewed before the customer pitch", who:'DaveBurnisonMS'},
+    {text:"Bruno C. needs the AI agent PR approved before the hackathon deadline", who:'elbruno'},
+    {text:"Christina needs the video script reviewed before filming at 1pm", who:'filmgirl'},
+    {text:"Gustavo needs the starter template approved before the workshop Friday", who:'gcordido'},
+    {text:"Christopher needs the Python workshop reviewed before registration opens", who:'GeekTrainer'},
+    {text:"Dave G. needs the IoT demo approved before the trade show setup", who:'gloveboxes'},
+    {text:"Katie H. needs the event checklist reviewed before invites go out today", who:'helmanke'},
+    {text:"Henk needs the computer vision demo approved before the keynote slot", who:'hnky'},
+    {text:"Howard needs the program update reviewed before the all-hands at 4pm", who:'howard-lio'},
+    {text:"Tara needs the exec briefing reviewed before Martin's meeting at 3pm", who:'ItalianInSeattle'},
+    {text:"James S. needs the platform PR reviewed before the sprint review", who:'jamesiri'},
+    {text:"James M. needs the mobile app demo approved before the launch event", who:'jamesmontemagno'},
+    {text:"Julien needs the Spring Boot PR reviewed before the release train", who:'jdubois'},
+    {text:"Jeff L. needs the license compliance check done before the audit", who:'Jeffrey-Luszcz'},
+    {text:"Jeff W. needs the infrastructure PR reviewed before the migration tonight", who:'jeffwilcox'},
+    {text:"Jake needs the data science notebook approved before his talk at 2pm", who:'jhofman'},
+    {text:"Jessica needs the Kubernetes demo reviewed before her session tomorrow", who:'jldeen'},
+    {text:"John needs the full-stack tutorial reviewed before it ships this week", who:'johnpapa'},
+    {text:"Julia needs the student workshop reviewed before orientation starts", who:'juliamuiruri4'},
+    {text:"Justin G. needs the geospatial PR approved before the demo tonight", who:'justingosses'},
+    {text:"Justin Y. needs the Azure Functions PR reviewed before the deploy window", who:'justinyoo'},
+    {text:"JV needs the platform integration approved before go-live Monday", who:'jvverd'},
+    {text:"Jun needs the partnership proposal reviewed before the meeting at noon", who:'jyoungpak'},
+    {text:"Katie L. needs the UX research doc approved before the design review", who:'katiejliu'},
+    {text:"Katie S. needs the community report reviewed before it gets shared out", who:'katiesavage'},
+    {text:"Kedasha needs the Copilot demo reviewed before her talk on Thursday", who:'LadyKerr'},
+    {text:"Lee needs the GitHub Arcade PR approved before game night Friday", who:'leereilly'},
+    {text:"Liam needs the web components talk reviewed before the meetup tonight", who:'liamchampton'},
+    {text:"Gwyneth needs the certification guide reviewed before publish date", who:'madebygps'},
+    {text:"Maya needs the community initiative approved before the launch window", who:'marzann'},
+    {text:"Pj needs the conference talk reviewed before the submission deadline", who:'MetzinAround'},
+    {text:"Morgan needs the event logistics doc approved by end of day Friday", who:'morganersery1'},
+    {text:"Karan needs the international launch plan reviewed before the rollout", who:'mvkaran'},
+    {text:"Olivia needs the social media strategy approved before the campaign starts", who:'olguzzar'},
+    {text:"Pablo needs the regional workshop plan reviewed before venue booking", who:'paverame'},
+    {text:"Phoebe needs the content calendar approved before scheduling starts", who:'phoebequincy'},
+    {text:"Pierce needs the mobile SDK demo reviewed before the beta ships", who:'pierceboggan'},
+    {text:"Renee needs the Python workshop PR approved before the event Saturday", who:'reneenoble'},
+    {text:"David needs the data platform demo reviewed before the showcase", who:'revodavid'},
+    {text:"Ricky needs the frontend PR approved before the sprint closes today", who:'ricky-diep'},
+    {text:"Rory needs the content engineering PR reviewed before publish", who:'roryp'},
+    {text:"Sandra needs the Java tutorial approved before the course starts Monday", who:'SandraAhlgrimm'},
+    {text:"April Y. needs the onboarding doc reviewed before new hire training", who:'scubaninja'},
+    {text:"Seth needs the ML demo approved before the research review at 4pm", who:'sethjuarez'},
+    {text:"Stephanie needs the product launch plan reviewed before kickoff Monday", who:'slincoln75'},
+    {text:"Chris N. needs the beginner tutorial approved before it goes live tonight", who:'softchris'},
+    {text:"Sydney needs the product spec reviewed before the design sprint starts", who:'swilson15'},
+    {text:"Govind needs the partner integration approved before the deadline Friday", who:'thegovind'},
+    {text:"Reynald needs the API demo reviewed before the webinar tomorrow", who:'thereynald'},
+    {text:"Jennifer needs the team operations doc approved before the new quarter", who:'ticachica'},
+    {text:"Anthony S. needs the Python benchmark reviewed before the blog publishes", who:'tonybaloney'},
+    {text:"Candice needs the project timeline approved before the standup at 10am", who:'v-candice'},
+    {text:"Van needs the dashboard prototype reviewed before the demo at 3pm", who:'VanLyHoosier'},
+    {text:"Anthony B. needs the cloud migration plan approved before the cutover", who:'wirelesslife'},
+    {text:"Yoshio needs the Java microservices PR reviewed before the release", who:'yoshioterada'},
+    {text:"Eric needs the tooling update approved before the next sprint starts", who:'2ley'},
+    {text:"Kirkland needs the engagement strategy reviewed before the exec sync", who:'kirkland1118'},
+    {text:"Lcho needs the platform config PR approved before the deploy window", who:'lcho'},
+    {text:"needs the security review approved before the release candidate ships", who:'predatorgoose'},
+  ];
+  // Shuffle ALL phrases on every load — completely random order each time
+  for (let i = TYPING_PHRASES_ALL.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [TYPING_PHRASES_ALL[i], TYPING_PHRASES_ALL[j]] = [TYPING_PHRASES_ALL[j], TYPING_PHRASES_ALL[i]]; }
+  const TYPING_PHRASES = TYPING_PHRASES_ALL;
+
+  // --- Typing animation with faces ---
+  let phraseIdx = 0, charIdx = 0, isDeleting = false;
+  const typedEl = document.getElementById('typedText');
+  const typedAvatar = document.getElementById('typedAvatar');
+
+  function showTypedAvatar(who) {
+    if (!typedAvatar) return;
+    if (!who) { typedAvatar.style.display = 'none'; return; }
+    const person = DEVREL.find(p => p.name === who);
+    if (person) { typedAvatar.src = person.url; typedAvatar.style.display = 'block'; }
+    else { typedAvatar.style.display = 'none'; }
+  }
+
+  function typeLoop() {
+    if (!typedEl) return;
+    const entry = TYPING_PHRASES[phraseIdx];
+    const phrase = entry.text;
+    if (!isDeleting) {
+      if (charIdx === 0) showTypedAvatar(entry.who);
+      charIdx++;
+      typedEl.textContent = phrase.slice(0, charIdx);
+      if (charIdx >= phrase.length) {
+        isDeleting = true;
+        setTimeout(typeLoop, 1600);
+        return;
+      }
+      setTimeout(typeLoop, 30 + Math.random() * 22);
+    } else {
+      charIdx--;
+      typedEl.textContent = phrase.slice(0, charIdx) || '\u00A0';
+      if (charIdx <= 0) {
+        isDeleting = false;
+        showTypedAvatar(null);
+        phraseIdx = (phraseIdx + 1) % TYPING_PHRASES.length;
+        setTimeout(typeLoop, 300);
+        return;
+      }
+      setTimeout(typeLoop, 14);
+    }
+  }
+  // Show first phrase immediately, then start cycling
+  const firstWho = TYPING_PHRASES[0].who;
+  if (firstWho && typedAvatar) {
+    const firstPerson = DEVREL.find(p => p.name === firstWho);
+    if (firstPerson) { typedAvatar.src = firstPerson.url; typedAvatar.style.display = 'block'; }
+  }
+  // Start typing right away
+  setTimeout(typeLoop, 200);
+
+  // --- SECOND typing line (offset, different speed) ---
+  const typedEl2 = document.getElementById('typedText2');
+  const typedAvatar2 = document.getElementById('typedAvatar2');
+  let phraseIdx2 = Math.floor(TYPING_PHRASES.length / 2), charIdx2 = 0, isDeleting2 = false;
+
+  function showTypedAvatar2(who) {
+    if (!typedAvatar2) return;
+    if (!who) { typedAvatar2.style.display = 'none'; return; }
+    const person = DEVREL.find(p => p.name === who);
+    if (person) { typedAvatar2.src = person.url; typedAvatar2.style.display = 'block'; }
+    else { typedAvatar2.style.display = 'none'; }
+  }
+
+  function typeLoop2() {
+    if (!typedEl2) return;
+    const entry = TYPING_PHRASES[phraseIdx2];
+    const phrase = entry.text;
+    if (!isDeleting2) {
+      if (charIdx2 === 0) showTypedAvatar2(entry.who);
+      charIdx2++;
+      typedEl2.textContent = phrase.slice(0, charIdx2);
+      if (charIdx2 >= phrase.length) {
+        isDeleting2 = true;
+        setTimeout(typeLoop2, 2200);
+        return;
+      }
+      setTimeout(typeLoop2, 32 + Math.random() * 22);
+    } else {
+      charIdx2--;
+      typedEl2.textContent = phrase.slice(0, charIdx2) || '\u00A0';
+      if (charIdx2 <= 0) {
+        isDeleting2 = false;
+        showTypedAvatar2(null);
+        phraseIdx2 = (phraseIdx2 + 1) % TYPING_PHRASES.length;
+        setTimeout(typeLoop2, 300);
+        return;
+      }
+      setTimeout(typeLoop2, 14);
+    }
+  }
+  // Start line 2 offset so they cross
+  const firstWho2 = TYPING_PHRASES[phraseIdx2].who;
+  if (firstWho2 && typedAvatar2) {
+    const fp2 = DEVREL.find(p => p.name === firstWho2);
+    if (fp2) { typedAvatar2.src = fp2.url; typedAvatar2.style.display = 'block'; }
+  }
+  setTimeout(typeLoop2, 1400);
+
+  // --- THIRD typing line (offset further, green) ---
+  const typedEl3 = document.getElementById('typedText3');
+  const typedAvatar3 = document.getElementById('typedAvatar3');
+  let phraseIdx3 = Math.floor(TYPING_PHRASES.length * 0.33), charIdx3 = 0, isDeleting3 = false;
+
+  function showTypedAvatar3(who) {
+    if (!typedAvatar3) return;
+    if (!who) { typedAvatar3.style.display = 'none'; return; }
+    const person = DEVREL.find(p => p.name === who);
+    if (person) { typedAvatar3.src = person.url; typedAvatar3.style.display = 'block'; }
+    else { typedAvatar3.style.display = 'none'; }
+  }
+
+  function typeLoop3() {
+    if (!typedEl3) return;
+    const entry = TYPING_PHRASES[phraseIdx3];
+    const phrase = entry.text;
+    if (!isDeleting3) {
+      if (charIdx3 === 0) showTypedAvatar3(entry.who);
+      charIdx3++;
+      typedEl3.textContent = phrase.slice(0, charIdx3);
+      if (charIdx3 >= phrase.length) {
+        isDeleting3 = true;
+        setTimeout(typeLoop3, 1400);
+        return;
+      }
+      setTimeout(typeLoop3, 28 + Math.random() * 20);
+    } else {
+      charIdx3--;
+      typedEl3.textContent = phrase.slice(0, charIdx3) || '\u00A0';
+      if (charIdx3 <= 0) {
+        isDeleting3 = false;
+        showTypedAvatar3(null);
+        phraseIdx3 = (phraseIdx3 + 1) % TYPING_PHRASES.length;
+        setTimeout(typeLoop3, 250);
+        return;
+      }
+      setTimeout(typeLoop3, 16);
+    }
+  }
+  const firstWho3 = TYPING_PHRASES[phraseIdx3].who;
+  if (firstWho3 && typedAvatar3) {
+    const fp3 = DEVREL.find(p => p.name === firstWho3);
+    if (fp3) { typedAvatar3.src = fp3.url; typedAvatar3.style.display = 'block'; }
+  }
+  setTimeout(typeLoop3, 600);
+
+  // --- FOURTH typing line (amber, offset at 3/4) ---
+  const typedEl4 = document.getElementById('typedText4');
+  const typedAvatar4 = document.getElementById('typedAvatar4');
+  let phraseIdx4 = Math.floor(TYPING_PHRASES.length * 0.75), charIdx4 = 0, isDeleting4 = false;
+
+  function showTypedAvatar4(who) {
+    if (!typedAvatar4) return;
+    if (!who) { typedAvatar4.style.display = 'none'; return; }
+    const person = DEVREL.find(p => p.name === who);
+    if (person) { typedAvatar4.src = person.url; typedAvatar4.style.display = 'block'; }
+    else { typedAvatar4.style.display = 'none'; }
+  }
+
+  function typeLoop4() {
+    if (!typedEl4) return;
+    const entry = TYPING_PHRASES[phraseIdx4];
+    const phrase = entry.text;
+    if (!isDeleting4) {
+      if (charIdx4 === 0) showTypedAvatar4(entry.who);
+      charIdx4++;
+      typedEl4.textContent = phrase.slice(0, charIdx4);
+      if (charIdx4 >= phrase.length) {
+        isDeleting4 = true;
+        setTimeout(typeLoop4, 2400);
+        return;
+      }
+      setTimeout(typeLoop4, 32 + Math.random() * 22);
+    } else {
+      charIdx4--;
+      typedEl4.textContent = phrase.slice(0, charIdx4) || '\u00A0';
+      if (charIdx4 <= 0) {
+        isDeleting4 = false;
+        showTypedAvatar4(null);
+        phraseIdx4 = (phraseIdx4 + 1) % TYPING_PHRASES.length;
+        setTimeout(typeLoop4, 300);
+        return;
+      }
+      setTimeout(typeLoop4, 14);
+    }
+  }
+  const firstWho4 = TYPING_PHRASES[phraseIdx4].who;
+  if (firstWho4 && typedAvatar4) {
+    const fp4 = DEVREL.find(p => p.name === firstWho4);
+    if (fp4) { typedAvatar4.src = fp4.url; typedAvatar4.style.display = 'block'; }
+  }
+  setTimeout(typeLoop4, 1900);
+
+  // --- FIFTH typing line (red, offset at 1/6) ---
+  const typedEl5 = document.getElementById('typedText5');
+  const typedAvatar5 = document.getElementById('typedAvatar5');
+  let phraseIdx5 = Math.floor(TYPING_PHRASES.length * 0.17), charIdx5 = 0, isDeleting5 = false;
+  function typeLoop5() {
+    if (!typedEl5) return;
+    const entry = TYPING_PHRASES[phraseIdx5];
+    const phrase = entry.text;
+    if (!isDeleting5) {
+      if (charIdx5 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar5) { typedAvatar5.src = p.url; typedAvatar5.style.display = 'block'; } else if (typedAvatar5) typedAvatar5.style.display = 'none'; }
+      charIdx5++;
+      typedEl5.textContent = phrase.slice(0, charIdx5);
+      if (charIdx5 >= phrase.length) { isDeleting5 = true; setTimeout(typeLoop5, 1200); return; }
+      setTimeout(typeLoop5, 30 + Math.random() * 22);
+    } else {
+      charIdx5--;
+      typedEl5.textContent = phrase.slice(0, charIdx5) || '\u00A0';
+      if (charIdx5 <= 0) { isDeleting5 = false; if (typedAvatar5) typedAvatar5.style.display = 'none'; phraseIdx5 = (phraseIdx5 + 1) % TYPING_PHRASES.length; setTimeout(typeLoop5, 300); return; }
+      setTimeout(typeLoop5, 14);
+    }
+  }
+  setTimeout(typeLoop5, 1100);
+  const fw5 = TYPING_PHRASES[phraseIdx5].who;
+  if (fw5 && typedAvatar5) { const p5 = DEVREL.find(p => p.name === fw5); if (p5) { typedAvatar5.src = p5.url; typedAvatar5.style.display = 'block'; } }
+
+  // --- SIXTH typing line (sky blue, offset at 5/6) ---
+  const typedEl6 = document.getElementById('typedText6');
+  const typedAvatar6 = document.getElementById('typedAvatar6');
+  let phraseIdx6 = Math.floor(TYPING_PHRASES.length * 0.83), charIdx6 = 0, isDeleting6 = false;
+  function typeLoop6() {
+    if (!typedEl6) return;
+    const entry = TYPING_PHRASES[phraseIdx6];
+    const phrase = entry.text;
+    if (!isDeleting6) {
+      if (charIdx6 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar6) { typedAvatar6.src = p.url; typedAvatar6.style.display = 'block'; } else if (typedAvatar6) typedAvatar6.style.display = 'none'; }
+      charIdx6++;
+      typedEl6.textContent = phrase.slice(0, charIdx6);
+      if (charIdx6 >= phrase.length) { isDeleting6 = true; setTimeout(typeLoop6, 1900); return; }
+      setTimeout(typeLoop6, 30 + Math.random() * 22);
+    } else {
+      charIdx6--;
+      typedEl6.textContent = phrase.slice(0, charIdx6) || '\u00A0';
+      if (charIdx6 <= 0) { isDeleting6 = false; if (typedAvatar6) typedAvatar6.style.display = 'none'; phraseIdx6 = (phraseIdx6 + 1) % TYPING_PHRASES.length; setTimeout(typeLoop6, 300); return; }
+      setTimeout(typeLoop6, 14);
+    }
+  }
+  setTimeout(typeLoop6, 2300);
+  const fw6 = TYPING_PHRASES[phraseIdx6].who;
+  if (fw6 && typedAvatar6) { const p6 = DEVREL.find(p => p.name === fw6); if (p6) { typedAvatar6.src = p6.url; typedAvatar6.style.display = 'block'; } }
+
+  </script>
+</body>
+</html>
