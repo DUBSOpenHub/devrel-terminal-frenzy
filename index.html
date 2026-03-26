@@ -1830,7 +1830,7 @@
 
   // --- Title screen typing animation ---
   const TYPING_PHRASES_ALL = [
-    {text:"Gregg's agents are writing code while he's at lunch", who:'dubsopenhub'},
+    {text:"Gregg needs 8 AI agents deployed before the team offsite", who:'dubsopenhub'},
     {text:"Martin needs the keynote demo approved by 5pm today", who:'martinwoodward'},
     {text:"Cassidy needs her talk slides reviewed before rehearsal", who:'cassidoo'},
     {text:"Scott needs the live demo fixed before he goes on stage", who:'shanselman'},
@@ -1862,14 +1862,14 @@
     {text:"Matt needs the migration PR reviewed before the cutover date", who:'codemillmatt'},
     {text:"Colten needs the docs approved before the release notes ship", who:'coltenwoo'},
     {text:"Sarah needs the quantum talk reviewed before the CFP closes tonight", who:'crazy4pi314'},
-    {text:"Jeff Fritz needs the live coding PR merged before his stream starts", who:'csharpfritz'},
+    {text:"Jeff Fritz needs the Copilot live coding PR merged before his stream", who:'csharpfritz'},
     {text:"Cynthia needs the cloud workshop reviewed before the event page goes up", who:'cyz'},
     {text:"Daisy needs the program strategy reviewed before the offsite Monday", who:'daisychaussee'},
     {text:"Damian needs the DevOps demo approved before the conference tomorrow", who:'damovisa'},
     {text:"Dan needs the tutorial reviewed before it gets promoted on socials", who:'DanWahlin'},
     {text:"Dave B. needs the enterprise demo reviewed before the customer pitch", who:'DaveBurnisonMS'},
     {text:"Bruno C. needs the AI agent PR approved before the hackathon deadline", who:'elbruno'},
-    {text:"Christina needs the video script reviewed before filming at 1pm", who:'filmgirl'},
+    {text:"Christina needs the AI demo video script reviewed before filming at 1pm", who:'filmgirl'},
     {text:"Gustavo needs the starter template approved before the workshop Friday", who:'gcordido'},
     {text:"Christopher needs the Python workshop reviewed before registration opens", who:'GeekTrainer'},
     {text:"Dave G. needs the IoT demo approved before the trade show setup", who:'gloveboxes'},
@@ -1892,7 +1892,7 @@
     {text:"Jun needs the partnership proposal reviewed before the meeting at noon", who:'jyoungpak'},
     {text:"Katie L. needs the UX research doc approved before the design review", who:'katiejliu'},
     {text:"Katie S. needs the community report reviewed before it gets shared out", who:'katiesavage'},
-    {text:"Kedasha needs the Copilot demo reviewed before her talk on Thursday", who:'LadyKerr'},
+    {text:"Kedasha needs the Copilot CLI demo reviewed before her talk on Thursday", who:'LadyKerr'},
     {text:"Lee needs the GitHub Arcade PR approved before game night Friday", who:'leereilly'},
     {text:"Liam needs the web components talk reviewed before the meetup tonight", who:'liamchampton'},
     {text:"Gwyneth needs the certification guide reviewed before publish date", who:'madebygps'},
@@ -1910,9 +1910,9 @@
     {text:"Rory needs the content engineering PR reviewed before publish", who:'roryp'},
     {text:"Sandra needs the Java tutorial approved before the course starts Monday", who:'SandraAhlgrimm'},
     {text:"April Y. needs the onboarding doc reviewed before new hire training", who:'scubaninja'},
-    {text:"Seth needs the ML demo approved before the research review at 4pm", who:'sethjuarez'},
+    {text:"Seth needs the Copilot CLI integration tested before the keynote at 4pm", who:'sethjuarez'},
     {text:"Stephanie needs the product launch plan reviewed before kickoff Monday", who:'slincoln75'},
-    {text:"Chris N. needs the beginner tutorial approved before it goes live tonight", who:'softchris'},
+    {text:"Chris N. needs the Copilot CLI beginner guide approved before publish", who:'softchris'},
     {text:"Sydney needs the product spec reviewed before the design sprint starts", who:'swilson15'},
     {text:"Govind needs the partner integration approved before the deadline Friday", who:'thegovind'},
     {text:"Reynald needs the API demo reviewed before the webinar tomorrow", who:'thereynald'},
@@ -1926,17 +1926,6 @@
     {text:"Kirkland needs the engagement strategy reviewed before the exec sync", who:'kirkland1118'},
     {text:"Lcho needs the platform config PR approved before the deploy window", who:'lcho'},
     {text:"needs the security review approved before the release candidate ships", who:'predatorgoose'},
-    {text:"gh copilot suggest just wrote your entire PR description", who:null},
-    {text:"Copilot CLI just auto-completed your career", who:null},
-    {text:"the AI reviewed your code faster than you wrote it", who:null},
-    {text:"gh copilot explain says your code is... creative", who:null},
-    {text:"your agent just opened a PR while you were reading this", who:null},
-    {text:"Copilot CLI: 0 keystrokes. 1 shipped feature.", who:null},
-    {text:"the terminal is the new IDE", who:null},
-    {text:"AI confidence: 94%. your confidence: pending.", who:null},
-    {text:"gh copilot just refactored your refactor", who:null},
-    {text:"the agents are pairing with each other now", who:null},
-    {text:"Copilot CLI shipped 3 PRs while you read the README", who:null},
   ];
   // Shuffle ALL phrases on every load — completely random order each time
   for (let i = TYPING_PHRASES_ALL.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [TYPING_PHRASES_ALL[i], TYPING_PHRASES_ALL[j]] = [TYPING_PHRASES_ALL[j], TYPING_PHRASES_ALL[i]]; }
@@ -2014,7 +2003,7 @@
       typedEl2.textContent = phrase.slice(0, charIdx2);
       if (charIdx2 >= phrase.length) {
         isDeleting2 = true;
-        setTimeout(typeLoop2, 2200);
+        setTimeout(typeLoop2, 800);
         return;
       }
       setTimeout(typeLoop2, 32 + Math.random() * 22);
@@ -2025,7 +2014,7 @@
         isDeleting2 = false;
         showTypedAvatar2(null);
         phraseIdx2 = (phraseIdx2 + 1) % TYPING_PHRASES.length;
-        setTimeout(typeLoop2, 300);
+        setTimeout(typeLoop2, 150);
         return;
       }
       setTimeout(typeLoop2, 14);
@@ -2109,7 +2098,7 @@
       typedEl4.textContent = phrase.slice(0, charIdx4);
       if (charIdx4 >= phrase.length) {
         isDeleting4 = true;
-        setTimeout(typeLoop4, 2400);
+        setTimeout(typeLoop4, 900);
         return;
       }
       setTimeout(typeLoop4, 32 + Math.random() * 22);
@@ -2120,7 +2109,7 @@
         isDeleting4 = false;
         showTypedAvatar4(null);
         phraseIdx4 = (phraseIdx4 + 1) % TYPING_PHRASES.length;
-        setTimeout(typeLoop4, 300);
+        setTimeout(typeLoop4, 150);
         return;
       }
       setTimeout(typeLoop4, 14);
@@ -2170,12 +2159,12 @@
       if (charIdx6 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar6) { typedAvatar6.src = p.url; typedAvatar6.style.display = 'block'; } else if (typedAvatar6) typedAvatar6.style.display = 'none'; }
       charIdx6++;
       typedEl6.textContent = phrase.slice(0, charIdx6);
-      if (charIdx6 >= phrase.length) { isDeleting6 = true; setTimeout(typeLoop6, 1900); return; }
+      if (charIdx6 >= phrase.length) { isDeleting6 = true; setTimeout(typeLoop6, 700); return; }
       setTimeout(typeLoop6, 30 + Math.random() * 22);
     } else {
       charIdx6--;
       typedEl6.textContent = phrase.slice(0, charIdx6) || '\u00A0';
-      if (charIdx6 <= 0) { isDeleting6 = false; if (typedAvatar6) typedAvatar6.style.display = 'none'; phraseIdx6 = (phraseIdx6 + 1) % TYPING_PHRASES.length; setTimeout(typeLoop6, 300); return; }
+      if (charIdx6 <= 0) { isDeleting6 = false; if (typedAvatar6) typedAvatar6.style.display = 'none'; phraseIdx6 = (phraseIdx6 + 1) % TYPING_PHRASES.length; setTimeout(typeLoop6, 150); return; }
       setTimeout(typeLoop6, 14);
     }
   }
