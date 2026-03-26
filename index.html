@@ -1954,10 +1954,10 @@
       typedEl.textContent = phrase.slice(0, charIdx);
       if (charIdx >= phrase.length) {
         isDeleting = true;
-        setTimeout(typeLoop, 1600);
+        setTimeout(typeLoop, 600 + Math.random() * 600);
         return;
       }
-      setTimeout(typeLoop, 30 + Math.random() * 22);
+      setTimeout(typeLoop, 20 + Math.random() * 35);
     } else {
       charIdx--;
       typedEl.textContent = phrase.slice(0, charIdx) || '\u00A0';
@@ -1965,10 +1965,10 @@
         isDeleting = false;
         showTypedAvatar(null);
         phraseIdx = (phraseIdx + 1) % TYPING_PHRASES.length;
-        setTimeout(typeLoop, 300);
+        setTimeout(typeLoop, 100 + Math.random() * 300);
         return;
       }
-      setTimeout(typeLoop, 14);
+      setTimeout(typeLoop, 8 + Math.random() * 14);
     }
   }
   // Show first phrase immediately, then start cycling
@@ -2003,10 +2003,10 @@
       typedEl2.textContent = phrase.slice(0, charIdx2);
       if (charIdx2 >= phrase.length) {
         isDeleting2 = true;
-        setTimeout(typeLoop2, 800);
+        setTimeout(typeLoop2, 600 + Math.random() * 600);
         return;
       }
-      setTimeout(typeLoop2, 32 + Math.random() * 22);
+      setTimeout(typeLoop2, 20 + Math.random() * 35);
     } else {
       charIdx2--;
       typedEl2.textContent = phrase.slice(0, charIdx2) || '\u00A0';
@@ -2014,10 +2014,10 @@
         isDeleting2 = false;
         showTypedAvatar2(null);
         phraseIdx2 = (phraseIdx2 + 1) % TYPING_PHRASES.length;
-        setTimeout(typeLoop2, 150);
+        setTimeout(typeLoop2, 100 + Math.random() * 300);
         return;
       }
-      setTimeout(typeLoop2, 14);
+      setTimeout(typeLoop2, 8 + Math.random() * 14);
     }
   }
   // Start line 2 offset so they cross
@@ -2051,10 +2051,10 @@
       typedEl3.textContent = phrase.slice(0, charIdx3);
       if (charIdx3 >= phrase.length) {
         isDeleting3 = true;
-        setTimeout(typeLoop3, 1400);
+        setTimeout(typeLoop3, 600 + Math.random() * 600);
         return;
       }
-      setTimeout(typeLoop3, 28 + Math.random() * 20);
+      setTimeout(typeLoop3, 20 + Math.random() * 35);
     } else {
       charIdx3--;
       typedEl3.textContent = phrase.slice(0, charIdx3) || '\u00A0';
@@ -2062,10 +2062,10 @@
         isDeleting3 = false;
         showTypedAvatar3(null);
         phraseIdx3 = (phraseIdx3 + 1) % TYPING_PHRASES.length;
-        setTimeout(typeLoop3, 250);
+        setTimeout(typeLoop3, 100 + Math.random() * 300);
         return;
       }
-      setTimeout(typeLoop3, 16);
+      setTimeout(typeLoop3, 8 + Math.random() * 14);
     }
   }
   const firstWho3 = TYPING_PHRASES[phraseIdx3].who;
@@ -2098,10 +2098,10 @@
       typedEl4.textContent = phrase.slice(0, charIdx4);
       if (charIdx4 >= phrase.length) {
         isDeleting4 = true;
-        setTimeout(typeLoop4, 900);
+        setTimeout(typeLoop4, 600 + Math.random() * 600);
         return;
       }
-      setTimeout(typeLoop4, 32 + Math.random() * 22);
+      setTimeout(typeLoop4, 20 + Math.random() * 35);
     } else {
       charIdx4--;
       typedEl4.textContent = phrase.slice(0, charIdx4) || '\u00A0';
@@ -2109,10 +2109,10 @@
         isDeleting4 = false;
         showTypedAvatar4(null);
         phraseIdx4 = (phraseIdx4 + 1) % TYPING_PHRASES.length;
-        setTimeout(typeLoop4, 150);
+        setTimeout(typeLoop4, 100 + Math.random() * 300);
         return;
       }
-      setTimeout(typeLoop4, 14);
+      setTimeout(typeLoop4, 8 + Math.random() * 14);
     }
   }
   const firstWho4 = TYPING_PHRASES[phraseIdx4].who;
@@ -2134,13 +2134,13 @@
       if (charIdx5 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar5) { typedAvatar5.src = p.url; typedAvatar5.style.display = 'block'; } else if (typedAvatar5) typedAvatar5.style.display = 'none'; }
       charIdx5++;
       typedEl5.textContent = phrase.slice(0, charIdx5);
-      if (charIdx5 >= phrase.length) { isDeleting5 = true; setTimeout(typeLoop5, 1200); return; }
-      setTimeout(typeLoop5, 30 + Math.random() * 22);
+      if (charIdx5 >= phrase.length) { isDeleting5 = true; setTimeout(typeLoop5, 600 + Math.random() * 600); return; }
+      setTimeout(typeLoop5, 20 + Math.random() * 35);
     } else {
       charIdx5--;
       typedEl5.textContent = phrase.slice(0, charIdx5) || '\u00A0';
-      if (charIdx5 <= 0) { isDeleting5 = false; if (typedAvatar5) typedAvatar5.style.display = 'none'; phraseIdx5 = (phraseIdx5 + 1) % TYPING_PHRASES.length; setTimeout(typeLoop5, 300); return; }
-      setTimeout(typeLoop5, 14);
+      if (charIdx5 <= 0) { isDeleting5 = false; if (typedAvatar5) typedAvatar5.style.display = 'none'; phraseIdx5 = (phraseIdx5 + 1) % TYPING_PHRASES.length; setTimeout(typeLoop5, 100 + Math.random() * 300); return; }
+      setTimeout(typeLoop5, 8 + Math.random() * 14);
     }
   }
   setTimeout(typeLoop5, 1600);
@@ -2159,13 +2159,13 @@
       if (charIdx6 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar6) { typedAvatar6.src = p.url; typedAvatar6.style.display = 'block'; } else if (typedAvatar6) typedAvatar6.style.display = 'none'; }
       charIdx6++;
       typedEl6.textContent = phrase.slice(0, charIdx6);
-      if (charIdx6 >= phrase.length) { isDeleting6 = true; setTimeout(typeLoop6, 700); return; }
-      setTimeout(typeLoop6, 30 + Math.random() * 22);
+      if (charIdx6 >= phrase.length) { isDeleting6 = true; setTimeout(typeLoop6, 600 + Math.random() * 600); return; }
+      setTimeout(typeLoop6, 20 + Math.random() * 35);
     } else {
       charIdx6--;
       typedEl6.textContent = phrase.slice(0, charIdx6) || '\u00A0';
-      if (charIdx6 <= 0) { isDeleting6 = false; if (typedAvatar6) typedAvatar6.style.display = 'none'; phraseIdx6 = (phraseIdx6 + 1) % TYPING_PHRASES.length; setTimeout(typeLoop6, 150); return; }
-      setTimeout(typeLoop6, 14);
+      if (charIdx6 <= 0) { isDeleting6 = false; if (typedAvatar6) typedAvatar6.style.display = 'none'; phraseIdx6 = (phraseIdx6 + 1) % TYPING_PHRASES.length; setTimeout(typeLoop6, 100 + Math.random() * 300); return; }
+      setTimeout(typeLoop6, 8 + Math.random() * 14);
     }
   }
   setTimeout(typeLoop6, 2000);
