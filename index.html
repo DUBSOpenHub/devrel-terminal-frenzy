@@ -457,8 +457,8 @@
 
     <!-- COUNTDOWN -->
     <div id="countdown" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(10,10,15,.95);display:none;flex-direction:column;align-items:center;justify-content:center">
-      <div id="countdownText" style="font-family:'Roboto',sans-serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:800;color:#c4b5fd;letter-spacing:.02em;margin-bottom:20px;text-align:center"></div>
-      <div id="countdownNum" style="font-family:'Roboto',sans-serif;font-size:clamp(6rem,20vw,12rem);font-weight:900;background:linear-gradient(135deg,#ffffff,#c4b5fd,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1"></div>
+      <div id="countdownText" style="font-family:'Roboto',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#c4b5fd;letter-spacing:.02em;margin-bottom:24px;text-align:center;max-width:600px;line-height:1.4;padding:0 20px"></div>
+      <div id="countdownNum" style="font-family:'Roboto',sans-serif;font-size:clamp(8rem,25vw,14rem);font-weight:900;background:linear-gradient(135deg,#ffffff,#c4b5fd,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1"></div>
     </div>
 
     <div id="toast"></div>
@@ -1558,24 +1558,59 @@
     localStorage.setItem('devrel-frenzy-player', handle);
     ensureAudio();
 
-    // --- COUNTDOWN ---
+    // --- COUNTDOWN with intro jingle ---
     const cdOverlay = document.getElementById('countdown');
     const cdText = document.getElementById('countdownText');
     const cdNum = document.getElementById('countdownNum');
     cdOverlay.style.display = 'flex';
 
+    // Intro jingle — synced to countdown beats
+    function introJingle() {
+      if (!audioCtx) return;
+      const t = audioCtx.currentTime;
+      const vol = 0.07;
+      function n(freq, start, dur, type) {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = type || 'square';
+        o.frequency.setValueAtTime(freq, t + start);
+        g.gain.setValueAtTime(vol, t + start);
+        g.gain.exponentialRampToValueAtTime(0.001, t + start + dur);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(t + start); o.stop(t + start + dur);
+      }
+      // Building energy over 5 beats — each beat syncs with a countdown step
+      // Beat 1 (0.0s) — "5"
+      n(262, 0.0, 0.12); n(330, 0.12, 0.12);
+      n(131, 0.0, 0.3, 'triangle');
+      // Beat 2 (1.0s) — "4"
+      n(330, 1.0, 0.12); n(392, 1.12, 0.12);
+      n(165, 1.0, 0.3, 'triangle');
+      // Beat 3 (2.0s) — "3"
+      n(392, 2.0, 0.12); n(523, 2.12, 0.15);
+      n(196, 2.0, 0.3, 'triangle');
+      // Beat 4 (3.0s) — "2"
+      n(523, 3.0, 0.12); n(659, 3.12, 0.12); n(523, 3.24, 0.12); n(659, 3.36, 0.15);
+      n(262, 3.0, 0.4, 'triangle');
+      // Beat 5 (4.0s) — "1"
+      n(659, 4.0, 0.1); n(784, 4.10, 0.1); n(659, 4.20, 0.1); n(784, 4.30, 0.1); n(880, 4.40, 0.2);
+      n(330, 4.0, 0.5, 'triangle');
+      // GO burst (5.0s)
+      n(1047, 5.0, 0.08); n(1175, 5.08, 0.08); n(1319, 5.16, 0.25);
+      n(523, 5.0, 0.12, 'triangle'); n(659, 5.12, 0.12, 'triangle'); n(784, 5.24, 0.3, 'triangle');
+    }
+    introJingle();
+
     const steps = [
-      {text: 'Get ready to ship', num: '3', beepFreq: 440},
-      {text: 'Press the keys', num: '2', beepFreq: 520},
-      {text: 'Here they come...', num: '1', beepFreq: 620},
-      {text: '', num: 'GO!', beepFreq: 880},
+      {text: 'Hands on the keys...', num: '5', delay: 1000},
+      {text: 'Press the letters and numbers you see', num: '4', delay: 1000},
+      {text: 'Type the Copilot CLI commands', num: '3', delay: 1000},
+      {text: 'Can you survive the DevRel Terminal Frenzy?', num: '2', delay: 1000},
+      {text: "Let's find out!", num: '1', delay: 1000},
+      {text: '', num: 'GO!', delay: 500},
     ];
 
     let step = 0;
-    // Start jingle
-    beep(330, 0.08, 'square', 0.07);
-    setTimeout(() => beep(440, 0.08, 'square', 0.07), 80);
-
     function nextStep() {
       if (step >= steps.length) {
         cdOverlay.style.display = 'none';
@@ -1584,8 +1619,10 @@
         showScreen('play');
         state = 'playing';
         lastT = 0;
-        beep(660, 0.1, 'square', 0.1);
-        setTimeout(() => beep(880, 0.15, 'square', 0.1), 80);
+        // GO burst
+        beep(660, 0.08, 'square', 0.1);
+        setTimeout(() => beep(880, 0.12, 'square', 0.1), 60);
+        setTimeout(() => beep(1047, 0.15, 'square', 0.1), 120);
         return;
       }
       const s = steps[step];
@@ -1599,11 +1636,13 @@
         cdNum.style.transform = 'scale(0.8)';
         cdNum.style.opacity = '0.4';
       }, 50);
-      beep(s.beepFreq, 0.1, 'square', 0.08);
+      // Ascending tone for each number
+      beep(440 + step * 140, 0.12, 'square', 0.08);
       step++;
-      setTimeout(nextStep, step === steps.length ? 600 : 900);
+      setTimeout(nextStep, s.delay);
     }
-    nextStep();
+    // Start countdown synced with first jingle beat
+    setTimeout(nextStep, 100);
   }
 
   function endGame(){
