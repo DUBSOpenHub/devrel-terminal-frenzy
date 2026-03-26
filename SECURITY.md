@@ -12,7 +12,7 @@
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Please report vulnerabilities via [GitHub Security Advisories](https://github.com/DUBSOpenHub/devrel-terminal-frenzy/security/advisories/new) or email the repository owner directly.
+Please report vulnerabilities via [GitHub Security Advisories](https://github.com/DUBSOpenHub/devrel-cli-frenzy/security/advisories/new) or email the repository owner directly.
 
 Include:
 - A description of the vulnerability and its potential impact

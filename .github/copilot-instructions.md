@@ -1,4 +1,4 @@
-# Copilot Instructions — DevRel Terminal Frenzy
+# Copilot Instructions — DevRel CLI Frenzy
 
 This repository contains a single-file HTML5 arcade game (`index.html`).
 
@@ -22,4 +22,4 @@ This repository contains a single-file HTML5 arcade game (`index.html`).
 The `DEVREL` array contains GitHub usernames and avatar URLs for all team members. The `TYPING_PHRASES_ALL` array has a personalized phrase for each person. Both must stay in sync.
 
 ## Hosted at
-- GitHub Pages: `https://dubsopenhub.github.io/devrel-terminal-frenzy/`
+- GitHub Pages: `https://dubsopenhub.github.io/devrel-cli-frenzy/`
