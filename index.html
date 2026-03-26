@@ -2059,19 +2059,42 @@
   let arcadeScores = [];
 
   async function fetchArcade() {
+    // Load local scores first
+    try {
+      const local = JSON.parse(localStorage.getItem(LB_KEY) || '[]');
+      if (local.length) arcadeScores = local;
+    } catch {}
+    // Try remote
     try {
       const res = await fetch(BLOB_URL);
       const data = await res.json();
-      arcadeScores = (data.scores || []).sort((a, b) => b.score - a.score);
-    } catch { arcadeScores = []; }
+      const remote = (data.scores || []);
+      // Merge: combine local + remote, dedupe by handle+score+date, sort
+      const all = [...arcadeScores, ...remote];
+      const seen = new Set();
+      arcadeScores = all.filter(e => {
+        const key = e.handle + '|' + e.score + '|' + (e.date || '');
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      }).sort((a, b) => b.score - a.score);
+      if (arcadeScores.length > 50) arcadeScores.length = 50;
+    } catch {}
+    saveArcadeLocal();
     renderArcade();
+  }
+
+  function saveArcadeLocal() {
+    try { localStorage.setItem(LB_KEY, JSON.stringify(arcadeScores)); } catch {}
   }
 
   async function addArcadeScore(handle, sc) {
     arcadeScores.push({handle, score: sc, date: new Date().toISOString()});
     arcadeScores.sort((a, b) => b.score - a.score);
     if (arcadeScores.length > 50) arcadeScores.length = 50;
+    saveArcadeLocal();
     renderArcade();
+    // Try remote save (may fail due to CORS but that's ok)
     try {
       await fetch(BLOB_URL, {
         method: 'PUT',
