@@ -1337,8 +1337,8 @@
 
     sfxApprove();
 
-    // Copilot logo burst every 5 approvals
-    if (approvals % 5 === 0) copilotBurst(rect.left + rect.width/2, rect.top + rect.height/2);
+    // Copilot logo burst every 3 approvals
+    if (approvals % 3 === 0) copilotBurst(rect.left + rect.width/2, rect.top + rect.height/2);
 
     // achievements
     if (approvals === 1) unlock('first-commit', 'First Commit!', 'Approved your first PR.');
