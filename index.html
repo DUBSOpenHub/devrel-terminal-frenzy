@@ -1566,11 +1566,11 @@
     const cdNum = document.getElementById('countdownNum');
     cdOverlay.style.display = 'flex';
 
-    // Intro jingle — plays independently, not synced to ticks
+    // Intro jingle — synced to countdown beats
     function introJingle() {
       if (!audioCtx) return;
       const t = audioCtx.currentTime;
-      const vol = 0.06;
+      const vol = 0.07;
       function n(freq, start, dur, type) {
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
@@ -1581,19 +1581,24 @@
         o.connect(g); g.connect(audioCtx.destination);
         o.start(t + start); o.stop(t + start + dur);
       }
-      // Smooth ascending melody
-      n(262, 0.0, 0.15);  n(330, 0.18, 0.15);  n(392, 0.36, 0.2);
-      n(330, 0.6, 0.12);  n(392, 0.75, 0.12);  n(523, 0.9, 0.25);
-      n(440, 1.2, 0.12);  n(523, 1.35, 0.12);  n(659, 1.5, 0.3);
-      n(523, 1.85, 0.1);  n(659, 1.98, 0.1);   n(784, 2.1, 0.12);
-      n(880, 2.25, 0.1);  n(784, 2.38, 0.1);   n(880, 2.5, 0.12);
-      n(1047, 2.65, 0.35);
-      // Bass
-      n(131, 0.0, 0.5, 'triangle');
-      n(165, 0.6, 0.5, 'triangle');
-      n(196, 1.2, 0.5, 'triangle');
-      n(262, 1.85, 0.4, 'triangle');
-      n(330, 2.5, 0.5, 'triangle');
+      // Beat 1 (0.0s) — "5"
+      n(262, 0.0, 0.12); n(330, 0.12, 0.12);
+      n(131, 0.0, 0.3, 'triangle');
+      // Beat 2 (1.0s) — "4"
+      n(330, 1.0, 0.12); n(392, 1.12, 0.12);
+      n(165, 1.0, 0.3, 'triangle');
+      // Beat 3 (2.0s) — "3"
+      n(392, 2.0, 0.12); n(523, 2.12, 0.15);
+      n(196, 2.0, 0.3, 'triangle');
+      // Beat 4 (3.0s) — "2"
+      n(523, 3.0, 0.12); n(659, 3.12, 0.12); n(523, 3.24, 0.12); n(659, 3.36, 0.15);
+      n(262, 3.0, 0.4, 'triangle');
+      // Beat 5 (4.0s) — "1"
+      n(659, 4.0, 0.1); n(784, 4.10, 0.1); n(659, 4.20, 0.1); n(784, 4.30, 0.1); n(880, 4.40, 0.2);
+      n(330, 4.0, 0.5, 'triangle');
+      // GO burst (5.0s)
+      n(1047, 5.0, 0.08); n(1175, 5.08, 0.08); n(1319, 5.16, 0.25);
+      n(523, 5.0, 0.12, 'triangle'); n(659, 5.12, 0.12, 'triangle'); n(784, 5.24, 0.3, 'triangle');
     }
     introJingle();
 
