@@ -243,7 +243,7 @@
     .lb-row:first-child{border-color:rgba(210,153,34,.3);background:rgba(210,153,34,.06)}
     .lb-pos{font-size:14px;font-weight:900;color:#4a4a6a;min-width:24px;text-align:center}
     .lb-row:first-child .lb-pos{color:#d29922}
-    .lb-avatar{width:30px;height:30px;border-radius:50%;border:2px solid rgba(124,58,237,.3);object-fit:cover}
+    .lb-avatar{width:40px;height:40px;border-radius:50%;border:2px solid rgba(124,58,237,.3);object-fit:cover}
     .lb-row:first-child .lb-avatar{border-color:rgba(210,153,34,.5)}
     .lb-name{flex:1;font-size:13px;color:#c4b5fd;font-weight:600}
     .lb-score{font-size:14px;font-weight:900;color:#e2e2f0}
@@ -281,32 +281,32 @@
         <!-- Typing animations with faces - 4 LINES crossing -->
         <div style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:4px;margin-bottom:24px">
           <div style="font-size:clamp(.85rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar" style="width:30px;height:30px;border-radius:50%;border:2px solid rgba(124,58,237,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(124,58,237,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText" style="color:#06b6d4;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor"></span>
           </div>
           <div style="font-size:clamp(.85rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar2" style="width:30px;height:30px;border-radius:50%;border:2px solid rgba(6,182,212,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar2" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(6,182,212,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText2" style="color:#a78bfa;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#a78bfa"></span>
           </div>
           <div style="font-size:clamp(.85rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar3" style="width:30px;height:30px;border-radius:50%;border:2px solid rgba(16,185,129,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar3" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(16,185,129,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText3" style="color:#10b981;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#10b981"></span>
           </div>
           <div style="font-size:clamp(.85rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar4" style="width:30px;height:30px;border-radius:50%;border:2px solid rgba(245,158,11,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar4" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(245,158,11,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText4" style="color:#f59e0b;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#f59e0b"></span>
           </div>
           <div style="font-size:clamp(.85rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar5" style="width:30px;height:30px;border-radius:50%;border:2px solid rgba(239,68,68,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar5" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(239,68,68,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText5" style="color:#ef4444;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#ef4444"></span>
           </div>
           <div style="font-size:clamp(.85rem,1.8vw,1rem);color:#a0a0c0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar6" style="width:30px;height:30px;border-radius:50%;border:2px solid rgba(56,189,248,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar6" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(56,189,248,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText6" style="color:#38bdf8;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#38bdf8"></span>
           </div>
@@ -317,9 +317,8 @@
           <!-- Subtle glow accent -->
           <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(124,58,237,.08);filter:blur(40px);pointer-events:none"></div>
           <div style="font-size:15px;color:#a0a0c0;line-height:1.7;margin-bottom:20px">
-            Everyone on DevRel just dropped their requests on you at once.<br>
-            The only way through? <b style="color:#e2e2f0">The GitHub Copilot CLI.</b><br>
-            You've got <b style="color:#d29922">60 seconds</b>. Can you survive the terminal frenzy?
+            DevRel is shipping at full speed. Everyone has something to get done.<br>
+            With the <b style="color:#e2e2f0">GitHub Copilot CLI</b>, can you help them clear it all in <b style="color:#d29922">60 seconds</b>?
           </div>
           <div style="display:flex;flex-direction:column;gap:16px;text-align:left">
             <!-- Step 1 -->
@@ -1970,102 +1969,102 @@
 
   // --- Title screen typing animation ---
   const TYPING_PHRASES_ALL = [
-    {text:"Gregg needs 8 AI agents deployed before the team offsite", who:'dubsopenhub'},
-    {text:"Martin needs the keynote demo approved by 5pm today", who:'martinwoodward'},
-    {text:"Cassidy needs her talk slides reviewed before rehearsal", who:'cassidoo'},
-    {text:"Scott needs the live demo fixed before he goes on stage", who:'shanselman'},
-    {text:"Jeramiah needs this enterprise PR reviewed before the call", who:'jdooley-clt'},
-    {text:"Ashley needs the repo audit done before her flight boards", who:'ashleymcnamara'},
-    {text:"Anisha needs these PRs reviewed before the morning standup", who:'anipind'},
-    {text:"Stacey needs your sign-off on the spec before 3pm", who:'stahaff'},
-    {text:"Kevin needs the open source funding report reviewed by Friday", who:'KevinCrosby'},
-    {text:"Jacqueline needs her review queue cleared before the sprint ends", who:'jaqster'},
-    {text:"Avni needs the curriculum reviewed before the workshop starts", who:'avni'},
-    {text:"Calvin needs the launch blog approved before the tweet goes out", who:'gbcal'},
-    {text:"Lauren needs the press release reviewed before the embargo lifts", who:'LaurenBuchman'},
-    {text:"Aaron needs the cloud architecture PR approved before deploy", who:'aaronpowell'},
-    {text:"Abby needs the community proposal reviewed before the board meeting", who:'abbycabs'},
-    {text:"Amy needs the keynote script reviewed before rehearsal at 2pm", who:'amynic'},
-    {text:"Andrea needs her demo repo checked before her session at 4pm", who:'andreagriffiths11'},
-    {text:"Andrew needs the security patch reviewed before the release window", who:'andrewmflick'},
-    {text:"Anna needs the workshop outline approved by tomorrow morning", who:'annasoracco'},
-    {text:"April G. needs the tutorial signed off before it publishes tonight", who:'aprilgittens'},
-    {text:"Ashley W. needs the sample app reviewed before the meetup tonight", who:'ashleywolf'},
-    {text:"Ayan needs the advocacy roadmap approved before planning kicks off", who:'ayangupt'},
-    {text:"Bethany needs the blog post reviewed before it goes live at noon", who:'BethanyJep'},
-    {text:"Bruno needs the Java migration PR approved before Friday's release", who:'brunoborges'},
-    {text:"Bryan needs the CI pipeline change reviewed before the merge window", who:'bryanrichter'},
-    {text:"Burke needs the VS Code extension reviewed before marketplace publish", who:'burkeholland'},
-    {text:"Carlotta needs the AI workshop reviewed before registration opens", who:'carlotta94c'},
-    {text:"Chris R. needs the DevOps runbook approved before the sprint ends", who:'chrisreddington'},
-    {text:"Chris S. needs the product demo reviewed before the exec meeting", who:'ChrisSfanos'},
-    {text:"Matt needs the migration PR reviewed before the cutover date", who:'codemillmatt'},
-    {text:"Colten needs the docs approved before the release notes ship", who:'coltenwoo'},
-    {text:"Sarah needs the quantum talk reviewed before the CFP closes tonight", who:'crazy4pi314'},
-    {text:"Jeff Fritz needs the Copilot live coding PR merged before his stream", who:'csharpfritz'},
-    {text:"Cynthia needs the cloud workshop reviewed before the event page goes up", who:'cyz'},
-    {text:"Daisy needs the program strategy reviewed before the offsite Monday", who:'daisychaussee'},
-    {text:"Damian needs the DevOps demo approved before the conference tomorrow", who:'damovisa'},
-    {text:"Dan needs the tutorial reviewed before it gets promoted on socials", who:'DanWahlin'},
-    {text:"Dave B. needs the enterprise demo reviewed before the customer pitch", who:'DaveBurnisonMS'},
-    {text:"Bruno C. needs the AI agent PR approved before the hackathon deadline", who:'elbruno'},
-    {text:"Christina needs the AI demo video script reviewed before filming at 1pm", who:'filmgirl'},
-    {text:"Gustavo needs the starter template approved before the workshop Friday", who:'gcordido'},
-    {text:"Christopher needs the Python workshop reviewed before registration opens", who:'GeekTrainer'},
-    {text:"Dave G. needs the IoT demo approved before the trade show setup", who:'gloveboxes'},
-    {text:"Katie H. needs the event checklist reviewed before invites go out today", who:'helmanke'},
-    {text:"Henk needs the computer vision demo approved before the keynote slot", who:'hnky'},
-    {text:"Howard needs the program update reviewed before the all-hands at 4pm", who:'howard-lio'},
-    {text:"Tara needs the exec briefing reviewed before Martin's meeting at 3pm", who:'ItalianInSeattle'},
-    {text:"James S. needs the platform PR reviewed before the sprint review", who:'jamesiri'},
-    {text:"James M. needs the mobile app demo approved before the launch event", who:'jamesmontemagno'},
-    {text:"Julien needs the Spring Boot PR reviewed before the release train", who:'jdubois'},
-    {text:"Jeff L. needs the license compliance check done before the audit", who:'Jeffrey-Luszcz'},
-    {text:"Jeff W. needs the infrastructure PR reviewed before the migration tonight", who:'jeffwilcox'},
-    {text:"Jake needs the data science notebook approved before his talk at 2pm", who:'jhofman'},
-    {text:"Jessica needs the Kubernetes demo reviewed before her session tomorrow", who:'jldeen'},
-    {text:"John needs the full-stack tutorial reviewed before it ships this week", who:'johnpapa'},
-    {text:"Julia needs the student workshop reviewed before orientation starts", who:'juliamuiruri4'},
-    {text:"Justin G. needs the geospatial PR approved before the demo tonight", who:'justingosses'},
-    {text:"Justin Y. needs the Azure Functions PR reviewed before the deploy window", who:'justinyoo'},
-    {text:"JV needs the platform integration approved before go-live Monday", who:'jvverd'},
-    {text:"Jun needs the partnership proposal reviewed before the meeting at noon", who:'jyoungpak'},
-    {text:"Katie L. needs the UX research doc approved before the design review", who:'katiejliu'},
-    {text:"Katie S. needs the community report reviewed before it gets shared out", who:'katiesavage'},
-    {text:"Kedasha needs the Copilot CLI demo reviewed before her talk on Thursday", who:'LadyKerr'},
-    {text:"Lee needs the GitHub Arcade PR approved before game night Friday", who:'leereilly'},
-    {text:"Liam needs the web components talk reviewed before the meetup tonight", who:'liamchampton'},
-    {text:"Gwyneth needs the certification guide reviewed before publish date", who:'madebygps'},
-    {text:"Maya needs the community initiative approved before the launch window", who:'marzann'},
-    {text:"Pj needs the conference talk reviewed before the submission deadline", who:'MetzinAround'},
-    {text:"Morgan needs the event logistics doc approved by end of day Friday", who:'morganersery1'},
-    {text:"Karan needs the international launch plan reviewed before the rollout", who:'mvkaran'},
-    {text:"Olivia needs the social media strategy approved before the campaign starts", who:'olguzzar'},
-    {text:"Pablo needs the regional workshop plan reviewed before venue booking", who:'paverame'},
-    {text:"Phoebe needs the content calendar approved before scheduling starts", who:'phoebequincy'},
-    {text:"Pierce needs the mobile SDK demo reviewed before the beta ships", who:'pierceboggan'},
-    {text:"Renee needs the Python workshop PR approved before the event Saturday", who:'reneenoble'},
-    {text:"David needs the data platform demo reviewed before the showcase", who:'revodavid'},
-    {text:"Ricky needs the frontend PR approved before the sprint closes today", who:'ricky-diep'},
-    {text:"Rory needs the content engineering PR reviewed before publish", who:'roryp'},
-    {text:"Sandra needs the Java tutorial approved before the course starts Monday", who:'SandraAhlgrimm'},
-    {text:"April Y. needs the onboarding doc reviewed before new hire training", who:'scubaninja'},
-    {text:"Seth needs the Copilot CLI integration tested before the keynote at 4pm", who:'sethjuarez'},
-    {text:"Stephanie needs the product launch plan reviewed before kickoff Monday", who:'slincoln75'},
-    {text:"Chris N. needs the Copilot CLI beginner guide approved before publish", who:'softchris'},
-    {text:"Sydney needs the product spec reviewed before the design sprint starts", who:'swilson15'},
-    {text:"Govind needs the partner integration approved before the deadline Friday", who:'thegovind'},
-    {text:"Reynald needs the API demo reviewed before the webinar tomorrow", who:'thereynald'},
-    {text:"Jennifer needs the team operations doc approved before the new quarter", who:'ticachica'},
-    {text:"Anthony S. needs the Python benchmark reviewed before the blog publishes", who:'tonybaloney'},
-    {text:"Candice needs the project timeline approved before the standup at 10am", who:'v-candice'},
-    {text:"Van needs the dashboard prototype reviewed before the demo at 3pm", who:'VanLyHoosier'},
-    {text:"Anthony B. needs the cloud migration plan approved before the cutover", who:'wirelesslife'},
-    {text:"Yoshio needs the Java microservices PR reviewed before the release", who:'yoshioterada'},
-    {text:"Eric needs the tooling update approved before the next sprint starts", who:'2ley'},
-    {text:"Kirkland needs the engagement strategy reviewed before the exec sync", who:'kirkland1118'},
-    {text:"Lcho needs the platform config PR approved before the deploy window", who:'lcho'},
-    {text:"needs the security review approved before the release candidate ships", who:'predatorgoose'},
+    {text:"Gregg needs to deploy 8 AI agents before the team offsite", who:'dubsopenhub'},
+    {text:"Martin needs to ship the keynote demo by 5pm today", who:'martinwoodward'},
+    {text:"Cassidy needs to finalize her talk slides before rehearsal", who:'cassidoo'},
+    {text:"Scott needs to fix the live demo before he goes on stage", who:'shanselman'},
+    {text:"Jeramiah needs to close this enterprise PR before the call", who:'jdooley-clt'},
+    {text:"Ashley needs to finish the repo audit before her flight boards", who:'ashleymcnamara'},
+    {text:"Anisha needs to merge these PRs before the morning standup", who:'anipind'},
+    {text:"Stacey needs to sign off on the spec before 3pm", who:'stahaff'},
+    {text:"Kevin needs to finalize the open source funding report by Friday", who:'KevinCrosby'},
+    {text:"Jacqueline needs to clear her review queue before the sprint ends", who:'jaqster'},
+    {text:"Avni needs to finish the curriculum before the workshop starts", who:'avni'},
+    {text:"Calvin needs to publish the launch blog before the tweet goes out", who:'gbcal'},
+    {text:"Lauren needs to ship the press release before the embargo lifts", who:'LaurenBuchman'},
+    {text:"Aaron needs to deploy the cloud architecture PR today", who:'aaronpowell'},
+    {text:"Abby needs to submit the community proposal before the board meeting", who:'abbycabs'},
+    {text:"Amy needs to finalize the keynote script before rehearsal at 2pm", who:'amynic'},
+    {text:"Andrea needs to test her demo repo before her session at 4pm", who:'andreagriffiths11'},
+    {text:"Andrew needs to ship the security patch before the release window", who:'andrewmflick'},
+    {text:"Anna needs to finalize the workshop outline by tomorrow morning", who:'annasoracco'},
+    {text:"April G. needs to publish the tutorial before tonight", who:'aprilgittens'},
+    {text:"Ashley W. needs to finish the sample app before the meetup tonight", who:'ashleywolf'},
+    {text:"Ayan needs to lock down the advocacy roadmap before planning kicks off", who:'ayangupt'},
+    {text:"Bethany needs to publish her blog post before noon", who:'BethanyJep'},
+    {text:"Bruno needs to merge the Java migration PR before Friday's release", who:'brunoborges'},
+    {text:"Bryan needs to ship the CI pipeline change before the merge window", who:'bryanrichter'},
+    {text:"Burke needs to publish the VS Code extension to marketplace", who:'burkeholland'},
+    {text:"Carlotta needs to finalize the AI workshop before registration opens", who:'carlotta94c'},
+    {text:"Chris R. needs to ship the DevOps runbook before the sprint ends", who:'chrisreddington'},
+    {text:"Chris S. needs to finish the product demo before the exec meeting", who:'ChrisSfanos'},
+    {text:"Matt needs to merge the migration PR before the cutover date", who:'codemillmatt'},
+    {text:"Colten needs to ship the docs before the release notes go out", who:'coltenwoo'},
+    {text:"Sarah needs to submit the quantum talk before the CFP closes tonight", who:'crazy4pi314'},
+    {text:"Jeff Fritz needs to merge the Copilot live coding PR before his stream", who:'csharpfritz'},
+    {text:"Cynthia needs to finalize the cloud workshop before the event page goes up", who:'cyz'},
+    {text:"Daisy needs to finish the program strategy before the offsite Monday", who:'daisychaussee'},
+    {text:"Damian needs to ship the DevOps demo before the conference tomorrow", who:'damovisa'},
+    {text:"Dan needs to publish the tutorial before it gets promoted on socials", who:'DanWahlin'},
+    {text:"Dave B. needs to finish the enterprise demo before the customer pitch", who:'DaveBurnisonMS'},
+    {text:"Bruno C. needs to ship the AI agent PR before the hackathon deadline", who:'elbruno'},
+    {text:"Christina needs to finalize the AI demo video script before filming at 1pm", who:'filmgirl'},
+    {text:"Gustavo needs to ship the starter template before the workshop Friday", who:'gcordido'},
+    {text:"Christopher needs to publish the Python workshop before registration opens", who:'GeekTrainer'},
+    {text:"Dave G. needs to ship the IoT demo before the trade show setup", who:'gloveboxes'},
+    {text:"Katie H. needs to finalize the event checklist before invites go out today", who:'helmanke'},
+    {text:"Henk needs to ship the computer vision demo before the keynote slot", who:'hnky'},
+    {text:"Howard needs to finish the program update before the all-hands at 4pm", who:'howard-lio'},
+    {text:"Tara needs to finalize the exec briefing before Martin's meeting at 3pm", who:'ItalianInSeattle'},
+    {text:"James S. needs to merge the platform PR before the sprint review", who:'jamesiri'},
+    {text:"James M. needs to ship the mobile app demo before the launch event", who:'jamesmontemagno'},
+    {text:"Julien needs to merge the Spring Boot PR before the release train", who:'jdubois'},
+    {text:"Jeff L. needs to complete the license compliance check before the audit", who:'Jeffrey-Luszcz'},
+    {text:"Jeff W. needs to ship the infrastructure PR before the migration tonight", who:'jeffwilcox'},
+    {text:"Jake needs to finish the data science notebook before his talk at 2pm", who:'jhofman'},
+    {text:"Jessica needs to test the Kubernetes demo before her session tomorrow", who:'jldeen'},
+    {text:"John needs to publish the full-stack tutorial before it ships this week", who:'johnpapa'},
+    {text:"Julia needs to finalize the student workshop before orientation starts", who:'juliamuiruri4'},
+    {text:"Justin G. needs to deploy the geospatial PR before the demo tonight", who:'justingosses'},
+    {text:"Justin Y. needs to ship the Azure Functions PR before the deploy window", who:'justinyoo'},
+    {text:"JV needs to launch the platform integration before go-live Monday", who:'jvverd'},
+    {text:"Jun needs to finalize the partnership proposal before the meeting at noon", who:'jyoungpak'},
+    {text:"Katie L. needs to finish the UX research doc before the design review", who:'katiejliu'},
+    {text:"Katie S. needs to publish the community report before it gets shared out", who:'katiesavage'},
+    {text:"Kedasha needs to ship the Copilot CLI demo before her talk on Thursday", who:'LadyKerr'},
+    {text:"Lee needs to merge the GitHub Arcade PR before game night Friday", who:'leereilly'},
+    {text:"Liam needs to finalize the web components talk before the meetup tonight", who:'liamchampton'},
+    {text:"Gwyneth needs to publish the certification guide before the deadline", who:'madebygps'},
+    {text:"Maya needs to launch the community initiative before the window closes", who:'marzann'},
+    {text:"Pj needs to submit the conference talk before the deadline", who:'MetzinAround'},
+    {text:"Morgan needs to finalize the event logistics doc by end of day Friday", who:'morganersery1'},
+    {text:"Karan needs to ship the international launch plan before the rollout", who:'mvkaran'},
+    {text:"Olivia needs to launch the social media strategy before the campaign starts", who:'olguzzar'},
+    {text:"Pablo needs to finalize the regional workshop plan before venue booking", who:'paverame'},
+    {text:"Phoebe needs to lock down the content calendar before scheduling starts", who:'phoebequincy'},
+    {text:"Pierce needs to ship the mobile SDK demo before the beta goes out", who:'pierceboggan'},
+    {text:"Renee needs to merge the Python workshop PR before the event Saturday", who:'reneenoble'},
+    {text:"David needs to finish the data platform demo before the showcase", who:'revodavid'},
+    {text:"Ricky needs to merge the frontend PR before the sprint closes today", who:'ricky-diep'},
+    {text:"Rory needs to publish the content engineering PR before it goes live", who:'roryp'},
+    {text:"Sandra needs to ship the Java tutorial before the course starts Monday", who:'SandraAhlgrimm'},
+    {text:"April Y. needs to finalize the onboarding doc before new hire training", who:'scubaninja'},
+    {text:"Seth needs to test the Copilot CLI integration before the keynote at 4pm", who:'sethjuarez'},
+    {text:"Stephanie needs to finish the product launch plan before kickoff Monday", who:'slincoln75'},
+    {text:"Chris N. needs to publish the Copilot CLI beginner guide today", who:'softchris'},
+    {text:"Sydney needs to finalize the product spec before the design sprint starts", who:'swilson15'},
+    {text:"Govind needs to ship the partner integration before the deadline Friday", who:'thegovind'},
+    {text:"Reynald needs to finish the API demo before the webinar tomorrow", who:'thereynald'},
+    {text:"Jennifer needs to finalize the team operations doc before the new quarter", who:'ticachica'},
+    {text:"Anthony S. needs to run the Python benchmark before the blog publishes", who:'tonybaloney'},
+    {text:"Candice needs to lock down the project timeline before the standup at 10am", who:'v-candice'},
+    {text:"Van needs to finish the dashboard prototype before the demo at 3pm", who:'VanLyHoosier'},
+    {text:"Anthony B. needs to ship the cloud migration plan before the cutover", who:'wirelesslife'},
+    {text:"Yoshio needs to merge the Java microservices PR before the release", who:'yoshioterada'},
+    {text:"Eric needs to ship the tooling update before the next sprint starts", who:'2ley'},
+    {text:"Kirkland needs to finalize the engagement strategy before the exec sync", who:'kirkland1118'},
+    {text:"Lcho needs to deploy the platform config PR before the deploy window", who:'lcho'},
+    {text:"needs to ship the security review before the release candidate goes out", who:'predatorgoose'},
   ];
   // Shuffle ALL phrases on every load — completely random order each time
   for (let i = TYPING_PHRASES_ALL.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [TYPING_PHRASES_ALL[i], TYPING_PHRASES_ALL[j]] = [TYPING_PHRASES_ALL[j], TYPING_PHRASES_ALL[i]]; }
