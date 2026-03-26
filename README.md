@@ -41,7 +41,7 @@ That's it. 60 seconds. How many can you clear?
 - ⭐ **Power-up cards** → double points, freeze timers, auto-approve
 - 🔥 **Urgent requests** → type `/approve`, `LGTM`, `/ship-it`, or `/yolo` for big bonuses
 - ❌ **Wrong key** → lose points and break your combo
-- 👑 **Final request** → Martin Woodward appears in the last 10 seconds. Type LGTM three times.
+- 👑 **Final request** → Martin Woodward appears in the last 10 seconds. Type the full Copilot CLI command.
 
 ### Ranks
 
