@@ -1978,7 +1978,7 @@
     if (firstPerson) { typedAvatar.src = firstPerson.url; typedAvatar.style.display = 'block'; }
   }
   // Start typing right away
-  setTimeout(typeLoop, 200);
+  setTimeout(typeLoop, 0);
 
   // --- SECOND typing line (offset, different speed) ---
   const typedEl2 = document.getElementById('typedText2');
@@ -2026,7 +2026,7 @@
     const fp2 = DEVREL.find(p => p.name === firstWho2);
     if (fp2) { typedAvatar2.src = fp2.url; typedAvatar2.style.display = 'block'; }
   }
-  setTimeout(typeLoop2, 1400);
+  setTimeout(typeLoop2, 400);
 
   // --- THIRD typing line (offset further, green) ---
   const typedEl3 = document.getElementById('typedText3');
@@ -2073,7 +2073,7 @@
     const fp3 = DEVREL.find(p => p.name === firstWho3);
     if (fp3) { typedAvatar3.src = fp3.url; typedAvatar3.style.display = 'block'; }
   }
-  setTimeout(typeLoop3, 600);
+  setTimeout(typeLoop3, 800);
 
   // --- FOURTH typing line (amber, offset at 3/4) ---
   const typedEl4 = document.getElementById('typedText4');
@@ -2120,7 +2120,7 @@
     const fp4 = DEVREL.find(p => p.name === firstWho4);
     if (fp4) { typedAvatar4.src = fp4.url; typedAvatar4.style.display = 'block'; }
   }
-  setTimeout(typeLoop4, 1900);
+  setTimeout(typeLoop4, 1200);
 
   // --- FIFTH typing line (red, offset at 1/6) ---
   const typedEl5 = document.getElementById('typedText5');
@@ -2143,7 +2143,7 @@
       setTimeout(typeLoop5, 14);
     }
   }
-  setTimeout(typeLoop5, 1100);
+  setTimeout(typeLoop5, 1600);
   const fw5 = TYPING_PHRASES[phraseIdx5].who;
   if (fw5 && typedAvatar5) { const p5 = DEVREL.find(p => p.name === fw5); if (p5) { typedAvatar5.src = p5.url; typedAvatar5.style.display = 'block'; } }
 
@@ -2168,7 +2168,7 @@
       setTimeout(typeLoop6, 14);
     }
   }
-  setTimeout(typeLoop6, 2300);
+  setTimeout(typeLoop6, 2000);
   const fw6 = TYPING_PHRASES[phraseIdx6].who;
   if (fw6 && typedAvatar6) { const p6 = DEVREL.find(p => p.name === fw6); if (p6) { typedAvatar6.src = p6.url; typedAvatar6.style.display = 'block'; } }
 
