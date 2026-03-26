@@ -1715,9 +1715,9 @@
         const mw = DEVREL.find(p => p.name === 'martinwoodward') || pick(DEVREL);
         spawnBoss({
           person: mw,
-          target: 'gh copilot merge --approve --ship-it LGTM',
+          target: 'gh copilot merge --approve LGTM',
           prTitle: 'feat: the PR to end all PRs',
-          durationMs: 4500,
+          durationMs: 5500,
           final: true
         });
         toast('FINAL URGENT REQUEST', 'Martin Woodward • type the full command!');
