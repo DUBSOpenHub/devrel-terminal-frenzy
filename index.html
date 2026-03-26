@@ -427,7 +427,9 @@
           <div class="stats" id="finalStats"></div>
           <div class="rank" id="finalRank">Junior Dev</div>
 
-          <div class="again" id="againLine">Press Enter to play again</div>
+          <div style="margin-top:16px">
+            <button id="playAgainBtn" class="start-btn">▶ Play Again</button>
+          </div>
       </div>
     </div>
 
@@ -1812,6 +1814,10 @@
   // Start button click
   document.getElementById('startBtn').addEventListener('click', () => {
     if (state === 'title' && imagesLoaded) { ensureAudio(); startGame(false); clack(); }
+  });
+
+  document.getElementById('playAgainBtn').addEventListener('click', () => {
+    if (state === 'gameover') { ensureAudio(); showScreen('title'); state = 'title'; clack(); }
   });
 
   // fun idle tips
