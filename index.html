@@ -1829,7 +1829,7 @@
 
   // --- Title screen typing animation ---
   const TYPING_PHRASES_ALL = [
-    {text:"Gregg just unleashed a swarm of agents on your repo", who:'dubsopenhub'},
+    {text:"Gregg's agents are writing code while he's at lunch", who:'dubsopenhub'},
     {text:"Martin needs the keynote demo approved by 5pm today", who:'martinwoodward'},
     {text:"Cassidy needs her talk slides reviewed before rehearsal", who:'cassidoo'},
     {text:"Scott needs the live demo fixed before he goes on stage", who:'shanselman'},
@@ -2174,12 +2174,8 @@
   // --- Easter egg: click "Frenzy" for zap ---
   document.getElementById('frenzyZap').addEventListener('click', (e) => {
     e.stopPropagation();
-    ensureAudio();
-    // Lightning zap sound
-    beep(2400, 0.04, 'sawtooth', 0.15);
-    setTimeout(() => beep(1800, 0.03, 'square', 0.12), 40);
-    setTimeout(() => beep(3200, 0.05, 'sawtooth', 0.1), 80);
-    setTimeout(() => beep(800, 0.08, 'square', 0.08), 130);
+    e.preventDefault();
+    window.getSelection().removeAllRanges();
     // Spawn ⚡ bolts flying out
     const rect = e.target.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
@@ -2201,10 +2197,6 @@
       });
       setTimeout(() => bolt.remove(), 700);
     }
-    // Flash the title
-    const el = e.target;
-    el.style.filter = 'brightness(3) drop-shadow(0 0 30px #f0c040)';
-    setTimeout(() => { el.style.filter = ''; }, 300);
   });
 
   </script>
