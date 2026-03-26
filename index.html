@@ -90,6 +90,16 @@
 
     .highscore-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;border:1px solid rgba(210,153,34,0.2);background:rgba(210,153,34,0.06);color:#d29922;font-size:13px;letter-spacing:.03em}
 
+    /* Arcade leaderboard */
+    .arcade-row{display:flex;align-items:center;gap:12px;padding:8px 16px;border-radius:10px;margin-bottom:4px;background:rgba(17,17,24,.4);border:1px solid rgba(30,30,46,.4);font-size:14px}
+    .arcade-row:first-child{border-color:rgba(210,153,34,.3);background:rgba(210,153,34,.06)}
+    .arcade-pos{font-weight:900;color:#4a4a6a;min-width:28px;text-align:center;font-size:16px}
+    .arcade-row:first-child .arcade-pos{color:#d29922}
+    .arcade-avatar{width:32px;height:32px;border-radius:50%;border:2px solid rgba(124,58,237,.3);object-fit:cover;flex-shrink:0}
+    .arcade-row:first-child .arcade-avatar{border-color:rgba(210,153,34,.5)}
+    .arcade-name{flex:1;color:#c4b5fd;font-weight:600;font-size:14px}
+    .arcade-score{font-weight:900;color:#e2e2f0;font-size:16px;font-variant-numeric:tabular-nums}
+
     /* Help */
     #help .termbody{padding:0}
     .helpwrap{padding:16px}
@@ -321,9 +331,23 @@
           </div>
         </div>
 
+        <!-- GitHub handle input -->
+        <div style="margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px">
+          <img id="playerAvatar" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(124,58,237,.4);object-fit:cover;display:none" src="" alt="">
+          <span style="color:#4a4a6a;font-size:18px;font-weight:700">@</span>
+          <input id="playerHandle" type="text" placeholder="your GitHub handle" maxlength="30" autocomplete="off" spellcheck="false" style="font-family:'Roboto',sans-serif;font-size:16px;padding:10px 16px;background:rgba(17,17,24,.8);border:1px solid rgba(124,58,237,.3);border-radius:10px;color:#e2e2f0;outline:none;width:200px;letter-spacing:.5px">
+        </div>
+        <div style="font-size:11px;color:#4a4a6a;margin-top:6px">Enter your handle to join the arcade leaderboard</div>
+
         <!-- Start button -->
-        <div class="startline show" id="startLine">
+        <div class="startline show" id="startLine" style="margin-top:16px">
           <button id="startBtn" class="start-btn">▶ Start Game</button>
+        </div>
+
+        <!-- Arcade Leaderboard -->
+        <div id="arcadeBoard" style="margin-top:24px;width:100%;max-width:520px">
+          <div style="font-size:13px;color:#4a4a6a;letter-spacing:2px;text-align:center;margin-bottom:10px">🕹️ Arcade Leaderboard</div>
+          <div id="arcadeRows"></div>
         </div>
 
         <!-- High score -->
@@ -1321,9 +1345,9 @@
   }
 
   // --- Boss logic ---
-  const BOSS_COMMANDS_EASY = ['/approve', 'LGTM', '/yolo', 'ACK'];
-  const BOSS_COMMANDS_MED = ['/ship-it', '/merge', 'SGTM', '/approve'];
-  const BOSS_COMMANDS_HARD = ['/ship-it-now', 'APPROVED', '/deploy-prod', '/merge-main'];
+  const BOSS_COMMANDS_EASY = ['gh copilot', 'gh pr merge', 'gh pr review', 'gh cs start'];
+  const BOSS_COMMANDS_MED = ['gh copilot suggest', 'gh pr merge --auto', 'gh copilot explain', 'gh cs rebuild'];
+  const BOSS_COMMANDS_HARD = ['gh copilot suggest --target cli', 'gh pr merge --squash --auto', 'gh copilot explain --format text', 'gh cs ports forward 3000'];
   const BOSS_INTERVAL_MS = 10000;
   const BOSS_DURATION_BASE = 5500;
 
@@ -1529,6 +1553,12 @@
       highScoreEl.textContent = String(highScore);
       highScoreTitleEl.textContent = String(highScore);
       toast('NEW HIGH SCORE', String(highScore));
+    }
+
+    // Auto-save to arcade leaderboard
+    if (currentPlayer && score > 0) {
+      addArcadeScore(currentPlayer, score);
+      renderArcade();
     }
 
     showScreen('gameover');
@@ -1807,7 +1837,85 @@
   preloadImages();
 
   // Start button click
+  // --- Player handle + Arcade Leaderboard ---
+  const LB_KEY = 'devrel-frenzy-arcade';
+  let currentPlayer = localStorage.getItem('devrel-frenzy-player') || '';
+  const playerInput = document.getElementById('playerHandle');
+  const playerAvatar = document.getElementById('playerAvatar');
+
+  // Restore saved handle
+  if (currentPlayer) {
+    playerInput.value = currentPlayer;
+    playerAvatar.src = 'https://avatars.githubusercontent.com/' + currentPlayer;
+    playerAvatar.style.display = 'block';
+  }
+
+  // Live avatar preview as they type
+  let avatarTimeout;
+  playerInput.addEventListener('input', () => {
+    clearTimeout(avatarTimeout);
+    const handle = playerInput.value.trim().replace(/^@/, '');
+    if (handle.length >= 2) {
+      avatarTimeout = setTimeout(() => {
+        playerAvatar.src = 'https://avatars.githubusercontent.com/' + handle;
+        playerAvatar.style.display = 'block';
+      }, 500);
+    } else {
+      playerAvatar.style.display = 'none';
+    }
+  });
+
+  // Prevent game start from input keypress
+  playerInput.addEventListener('keydown', (e) => {
+    e.stopPropagation();
+    if (e.key === 'Enter') { playerInput.blur(); document.getElementById('startBtn').click(); }
+  });
+
+  function loadArcade() {
+    try { return JSON.parse(localStorage.getItem(LB_KEY) || '[]') || []; }
+    catch { return []; }
+  }
+  function saveArcade(lb) {
+    try { localStorage.setItem(LB_KEY, JSON.stringify(lb)); } catch {}
+  }
+  function addArcadeScore(handle, sc) {
+    const lb = loadArcade();
+    lb.push({handle, score: sc, date: new Date().toISOString()});
+    lb.sort((a, b) => b.score - a.score);
+    if (lb.length > 20) lb.length = 20;
+    saveArcade(lb);
+  }
+  function renderArcade() {
+    const lb = loadArcade();
+    const container = document.getElementById('arcadeRows');
+    if (!container) return;
+    container.innerHTML = '';
+    if (lb.length === 0) {
+      container.innerHTML = '<div style="color:#4a4a6a;font-size:13px;text-align:center;padding:12px">No scores yet — be the first!</div>';
+      return;
+    }
+    lb.slice(0, 10).forEach((entry, i) => {
+      const row = document.createElement('div');
+      row.className = 'arcade-row';
+      const medals = ['🥇','🥈','🥉'];
+      const pos = i < 3 ? medals[i] : String(i + 1);
+      row.innerHTML = `
+        <span class="arcade-pos">${pos}</span>
+        <img class="arcade-avatar" src="https://avatars.githubusercontent.com/${entry.handle}" onerror="this.style.display='none'" alt="">
+        <span class="arcade-name">@${entry.handle}</span>
+        <span class="arcade-score">${entry.score.toLocaleString()}</span>`;
+      container.appendChild(row);
+    });
+  }
+  renderArcade();
+
   document.getElementById('startBtn').addEventListener('click', () => {
+    // Save handle before starting
+    const handle = playerInput.value.trim().replace(/^@/, '');
+    if (handle) {
+      currentPlayer = handle;
+      localStorage.setItem('devrel-frenzy-player', handle);
+    }
     if (state === 'title' && imagesLoaded) { ensureAudio(); startGame(false); clack(); }
   });
 
