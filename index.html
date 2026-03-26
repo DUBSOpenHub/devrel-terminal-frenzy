@@ -316,9 +316,10 @@
         <div style="width:100%;max-width:580px;border:1px solid rgba(124,58,237,.15);border-radius:16px;background:linear-gradient(135deg,rgba(17,17,24,.7),rgba(22,18,35,.5));backdrop-filter:blur(16px);padding:28px 32px;margin-bottom:28px;text-align:center;position:relative;overflow:hidden">
           <!-- Subtle glow accent -->
           <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(124,58,237,.08);filter:blur(40px);pointer-events:none"></div>
-          <div style="font-size:15px;color:#a0a0c0;line-height:1.7;margin-bottom:24px">
-            DevRel is shipping at full speed. Everyone has something to get done.<br>
-            With the <b style="color:#e2e2f0">GitHub Copilot CLI</b>, can you help them clear it all in <b style="color:#d29922">60 seconds</b>?
+          <div style="font-size:15px;color:#a0a0c0;line-height:1.8;margin-bottom:24px;text-align:justify">
+            <div style="margin-bottom:8px">DevRel is shipping at full speed.</div>
+            <div style="margin-bottom:8px">Everyone has something to get done.</div>
+            <div>With the <b style="color:#e2e2f0">GitHub Copilot CLI</b>, can you help them clear it all in <b style="color:#d29922">60 seconds</b>?</div>
           </div>
           <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.3),transparent);margin:0 auto 20px"></div>
           <div style="display:flex;flex-direction:column;gap:20px;text-align:left">
@@ -1522,6 +1523,19 @@
   }
 
   function startGame(modeWarmup){
+    // GATE: require handle in the input field — no exceptions
+    const handle = playerInput ? playerInput.value.trim().replace(/^@/, '') : '';
+    if (!handle) {
+      if (playerInput) {
+        playerInput.focus();
+        playerInput.style.borderColor = 'rgba(248,81,73,.8)';
+        playerInput.placeholder = 'enter your handle first!';
+        setTimeout(() => { playerInput.style.borderColor = 'rgba(124,58,237,.3)'; playerInput.placeholder = 'your GitHub handle'; }, 2000);
+      }
+      return;
+    }
+    currentPlayer = handle;
+    localStorage.setItem('devrel-frenzy-player', handle);
     ensureAudio();
     warmup = !!modeWarmup;
     resetGame();
