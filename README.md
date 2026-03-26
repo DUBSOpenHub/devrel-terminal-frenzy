@@ -1,4 +1,4 @@
-# 🎮 DevRel CLI Frenzy
+# 🎮 DevRel Terminal Frenzy
 
 [![Play Now](https://img.shields.io/badge/Play%20Now-GitHub%20Pages-7c3aed?style=for-the-badge&logo=github)](https://dubsopenhub.github.io/devrel-cli-frenzy/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)

@@ -1,4 +1,4 @@
-# Copilot Instructions — DevRel CLI Frenzy
+# Copilot Instructions — DevRel Terminal Frenzy
 
 This repository contains a single-file HTML5 arcade game (`index.html`).
 
