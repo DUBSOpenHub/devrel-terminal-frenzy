@@ -148,10 +148,12 @@
     .slot::before{content:'';position:absolute;left:0;right:0;top:0;height:16px;background:rgba(22,26,35,0.9);border-bottom:1px solid rgba(30,30,46,.5)}
     .slot::after{content:'● ● ●';position:absolute;top:1px;left:10px;font-size:8px;letter-spacing:3px;color:rgba(90,90,120,.5)}
 
-    .slot.active{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.06);box-shadow:0 0 20px rgba(124,58,237,.1)}
-    .slot.approved{border-color:rgba(16,185,129,.6);background:rgba(16,185,129,.08);box-shadow:0 0 20px rgba(16,185,129,.1)}
-    .slot.missed{border-color:rgba(248,81,73,.5);background:rgba(248,81,73,.06)}
-    .slot.power{border-color:rgba(210,153,34,.5);background:rgba(210,153,34,.06);box-shadow:0 0 20px rgba(210,153,34,.1)}
+    .slot.active{border-color:rgba(124,58,237,.6);background:rgba(124,58,237,.06);box-shadow:0 0 20px rgba(124,58,237,.15),0 0 40px rgba(124,58,237,.05);animation:cardGlow 1.5s ease-in-out infinite alternate}
+    @keyframes cardGlow{0%{border-color:rgba(124,58,237,.4);box-shadow:0 0 15px rgba(124,58,237,.1)}100%{border-color:rgba(139,92,246,.7);box-shadow:0 0 25px rgba(139,92,246,.2),0 0 50px rgba(124,58,237,.08)}}
+    .slot.approved{border-color:rgba(16,185,129,.7);background:rgba(16,185,129,.08);box-shadow:0 0 25px rgba(16,185,129,.2),0 0 50px rgba(16,185,129,.08);animation:none}
+    .slot.missed{border-color:rgba(248,81,73,.6);background:rgba(248,81,73,.06);box-shadow:0 0 20px rgba(248,81,73,.15);animation:none}
+    .slot.power{border-color:rgba(210,153,34,.6);background:rgba(210,153,34,.06);box-shadow:0 0 25px rgba(210,153,34,.15),0 0 50px rgba(210,153,34,.06);animation:cardGlowGold 1.5s ease-in-out infinite alternate}
+    @keyframes cardGlowGold{0%{border-color:rgba(210,153,34,.4);box-shadow:0 0 15px rgba(210,153,34,.1)}100%{border-color:rgba(245,158,11,.7);box-shadow:0 0 25px rgba(245,158,11,.2),0 0 50px rgba(210,153,34,.08)}}
     .slot.explainGlow{box-shadow:0 0 30px rgba(124,58,237,.2)}
 
     .card{position:absolute;inset:16px 0 0 0;padding:10px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px}
@@ -1564,11 +1566,11 @@
     const cdNum = document.getElementById('countdownNum');
     cdOverlay.style.display = 'flex';
 
-    // Intro jingle — synced to countdown beats
+    // Intro jingle — plays independently, not synced to ticks
     function introJingle() {
       if (!audioCtx) return;
       const t = audioCtx.currentTime;
-      const vol = 0.07;
+      const vol = 0.06;
       function n(freq, start, dur, type) {
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
@@ -1579,25 +1581,19 @@
         o.connect(g); g.connect(audioCtx.destination);
         o.start(t + start); o.stop(t + start + dur);
       }
-      // Building energy over 5 beats — each beat syncs with a countdown step
-      // Beat 1 (0.0s) — "5"
-      n(262, 0.0, 0.12); n(330, 0.12, 0.12);
-      n(131, 0.0, 0.3, 'triangle');
-      // Beat 2 (1.0s) — "4"
-      n(330, 1.0, 0.12); n(392, 1.12, 0.12);
-      n(165, 1.0, 0.3, 'triangle');
-      // Beat 3 (2.0s) — "3"
-      n(392, 2.0, 0.12); n(523, 2.12, 0.15);
-      n(196, 2.0, 0.3, 'triangle');
-      // Beat 4 (3.0s) — "2"
-      n(523, 3.0, 0.12); n(659, 3.12, 0.12); n(523, 3.24, 0.12); n(659, 3.36, 0.15);
-      n(262, 3.0, 0.4, 'triangle');
-      // Beat 5 (4.0s) — "1"
-      n(659, 4.0, 0.1); n(784, 4.10, 0.1); n(659, 4.20, 0.1); n(784, 4.30, 0.1); n(880, 4.40, 0.2);
-      n(330, 4.0, 0.5, 'triangle');
-      // GO burst (5.0s)
-      n(1047, 5.0, 0.08); n(1175, 5.08, 0.08); n(1319, 5.16, 0.25);
-      n(523, 5.0, 0.12, 'triangle'); n(659, 5.12, 0.12, 'triangle'); n(784, 5.24, 0.3, 'triangle');
+      // Smooth ascending melody
+      n(262, 0.0, 0.15);  n(330, 0.18, 0.15);  n(392, 0.36, 0.2);
+      n(330, 0.6, 0.12);  n(392, 0.75, 0.12);  n(523, 0.9, 0.25);
+      n(440, 1.2, 0.12);  n(523, 1.35, 0.12);  n(659, 1.5, 0.3);
+      n(523, 1.85, 0.1);  n(659, 1.98, 0.1);   n(784, 2.1, 0.12);
+      n(880, 2.25, 0.1);  n(784, 2.38, 0.1);   n(880, 2.5, 0.12);
+      n(1047, 2.65, 0.35);
+      // Bass
+      n(131, 0.0, 0.5, 'triangle');
+      n(165, 0.6, 0.5, 'triangle');
+      n(196, 1.2, 0.5, 'triangle');
+      n(262, 1.85, 0.4, 'triangle');
+      n(330, 2.5, 0.5, 'triangle');
     }
     introJingle();
 
@@ -1605,8 +1601,8 @@
       {text: 'Hands on the keys...', num: '5', delay: 1000},
       {text: 'Press the letters and numbers you see', num: '4', delay: 1000},
       {text: 'Type the Copilot CLI commands', num: '3', delay: 1000},
-      {text: 'Can you survive the DevRel Terminal Frenzy?', num: '2', delay: 1000},
-      {text: "Let's find out!", num: '1', delay: 1000},
+      {text: 'Can you survive the terminal frenzy?', num: '2', delay: 1000},
+      {text: 'With the GitHub Copilot CLI, you can.', num: '1', delay: 1000},
       {text: '', num: 'GO!', delay: 500},
     ];
 
