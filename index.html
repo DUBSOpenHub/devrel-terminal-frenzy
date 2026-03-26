@@ -938,27 +938,28 @@
 
   function getDifficulty(){
     const elapsed = GAME_DURATION - timeLeft;
-    const base = clamp(Math.floor(elapsed / 7), 0, 8);
-    return warmup ? Math.max(0, base-2) : base;
+    // Ramps every 10 seconds: 0→1→2→3→4→5
+    return clamp(Math.floor(elapsed / 10), 0, 5);
   }
   function getSpawnRateMs(){
     const d = getDifficulty();
-    const base = 1200 - d*110;
-    return warmup ? base + 250 : base;
+    // 1300ms → 650ms (cards appear faster)
+    return Math.max(650, 1300 - d * 130);
   }
   function getKeyChangeRateMs(){
     const d = getDifficulty();
-    const base = 900 - d*75;
-    return warmup ? base + 280 : base;
+    // 1000ms → 500ms (keys shuffle faster)
+    return Math.max(500, 1000 - d * 100);
   }
   function getCardDurationMs(){
     const d = getDifficulty();
-    const base = 3200 - d*240;
-    return warmup ? base + 700 : base;
+    // 3500ms → 1900ms (less time to react)
+    return Math.max(1900, 3500 - d * 320);
   }
   function getMaxActive(){
     const d = getDifficulty();
-    return clamp(2 + Math.floor(d*0.85), 2, KEYSET.length);
+    // 3 → 8 cards at once
+    return clamp(3 + d, 3, 8);
   }
 
   function screenShake(){
@@ -1348,11 +1349,12 @@
   }
 
   // --- Boss logic ---
-  const BOSS_COMMANDS_EASY = ['gh copilot', 'gh pr merge', 'gh pr review', 'gh cs start'];
-  const BOSS_COMMANDS_MED = ['gh copilot suggest', 'gh pr merge --auto', 'gh copilot explain', 'gh cs rebuild'];
-  const BOSS_COMMANDS_HARD = ['gh copilot suggest --target cli', 'gh pr merge --squash --auto', 'gh copilot explain --format text', 'gh cs ports forward 3000'];
+  const BOSS_COMMANDS_EASY = ['gh copilot', 'gh pr merge', 'gh pr review'];
+  const BOSS_COMMANDS_MED = ['gh copilot suggest', 'gh pr merge --auto', 'gh copilot explain'];
+  const BOSS_COMMANDS_HARD = ['gh copilot suggest --target cli', 'gh pr merge --squash --auto', 'gh copilot explain --format text'];
+  const BOSS_COMMANDS_BRUTAL = ['gh copilot suggest --target shell --hostname github.com', 'gh pr merge --squash --delete-branch --auto', 'gh copilot explain --format markdown --model gpt-5'];
   const BOSS_INTERVAL_MS = 10000;
-  const BOSS_DURATION_BASE = 5500;
+  const BOSS_DURATION_BASE = 6000;
 
   function spawnBoss(opts={}){
     bossActive = true;
@@ -1360,15 +1362,16 @@
 
     const person = opts.person || pickPerson('martinwoodward');
     const prTitle = opts.prTitle || pick(PR_TITLES);
-    // Difficulty ramps with each defeated request
-    const difficulty = Math.min(bossesDefeated, 5);
+    // Difficulty ramps HARD with each defeated request
+    const difficulty = bossesDefeated;
     let cmdPool;
-    if (difficulty <= 1) cmdPool = BOSS_COMMANDS_EASY;
-    else if (difficulty <= 3) cmdPool = BOSS_COMMANDS_MED;
-    else cmdPool = BOSS_COMMANDS_HARD;
+    if (difficulty === 0) cmdPool = BOSS_COMMANDS_EASY;
+    else if (difficulty <= 2) cmdPool = BOSS_COMMANDS_MED;
+    else if (difficulty <= 4) cmdPool = BOSS_COMMANDS_HARD;
+    else cmdPool = BOSS_COMMANDS_BRUTAL;
     const target = opts.target || pick(cmdPool);
-    // Timer gets tighter: 5.5s → 3.5s over 5 rounds
-    const durationMs = opts.durationMs || Math.max(3500, BOSS_DURATION_BASE - difficulty * 400);
+    // Timer gets brutally tight: 6s → 3s over 5 rounds
+    const durationMs = opts.durationMs || Math.max(3000, BOSS_DURATION_BASE - difficulty * 600);
     const final = !!opts.final;
 
     boss = { person, prTitle, target, typed:'', durationMs, timeLeftMs: durationMs, final };
@@ -1699,12 +1702,12 @@
         const mw = DEVREL.find(p => p.name === 'martinwoodward') || pick(DEVREL);
         spawnBoss({
           person: mw,
-          target: 'LGTM'.repeat(3),
+          target: 'gh copilot merge --approve --ship-it LGTM',
           prTitle: 'feat: the PR to end all PRs',
-          durationMs: 7500,
+          durationMs: 4500,
           final: true
         });
-        toast('FINAL URGENT REQUEST', 'Martin Woodward • LGTM x3');
+        toast('FINAL URGENT REQUEST', 'Martin Woodward • type the full command!');
       }
     }
 
@@ -1713,8 +1716,8 @@
     if (bossTimerAccum >= BOSS_INTERVAL_MS && !bossActive && timeLeft > 10){
       bossTimerAccum = 0;
       // Difficulty-based command selection
-      const d = Math.min(bossesDefeated, 5);
-      const pool = d <= 1 ? BOSS_COMMANDS_EASY : d <= 3 ? BOSS_COMMANDS_MED : BOSS_COMMANDS_HARD;
+      const d = bossesDefeated;
+      const pool = d === 0 ? BOSS_COMMANDS_EASY : d <= 2 ? BOSS_COMMANDS_MED : d <= 4 ? BOSS_COMMANDS_HARD : BOSS_COMMANDS_BRUTAL;
       const cmd = pick(pool);
       const prTitle = pick([
         'chore: copilot wrote my commit message',
