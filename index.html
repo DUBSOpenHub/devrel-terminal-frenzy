@@ -1754,7 +1754,17 @@
       const up = e.key.toUpperCase();
       if (up === 'H') { showScreen('help'); state='help'; clack(); return; }
       if (!imagesLoaded) { clack(); return; }
-      // any other key starts
+      // Require handle before starting
+      if (!currentPlayer && !playerInput.value.trim()) {
+        playerInput.focus();
+        playerInput.style.borderColor = 'rgba(248,81,73,.8)';
+        setTimeout(() => { playerInput.style.borderColor = 'rgba(124,58,237,.3)'; }, 2000);
+        return;
+      }
+      if (playerInput.value.trim()) {
+        currentPlayer = playerInput.value.trim().replace(/^@/, '');
+        localStorage.setItem('devrel-frenzy-player', currentPlayer);
+      }
       startGame(false);
       clack();
       return;
@@ -1910,12 +1920,17 @@
   renderArcade();
 
   document.getElementById('startBtn').addEventListener('click', () => {
-    // Save handle before starting
+    // Require handle
     const handle = playerInput.value.trim().replace(/^@/, '');
-    if (handle) {
-      currentPlayer = handle;
-      localStorage.setItem('devrel-frenzy-player', handle);
+    if (!handle) {
+      playerInput.style.borderColor = 'rgba(248,81,73,.8)';
+      playerInput.placeholder = 'enter your handle first!';
+      playerInput.focus();
+      setTimeout(() => { playerInput.style.borderColor = 'rgba(124,58,237,.3)'; playerInput.placeholder = 'your GitHub handle'; }, 2000);
+      return;
     }
+    currentPlayer = handle;
+    localStorage.setItem('devrel-frenzy-player', handle);
     if (state === 'title' && imagesLoaded) { ensureAudio(); startGame(false); clack(); }
   });
 
