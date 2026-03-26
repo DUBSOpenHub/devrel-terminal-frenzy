@@ -156,18 +156,18 @@
     @keyframes cardGlowGold{0%{border-color:rgba(210,153,34,.4);box-shadow:0 0 15px rgba(210,153,34,.1)}100%{border-color:rgba(245,158,11,.7);box-shadow:0 0 25px rgba(245,158,11,.2),0 0 50px rgba(210,153,34,.08)}}
     .slot.explainGlow{box-shadow:0 0 30px rgba(124,58,237,.2)}
 
-    .card{position:absolute;inset:16px 0 0 0;padding:10px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+    .card{position:absolute;inset:16px 0 0 0;padding:4px 6px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2px}
     .slot.active .card{display:flex}
 
-    .avatar{width:clamp(28px,4.5vw,44px);height:clamp(28px,4.5vw,44px);border-radius:50%;border:2px solid rgba(110,64,201,0.85);object-fit:cover;background:rgba(13,17,23,0.7)}
+    .avatar{width:clamp(24px,4vw,36px);height:clamp(24px,4vw,36px);border-radius:50%;border:2px solid rgba(110,64,201,0.85);object-fit:cover;background:rgba(13,17,23,0.7)}
     .slot.power .avatar{border-color:rgba(210,153,34,0.85)}
 
-    .who{font-size:11px;color:var(--purple2);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:95%}
+    .who{font-size:10px;color:var(--purple2);letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:95%}
     .who .role{color:var(--muted)}
-    .pr{font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;max-width:96%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.3}
+    .pr{font-size:9px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;max-width:96%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.3}
 
-    .key{margin-top:6px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(110,64,201,0.95);border:1px solid rgba(0,0,0,0.35);color:white;font-size:22px;font-weight:900;box-shadow:0 4px 0 #4c2889, 0 0 18px rgba(110,64,201,0.35);text-shadow:0 1px 2px rgba(0,0,0,0.45)}
-    .slot.power .key{background:rgba(210,153,34,0.95);box-shadow:0 4px 0 #7a5714, 0 0 18px rgba(210,153,34,0.25)}
+    .key{margin-top:2px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(110,64,201,0.95);border:1px solid rgba(0,0,0,0.35);color:white;font-size:18px;font-weight:900;box-shadow:0 3px 0 #4c2889, 0 0 14px rgba(110,64,201,0.35);text-shadow:0 1px 2px rgba(0,0,0,0.45)}
+    .slot.power .key{background:rgba(210,153,34,0.95);box-shadow:0 3px 0 #7a5714, 0 0 14px rgba(210,153,34,0.25)}
     .key.flash{animation:keyflash 140ms}
     @keyframes keyflash{0%{transform:scale(1.25)}100%{transform:scale(1)}}
 
@@ -450,6 +450,12 @@
           <div class="finalScore" id="finalScore">0</div>
           <div class="stats" id="finalStats"></div>
           <div class="rank" id="finalRank">Junior Dev</div>
+
+          <!-- Leaderboard on game over -->
+          <div style="margin-top:20px;width:100%;max-width:420px">
+            <div style="font-size:13px;color:#4a4a6a;letter-spacing:2px;text-align:center;margin-bottom:10px">🕹️ Arcade Leaderboard</div>
+            <div id="arcadeRowsGameOver"></div>
+          </div>
 
           <div style="margin-top:16px">
             <button id="playAgainBtn" class="start-btn">▶ Play Again</button>
@@ -2028,24 +2034,26 @@
   }
 
   function renderArcade() {
-    const container = document.getElementById('arcadeRows');
-    if (!container) return;
-    container.innerHTML = '';
-    if (arcadeScores.length === 0) {
-      container.innerHTML = '<div style="color:#4a4a6a;font-size:13px;text-align:center;padding:12px">No scores yet — be the first!</div>';
-      return;
-    }
-    arcadeScores.slice(0, 10).forEach((entry, i) => {
-      const row = document.createElement('div');
-      row.className = 'arcade-row';
-      const medals = ['🥇','🥈','🥉'];
-      const pos = i < 3 ? medals[i] : String(i + 1);
-      row.innerHTML = `
-        <span class="arcade-pos">${pos}</span>
-        <img class="arcade-avatar" src="https://avatars.githubusercontent.com/${entry.handle}" onerror="this.style.display='none'" alt="">
-        <span class="arcade-name">@${entry.handle}</span>
-        <span class="arcade-score">${entry.score.toLocaleString()}</span>`;
-      container.appendChild(row);
+    ['arcadeRows', 'arcadeRowsGameOver'].forEach(id => {
+      const container = document.getElementById(id);
+      if (!container) return;
+      container.innerHTML = '';
+      if (arcadeScores.length === 0) {
+        container.innerHTML = '<div style="color:#4a4a6a;font-size:13px;text-align:center;padding:12px">No scores yet — be the first!</div>';
+        return;
+      }
+      arcadeScores.slice(0, 10).forEach((entry, i) => {
+        const row = document.createElement('div');
+        row.className = 'arcade-row';
+        const medals = ['🥇','🥈','🥉'];
+        const pos = i < 3 ? medals[i] : String(i + 1);
+        row.innerHTML = `
+          <span class="arcade-pos">${pos}</span>
+          <img class="arcade-avatar" src="https://avatars.githubusercontent.com/${entry.handle}" onerror="this.style.display='none'" alt="">
+          <span class="arcade-name">@${entry.handle}</span>
+          <span class="arcade-score">${entry.score.toLocaleString()}</span>`;
+        container.appendChild(row);
+      });
     });
   }
   fetchArcade();
