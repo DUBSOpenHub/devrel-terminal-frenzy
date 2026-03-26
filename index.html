@@ -316,11 +316,12 @@
         <div style="width:100%;max-width:580px;border:1px solid rgba(124,58,237,.15);border-radius:16px;background:linear-gradient(135deg,rgba(17,17,24,.7),rgba(22,18,35,.5));backdrop-filter:blur(16px);padding:28px 32px;margin-bottom:28px;text-align:center;position:relative;overflow:hidden">
           <!-- Subtle glow accent -->
           <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(124,58,237,.08);filter:blur(40px);pointer-events:none"></div>
-          <div style="font-size:15px;color:#a0a0c0;line-height:1.7;margin-bottom:20px">
+          <div style="font-size:15px;color:#a0a0c0;line-height:1.7;margin-bottom:24px">
             DevRel is shipping at full speed. Everyone has something to get done.<br>
             With the <b style="color:#e2e2f0">GitHub Copilot CLI</b>, can you help them clear it all in <b style="color:#d29922">60 seconds</b>?
           </div>
-          <div style="display:flex;flex-direction:column;gap:16px;text-align:left">
+          <div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.3),transparent);margin:0 auto 20px"></div>
+          <div style="display:flex;flex-direction:column;gap:20px;text-align:left">
             <!-- Step 1 -->
             <div style="display:flex;align-items:center;gap:14px">
               <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#6e40c9);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 0 16px rgba(124,58,237,.2)">1</div>
@@ -377,7 +378,7 @@
           <b style="color:#d29922">Urgent Requests</b> pop up — type the Copilot CLI command to clear them<br>
         </div>
         <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
-          <button class="start-btn" onclick="if(imagesLoaded){ensureAudio();startGame(false);clack();}">▶ Start Game</button>
+          <button class="start-btn" onclick="if(imagesLoaded && currentPlayer){ensureAudio();startGame(false);clack();}">▶ Start Game</button>
         </div>
         <div style="margin-top:14px;color:#4a4a6a;font-size:12px">Press <b style="color:#a0a0c0">ESC</b> to go back</div>
       </div>
@@ -1777,7 +1778,7 @@
       ensureAudio();
       if (e.key === 'Escape') { showScreen('title'); state='title'; clack(); return; }
       if (e.key.toUpperCase() === 'H') { showScreen('title'); state='title'; clack(); return; }
-      if (e.key === 'Enter') { if (!imagesLoaded) return; startGame(false); clack(); return; }
+      if (e.key === 'Enter') { if (!imagesLoaded || !currentPlayer) return; startGame(false); clack(); return; }
       clack();
       return;
     }

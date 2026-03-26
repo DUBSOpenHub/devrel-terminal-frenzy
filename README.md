@@ -2,7 +2,7 @@
 
 [![Play Now](https://img.shields.io/badge/Play%20Now-GitHub%20Pages-7c3aed?style=for-the-badge&logo=github)](https://dubsopenhub.github.io/devrel-cli-frenzy/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Built with AI](https://img.shields.io/badge/Built%20with-AI%20Agents-06b6d4.svg)](https://github.com/features/copilot)
+[![Built with Copilot CLI](https://img.shields.io/badge/Built%20with-Copilot%20CLI-06b6d4.svg)](https://docs.github.com/en/copilot/github-copilot-in-the-cli)
 
 **A retro arcade game for the GitHub DevRel team.** Approve PRs, survive urgent requests, and clear the review queue — all in 60 seconds. Featuring the faces and names of the entire DevRel org.
 
