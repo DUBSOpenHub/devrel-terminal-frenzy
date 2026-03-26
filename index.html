@@ -249,11 +249,6 @@
   <div id="scanlines"></div>
   <canvas id="fx"></canvas>
 
-  <div id="wm" style="position:absolute;bottom:12px;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:center;gap:12px;user-select:none;pointer-events:auto">
-    <img src="https://avatars.githubusercontent.com/u/158339470?v=4" style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(124,58,237,.4);opacity:.85" alt="">
-    <span style="font-size:14px;letter-spacing:.03em;color:rgba(125,133,144,.75)">Built with the <a href="https://docs.github.com/en/copilot/github-copilot-in-the-cli" style="color:rgba(167,139,250,.75);text-decoration:none" target="_blank">Copilot CLI</a> by <a href="https://github.com/DUBSOpenHub" style="color:rgba(167,139,250,.75);text-decoration:none" target="_blank">@DUBSOpenHub</a></span>
-  </div>
-
   <div class="orb orb-1" aria-hidden="true"></div>
   <div class="orb orb-2" aria-hidden="true"></div>
   <div class="orb orb-3" aria-hidden="true"></div>
@@ -340,6 +335,12 @@
         <!-- High score -->
         <div style="margin-top:20px">
           <span class="highscore-badge">🏆 High Score: <b id="highScoreTitle">0</b></span>
+        </div>
+
+        <!-- Built with -->
+        <div style="margin-top:20px;display:flex;align-items:center;justify-content:center;gap:12px">
+          <img src="https://avatars.githubusercontent.com/u/158339470?v=4" style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(124,58,237,.4);opacity:.85" alt="">
+          <span style="font-size:14px;letter-spacing:.03em;color:rgba(125,133,144,.75)">Built with the <a href="https://docs.github.com/en/copilot/github-copilot-in-the-cli" style="color:rgba(167,139,250,.75);text-decoration:none" target="_blank">Copilot CLI</a> by <a href="https://github.com/DUBSOpenHub" style="color:rgba(167,139,250,.75);text-decoration:none" target="_blank">@DUBSOpenHub</a></span>
         </div>
 
         <div class="loadbox" id="loadBox" style="display:none"></div>
