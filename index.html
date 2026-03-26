@@ -157,7 +157,7 @@
     .card{position:absolute;inset:16px 0 0 0;padding:10px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px}
     .slot.active .card{display:flex}
 
-    .avatar{width:clamp(36px,6vw,60px);height:clamp(36px,6vw,60px);border-radius:50%;border:2px solid rgba(110,64,201,0.85);object-fit:cover;background:rgba(13,17,23,0.7)}
+    .avatar{width:clamp(28px,4.5vw,44px);height:clamp(28px,4.5vw,44px);border-radius:50%;border:2px solid rgba(110,64,201,0.85);object-fit:cover;background:rgba(13,17,23,0.7)}
     .slot.power .avatar{border-color:rgba(210,153,34,0.85)}
 
     .who{font-size:11px;color:var(--purple2);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:95%}
@@ -629,7 +629,7 @@
     '/approve', '/ship-it', '/merge', '/yolo', 'LGTM', 'SGTM'
   ];
 
-  const KEYSET = ['A','S','D','F','J','K','L',';'];
+  const KEYSET = ['A','S','D','F','J','K','L','1','2','3','4','5'];
   const GAME_DURATION = 60;
   const GRID_SIZE = 12;
 
@@ -1885,30 +1885,43 @@
     if (e.key === 'Enter') { playerInput.blur(); document.getElementById('startBtn').click(); }
   });
 
-  function loadArcade() {
-    try { return JSON.parse(localStorage.getItem(LB_KEY) || '[]') || []; }
-    catch { return []; }
+  // --- Persistent Leaderboard (JSONBlob) ---
+  const BLOB_ID = '019d2ab9-09cb-7e67-a50a-7187096ed008';
+  const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/' + BLOB_ID;
+  let arcadeScores = [];
+
+  async function fetchArcade() {
+    try {
+      const res = await fetch(BLOB_URL);
+      const data = await res.json();
+      arcadeScores = (data.scores || []).sort((a, b) => b.score - a.score);
+    } catch { arcadeScores = []; }
+    renderArcade();
   }
-  function saveArcade(lb) {
-    try { localStorage.setItem(LB_KEY, JSON.stringify(lb)); } catch {}
+
+  async function addArcadeScore(handle, sc) {
+    arcadeScores.push({handle, score: sc, date: new Date().toISOString()});
+    arcadeScores.sort((a, b) => b.score - a.score);
+    if (arcadeScores.length > 50) arcadeScores.length = 50;
+    renderArcade();
+    try {
+      await fetch(BLOB_URL, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({scores: arcadeScores})
+      });
+    } catch {}
   }
-  function addArcadeScore(handle, sc) {
-    const lb = loadArcade();
-    lb.push({handle, score: sc, date: new Date().toISOString()});
-    lb.sort((a, b) => b.score - a.score);
-    if (lb.length > 20) lb.length = 20;
-    saveArcade(lb);
-  }
+
   function renderArcade() {
-    const lb = loadArcade();
     const container = document.getElementById('arcadeRows');
     if (!container) return;
     container.innerHTML = '';
-    if (lb.length === 0) {
+    if (arcadeScores.length === 0) {
       container.innerHTML = '<div style="color:#4a4a6a;font-size:13px;text-align:center;padding:12px">No scores yet — be the first!</div>';
       return;
     }
-    lb.slice(0, 10).forEach((entry, i) => {
+    arcadeScores.slice(0, 10).forEach((entry, i) => {
       const row = document.createElement('div');
       row.className = 'arcade-row';
       const medals = ['🥇','🥈','🥉'];
@@ -1921,7 +1934,7 @@
       container.appendChild(row);
     });
   }
-  renderArcade();
+  fetchArcade();
 
   document.getElementById('startBtn').addEventListener('click', () => {
     // Require handle
