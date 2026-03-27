@@ -88,7 +88,7 @@
 
     .divider{width:80px;height:1px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.3),transparent);margin:20px auto}
 
-    .highscore-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;border:1px solid rgba(210,153,34,0.2);background:rgba(210,153,34,0.06);color:#d29922;font-size:13px;letter-spacing:.03em}
+
 
     /* Arcade leaderboard */
     .arcade-row{display:flex;align-items:center;gap:12px;padding:8px 16px;border-radius:10px;margin-bottom:4px;background:rgba(17,17,24,.4);border:1px solid rgba(30,30,46,.4);font-size:14px}
@@ -324,7 +324,7 @@
         <div style="width:100%;max-width:520px;border:1px solid rgba(124,58,237,.15);border-radius:16px;background:linear-gradient(135deg,rgba(17,17,24,.7),rgba(22,18,35,.5));backdrop-filter:blur(16px);padding:24px 28px;margin-bottom:28px;position:relative;overflow:hidden">
           <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(124,58,237,.08);filter:blur(40px);pointer-events:none"></div>
           <div style="text-align:center;margin-bottom:16px">
-            <div style="margin-bottom:4px;font-size:17px;color:#e2e2f0;font-weight:700">DevRel is shipping at full speed.</div>
+            <div style="margin-bottom:4px;font-size:17px;color:#e2e2f0;font-weight:700">DevRel is shipping at warp speed.</div>
             <div style="margin-bottom:4px;font-size:15px;color:#c4b5fd;font-weight:700">12 terminals. 60 seconds. Shipping with the Copilot CLI.</div>
             <div style="font-size:15px;color:#d29922;font-weight:700">Can you survive the terminal frenzy?</div>
           </div>
@@ -359,10 +359,7 @@
           <div id="arcadeRows"></div>
         </div>
 
-        <!-- High score -->
-        <div style="margin-top:20px">
-          <span class="highscore-badge">🏆 High Score: <b id="highScoreTitle">0</b></span>
-        </div>
+
 
         <!-- Built with -->
         <div style="margin-top:20px;display:flex;align-items:center;justify-content:center;gap:12px">
@@ -662,7 +659,6 @@
 
   const scoreEl = document.getElementById('score');
   const highScoreEl = document.getElementById('highScore');
-  const highScoreTitleEl = document.getElementById('highScoreTitle');
   const timerEl = document.getElementById('timer');
   const rankNowEl = document.getElementById('rankNow');
 
@@ -718,7 +714,6 @@
   const store = loadStore();
   let highScore = Number(store.highScore || 0);
   highScoreEl.textContent = String(highScore);
-  highScoreTitleEl.textContent = String(highScore);
 
   // Achievements
   const achievements = store.achievements || {};
@@ -1674,10 +1669,10 @@
         showScreen('play');
         state = 'playing';
         lastT = 0;
-        // GO burst
-        beep(660, 0.08, 'square', 0.1);
-        setTimeout(() => beep(880, 0.12, 'square', 0.1), 60);
-        setTimeout(() => beep(1047, 0.15, 'square', 0.1), 120);
+        // GO burst — C major triad
+        beep(523, 0.08, 'square', 0.1);
+        setTimeout(() => beep(659, 0.12, 'square', 0.1), 60);
+        setTimeout(() => beep(784, 0.15, 'square', 0.1), 120);
         return;
       }
       const s = steps[step];
@@ -1691,8 +1686,9 @@
         cdNum.style.transform = 'scale(0.8)';
         cdNum.style.opacity = '0.4';
       }, 50);
-      // Ascending tone for each number
-      beep(440 + step * 140, 0.12, 'square', 0.08);
+      // Tick tone — in C major, matching the jingle's chord at each beat
+      const tickNotes = [262, 330, 392, 523, 659, 784]; // C4, E4, G4, C5, E5, G5
+      beep(tickNotes[step] || 523, 0.1, 'square', 0.06);
       step++;
       setTimeout(nextStep, s.delay);
     }
@@ -1723,7 +1719,6 @@
       store.highScore = highScore;
       saveStore(store);
       highScoreEl.textContent = String(highScore);
-      highScoreTitleEl.textContent = String(highScore);
       toast('NEW HIGH SCORE', String(highScore));
     }
 
