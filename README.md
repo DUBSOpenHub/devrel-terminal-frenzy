@@ -1,6 +1,6 @@
 # 🎮 DevRel Terminal Frenzy
 
-[![Play Now](https://img.shields.io/badge/Play%20Now-GitHub%20Pages-7c3aed?style=for-the-badge&logo=github)](https://dubsopenhub.github.io/devrel-cli-frenzy/)
+[![Play Now](https://img.shields.io/badge/Play%20Now-GitHub%20Pages-7c3aed?style=for-the-badge&logo=github)](https://dubsopenhub.github.io/devrel-terminal-frenzy/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Built with Copilot CLI](https://img.shields.io/badge/Built%20with-Copilot%20CLI-06b6d4.svg)](https://docs.github.com/en/copilot/github-copilot-in-the-cli)
 
@@ -12,14 +12,14 @@
 
 ### 🌐 Browser (instant)
 
-**[Play on GitHub Pages →](https://dubsopenhub.github.io/devrel-cli-frenzy/)**
+**[Play on GitHub Pages →](https://dubsopenhub.github.io/devrel-terminal-frenzy/)**
 
 ### 💻 From your terminal
 
 ```bash
 # Clone and open
-git clone https://github.com/DUBSOpenHub/devrel-cli-frenzy.git
-open devrel-cli-frenzy/index.html
+git clone https://github.com/DUBSOpenHub/devrel-terminal-frenzy.git
+open devrel-terminal-frenzy/index.html
 ```
 
 Or just download and double-click `index.html` — it's a single file with zero dependencies.
@@ -78,7 +78,7 @@ All members of the GitHub DevRel organization are featured in the game — their
 ## 📁 Repository Structure
 
 ```
-devrel-cli-frenzy/
+devrel-terminal-frenzy/
 ├── index.html          # The entire game (single file)
 ├── README.md           # This file
 ├── AGENTS.md           # AI agent architecture
