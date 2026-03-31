@@ -14,12 +14,9 @@
 
 **[Play on GitHub Pages →](https://dubsopenhub.github.io/devrel-terminal-frenzy/)**
 
+### 🎬 Game Preview
 
-
-https://github.com/user-attachments/assets/3d275298-5ced-4434-b046-92d6c7eaecb5
-
-
-
+<video src="https://github.com/user-attachments/assets/3d275298-5ced-4434-b046-92d6c7eaecb5" autoplay loop muted playsinline width="100%"></video>
 
 
 ### 💻 From your terminal
