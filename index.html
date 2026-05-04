@@ -88,8 +88,30 @@
 
     .divider{width:80px;height:1px;background:linear-gradient(90deg,transparent,rgba(163,113,247,0.3),transparent);margin:20px auto}
     .hero-copy-line{line-height:1.35;white-space:nowrap}
+    #homeMascotLines{height:284px;overflow:hidden;padding:0 28px}
+    #homeMascotLines .mascotLine{--row-offset:0px;height:44px;min-height:44px;flex-shrink:0;width:calc(100% - 72px);max-width:620px;margin:0 auto;padding:0 4px;justify-content:center!important;overflow:visible;animation:mascotDrift 4.8s ease-in-out infinite}
+    #homeMascotLines .mascotLine:nth-child(1){--row-offset:-26px;animation-delay:-.3s}
+    #homeMascotLines .mascotLine:nth-child(2){--row-offset:22px;animation-delay:-1.1s}
+    #homeMascotLines .mascotLine:nth-child(3){--row-offset:-14px;animation-delay:-1.8s}
+    #homeMascotLines .mascotLine:nth-child(4){--row-offset:28px;animation-delay:-2.4s}
+    #homeMascotLines .mascotLine:nth-child(5){--row-offset:-22px;animation-delay:-3s}
+    #homeMascotLines .mascotLine:nth-child(6){--row-offset:12px;animation-delay:-3.6s}
+    #homeMascotLines [id^="typedText"]{display:inline-block;flex:0 1 auto;min-width:0;max-width:none;overflow:visible;font-size:clamp(.58rem,1.45vw,.86rem)!important;line-height:1.2;text-align:left}
+    #homeMascotLines .cursor{flex:0 0 auto}
+    @keyframes mascotDrift{
+      0%,100%{transform:translateX(calc(var(--row-offset) - 8px))}
+      50%{transform:translateX(calc(var(--row-offset) + 8px))}
+    }
     @media (max-width:720px){
       .hero-copy-line{white-space:normal}
+      #homeMascotLines{padding:0 12px}
+      #homeMascotLines .mascotLine{width:calc(100% - 24px)}
+      #homeMascotLines .mascotLine:nth-child(1){--row-offset:-10px}
+      #homeMascotLines .mascotLine:nth-child(2){--row-offset:10px}
+      #homeMascotLines .mascotLine:nth-child(3){--row-offset:-6px}
+      #homeMascotLines .mascotLine:nth-child(4){--row-offset:12px}
+      #homeMascotLines .mascotLine:nth-child(5){--row-offset:-8px}
+      #homeMascotLines .mascotLine:nth-child(6){--row-offset:6px}
     }
 
 
@@ -176,21 +198,6 @@
     .avatar{width:clamp(36px,6vw,54px);height:clamp(36px,6vw,54px);border-radius:14px;border:2px solid rgba(110,64,201,0.85);object-fit:contain;background:transparent;padding:0}
     .slot.power .avatar{border-color:rgba(210,153,34,0.85)}
     #typedAvatar,#typedAvatar2,#typedAvatar3,#typedAvatar4,#typedAvatar5,#typedAvatar6{border-radius:14px!important;object-fit:contain!important;background:transparent!important;padding:0!important}
-    #homeMascotLines .mascotLine:nth-child(1){transform:translateX(-34px)}
-    #homeMascotLines .mascotLine:nth-child(2){transform:translateX(24px)}
-    #homeMascotLines .mascotLine:nth-child(3){transform:translateX(-16px)}
-    #homeMascotLines .mascotLine:nth-child(4){transform:translateX(38px)}
-    #homeMascotLines .mascotLine:nth-child(5){transform:translateX(-28px)}
-    #homeMascotLines .mascotLine:nth-child(6){transform:translateX(14px)}
-    @media (max-width:560px){
-      #homeMascotLines .mascotLine:nth-child(1){transform:translateX(-18px)}
-      #homeMascotLines .mascotLine:nth-child(2){transform:translateX(12px)}
-      #homeMascotLines .mascotLine:nth-child(3){transform:translateX(-8px)}
-      #homeMascotLines .mascotLine:nth-child(4){transform:translateX(18px)}
-      #homeMascotLines .mascotLine:nth-child(5){transform:translateX(-14px)}
-      #homeMascotLines .mascotLine:nth-child(6){transform:translateX(8px)}
-    }
-
     .who{font-size:14px;color:var(--purple2);letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:95%}
     .who .role{color:var(--muted)}
     .pr{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;max-width:96%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.3;text-align:center}
@@ -353,17 +360,17 @@
           <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(137,87,229,.08);filter:blur(40px);pointer-events:none"></div>
           <div style="text-align:center;margin-bottom:16px">
             <div class="hero-copy-line" style="margin-bottom:4px;font-size:17px;color:#e6edf3;font-weight:700">Mona, Copilot, and Ducky just unlocked 12 terminal challenges.</div>
-            <div class="hero-copy-line" style="margin-bottom:4px;font-size:15px;color:#bc8cff;font-weight:700">Help them ship fast with Copilot CLI before time runs out.</div>
+            <div class="hero-copy-line" style="margin-bottom:4px;font-size:15px;color:#bc8cff;font-weight:700">Help them ship fast with the GitHub Copilot CLI before time runs out.</div>
             <div class="hero-copy-line" style="font-size:15px;color:#58a6ff;font-weight:700">Welcome to Terminal Frenzy!</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:rgba(137,87,229,.06);border:1px solid rgba(137,87,229,.12)">
               <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#8957e5,#6e40c9);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">1</div>
-              <div style="font-size:14px;color:#8b949e"><b style="color:#e6edf3">Press keys.</b> Clear requests. Keep the queue moving.</div>
+              <div style="font-size:14px;color:#8b949e"><b style="color:#e6edf3">Press keys.</b> Clear requests and keep the queue moving.</div>
             </div>
             <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:rgba(88,166,255,.05);border:1px solid rgba(163,113,247,.16)">
               <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#a371f7,#58a6ff);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">2</div>
-              <div style="font-size:14px;color:#8b949e"><b style="color:#58a6ff">Type urgent commands.</b> Ship before time runs out.</div>
+              <div style="font-size:14px;color:#8b949e"><b style="color:#58a6ff">Type urgent commands.</b> Use the GitHub Copilot CLI to ship before time runs out.</div>
             </div>
           </div>
         </div>
@@ -2185,6 +2192,16 @@
   // Shuffle ALL phrases on every load — completely random order each time
   for (let i = TYPING_PHRASES_ALL.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [TYPING_PHRASES_ALL[i], TYPING_PHRASES_ALL[j]] = [TYPING_PHRASES_ALL[j], TYPING_PHRASES_ALL[i]]; }
   const TYPING_PHRASES = TYPING_PHRASES_ALL;
+  const HOME_MASCOT_SEQUENCE = ['mona', 'copilot', 'ducky', 'mona', 'copilot', 'ducky'];
+  const TYPING_PHRASES_BY_WHO = TYPING_PHRASES_ALL.reduce((acc, phrase) => {
+    (acc[phrase.who] ||= []).push(phrase);
+    return acc;
+  }, {});
+  function homePhrase(lineIndex, phraseIndex) {
+    const who = HOME_MASCOT_SEQUENCE[lineIndex];
+    const phrases = TYPING_PHRASES_BY_WHO[who] || TYPING_PHRASES;
+    return phrases[phraseIndex % phrases.length];
+  }
 
   // --- Typing animation with mascot artwork ---
   let phraseIdx = 0, charIdx = 0, isDeleting = false;
@@ -2201,7 +2218,7 @@
 
   function typeLoop() {
     if (!typedEl) return;
-    const entry = TYPING_PHRASES[phraseIdx];
+    const entry = homePhrase(0, phraseIdx);
     const phrase = entry.text;
     if (!isDeleting) {
       if (charIdx === 0) showTypedAvatar(entry.who);
@@ -2227,7 +2244,7 @@
     }
   }
   // Show first phrase immediately, then start cycling
-  const firstWho = TYPING_PHRASES[0].who;
+  const firstWho = HOME_MASCOT_SEQUENCE[0];
   if (firstWho && typedAvatar) {
     const firstPerson = DEVREL.find(p => p.name === firstWho);
     if (firstPerson) { typedAvatar.src = mascotPopupImage(firstPerson); typedAvatar.style.display = 'block'; }
@@ -2250,7 +2267,7 @@
 
   function typeLoop2() {
     if (!typedEl2) return;
-    const entry = TYPING_PHRASES[phraseIdx2];
+    const entry = homePhrase(1, phraseIdx2);
     const phrase = entry.text;
     if (!isDeleting2) {
       if (charIdx2 === 0) showTypedAvatar2(entry.who);
@@ -2276,7 +2293,7 @@
     }
   }
   // Start line 2 offset so they cross
-  const firstWho2 = TYPING_PHRASES[phraseIdx2].who;
+  const firstWho2 = HOME_MASCOT_SEQUENCE[1];
   if (firstWho2 && typedAvatar2) {
     const fp2 = DEVREL.find(p => p.name === firstWho2);
     if (fp2) { typedAvatar2.src = mascotPopupImage(fp2); typedAvatar2.style.display = 'block'; }
@@ -2298,7 +2315,7 @@
 
   function typeLoop3() {
     if (!typedEl3) return;
-    const entry = TYPING_PHRASES[phraseIdx3];
+    const entry = homePhrase(2, phraseIdx3);
     const phrase = entry.text;
     if (!isDeleting3) {
       if (charIdx3 === 0) showTypedAvatar3(entry.who);
@@ -2323,7 +2340,7 @@
       setTimeout(typeLoop3, 8 + Math.random() * 14);
     }
   }
-  const firstWho3 = TYPING_PHRASES[phraseIdx3].who;
+  const firstWho3 = HOME_MASCOT_SEQUENCE[2];
   if (firstWho3 && typedAvatar3) {
     const fp3 = DEVREL.find(p => p.name === firstWho3);
     if (fp3) { typedAvatar3.src = mascotPopupImage(fp3); typedAvatar3.style.display = 'block'; }
@@ -2345,7 +2362,7 @@
 
   function typeLoop4() {
     if (!typedEl4) return;
-    const entry = TYPING_PHRASES[phraseIdx4];
+    const entry = homePhrase(3, phraseIdx4);
     const phrase = entry.text;
     if (!isDeleting4) {
       if (charIdx4 === 0) showTypedAvatar4(entry.who);
@@ -2370,7 +2387,7 @@
       setTimeout(typeLoop4, 8 + Math.random() * 14);
     }
   }
-  const firstWho4 = TYPING_PHRASES[phraseIdx4].who;
+  const firstWho4 = HOME_MASCOT_SEQUENCE[3];
   if (firstWho4 && typedAvatar4) {
     const fp4 = DEVREL.find(p => p.name === firstWho4);
     if (fp4) { typedAvatar4.src = mascotPopupImage(fp4); typedAvatar4.style.display = 'block'; }
@@ -2383,7 +2400,7 @@
   let phraseIdx5 = Math.floor(TYPING_PHRASES.length * 0.17), charIdx5 = 0, isDeleting5 = false;
   function typeLoop5() {
     if (!typedEl5) return;
-    const entry = TYPING_PHRASES[phraseIdx5];
+    const entry = homePhrase(4, phraseIdx5);
     const phrase = entry.text;
     if (!isDeleting5) {
       if (charIdx5 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar5) { typedAvatar5.src = mascotPopupImage(p); typedAvatar5.style.display = 'block'; } else if (typedAvatar5) typedAvatar5.style.display = 'none'; }
@@ -2399,7 +2416,7 @@
     }
   }
   setTimeout(typeLoop5, 1600);
-  const fw5 = TYPING_PHRASES[phraseIdx5].who;
+  const fw5 = HOME_MASCOT_SEQUENCE[4];
   if (fw5 && typedAvatar5) { const p5 = DEVREL.find(p => p.name === fw5); if (p5) { typedAvatar5.src = mascotPopupImage(p5); typedAvatar5.style.display = 'block'; } }
 
   // --- SIXTH typing line (sky blue, offset at 5/6) ---
@@ -2408,7 +2425,7 @@
   let phraseIdx6 = Math.floor(TYPING_PHRASES.length * 0.83), charIdx6 = 0, isDeleting6 = false;
   function typeLoop6() {
     if (!typedEl6) return;
-    const entry = TYPING_PHRASES[phraseIdx6];
+    const entry = homePhrase(5, phraseIdx6);
     const phrase = entry.text;
     if (!isDeleting6) {
       if (charIdx6 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar6) { typedAvatar6.src = mascotPopupImage(p); typedAvatar6.style.display = 'block'; } else if (typedAvatar6) typedAvatar6.style.display = 'none'; }
@@ -2424,7 +2441,7 @@
     }
   }
   setTimeout(typeLoop6, 2000);
-  const fw6 = TYPING_PHRASES[phraseIdx6].who;
+  const fw6 = HOME_MASCOT_SEQUENCE[5];
   if (fw6 && typedAvatar6) { const p6 = DEVREL.find(p => p.name === fw6); if (p6) { typedAvatar6.src = mascotPopupImage(p6); typedAvatar6.style.display = 'block'; } }
 
   // --- Easter egg: click "Frenzy" for burst (Hoot-style) ---
