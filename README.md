@@ -1,10 +1,10 @@
-# 🎮 DevRel Terminal Frenzy
+# 🎮 Terminal Frenzy
 
 [![Play Now](https://img.shields.io/badge/Play%20Now-GitHub%20Pages-7c3aed?style=for-the-badge&logo=github)](https://dubsopenhub.github.io/devrel-terminal-frenzy/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Built with Copilot CLI](https://img.shields.io/badge/Built%20with-Copilot%20CLI-06b6d4.svg)](https://docs.github.com/en/copilot/github-copilot-in-the-cli)
 
-**A retro arcade game for the GitHub DevRel team.** Approve PRs, survive urgent requests, and clear the review queue — all in 60 seconds. Featuring the faces and names of the entire DevRel org.
+**A retro arcade game starring GitHub's mascot characters.** Clear requests from Mona, Copilot, and Ducky, survive urgent terminal prompts, and keep the pipeline green for 60 seconds.
 
 ---
 
@@ -35,18 +35,18 @@ Or just download and double-click `index.html` — it's a single file with zero 
 
 | Step | What to do |
 |------|-----------|
-| **1** | Press the **key shown** on each card to approve it |
+| **1** | Press the **key shown** on each mascot request card to clear it |
 | **2** | Type the **Copilot CLI command** when urgent requests appear |
 
 That's it. 60 seconds. How many can you clear?
 
 ### Scoring
 
-- ✅ **Approve a card** → points × your pipeline multiplier
-- ⭐ **Power-up cards** → double points, freeze timers, auto-approve
-- 🔥 **Urgent requests** → type `/approve`, `LGTM`, `/ship-it`, or `/yolo` for big bonuses
+- ✅ **Clear a request** → points × your pipeline multiplier
+- ⭐ **Power-up cards** → double points, freeze timers, auto-clear requests
+- 🔥 **Urgent requests** → type the shown Copilot CLI command for big bonuses
 - ❌ **Wrong key** → lose points and break your combo
-- 👑 **Final request** → Martin Woodward appears in the last 10 seconds. Type the full Copilot CLI command.
+- 👑 **Final request** → Mona appears in the last 10 seconds. Type the full Copilot CLI command.
 
 ### Ranks
 
@@ -62,9 +62,9 @@ That's it. 60 seconds. How many can you clear?
 
 ---
 
-## 👥 The Team
+## 🐙 The Characters
 
-All members of the GitHub DevRel organization are featured in the game — their GitHub avatars appear on review cards, in urgent requests, and in the animated title screen. Each person has a custom typing phrase that cycles on the home screen.
+GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — now drive every card, urgent request, and animated title line. Mascot artwork is embedded directly in the single HTML file.
 
 ---
 
@@ -74,9 +74,9 @@ All members of the GitHub DevRel organization are featured in the game — their
 - **~2,000 lines** of HTML, CSS, and JavaScript
 - **Web Audio API** — all sound effects synthesized in real-time
 - **Canvas** — Matrix rain background and particle effects
-- **GitHub Avatars** — loaded directly from `avatars.githubusercontent.com`
+- **GitHub mascot artwork** — embedded directly in `index.html`
 - **localStorage** — high score persistence across sessions
-- **Works offline** — once avatar images are cached
+- **Works offline** — mascot artwork ships inside the HTML file
 
 ---
 
@@ -97,8 +97,8 @@ devrel-terminal-frenzy/
 
 ## 🤝 Contributing
 
-This is a team fun project! Ideas welcome:
-- New typing phrases for team members
+This is a fun project! Ideas welcome:
+- New mascot request phrases
 - Visual effects and polish
 - New urgent request commands
 - Accessibility improvements

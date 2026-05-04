@@ -12,7 +12,7 @@
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Please report vulnerabilities via [GitHub Security Advisories](https://github.com/DUBSOpenHub/devrel-cli-frenzy/security/advisories/new) or email the repository owner directly.
+Please report vulnerabilities via [GitHub Security Advisories](https://github.com/DUBSOpenHub/devrel-terminal-frenzy/security/advisories/new) or email the repository owner directly.
 
 Include:
 - A description of the vulnerability and its potential impact
@@ -31,19 +31,20 @@ Include:
 
 ## Security Posture
 
-This is a **client-side only** HTML game with no server component, no authentication, and no data collection.
+This is a **client-side only** HTML game with no server component and no authentication.
 
 ### What it does
-- Loads team avatar images from `avatars.githubusercontent.com` (GitHub's public CDN)
-- Stores a single high score value in the browser's `localStorage`
+- Uses embedded GitHub mascot artwork
+- Stores local gameplay data in the browser's `localStorage`
+- Optionally syncs leaderboard scores to JSONBlob
 - Synthesizes audio using the Web Audio API
 - Runs entirely in your browser tab
 
 ### What it does NOT do
-- ❌ No server, no backend, no API calls (other than avatar images)
+- ❌ No server, no backend, no game API calls (other than image and leaderboard requests)
 - ❌ No cookies, no tracking, no analytics
 - ❌ No user accounts or authentication
-- ❌ No data sent anywhere — everything stays in your browser
+- ❌ No analytics or behavioral tracking
 - ❌ No external JavaScript dependencies
 - ❌ No service workers or background processes
 
@@ -51,15 +52,17 @@ This is a **client-side only** HTML game with no server component, no authentica
 
 - All game logic is inline in a single HTML file
 - No external scripts are loaded
-- Avatar images are loaded with `crossOrigin="anonymous"` from GitHub's CDN
-- No user input is stored or transmitted — the game is stateless except for `localStorage` high score
+- Mascot artwork is loaded with `crossOrigin="anonymous"` from GitHub's brand site
+- Player handles and scores may be stored locally and submitted to the leaderboard endpoint
 
 ### localStorage Usage
 
-The game stores exactly two keys in `localStorage`:
-- `copilot-frenzy-v2` — high score and achievement data (JSON)
+The game stores local gameplay data in `localStorage`:
+- `terminal-frenzy-v1` — high score and achievement data (JSON)
+- `terminal-frenzy-player` — the locally remembered player handle
+- `terminal-frenzy-arcade` — local leaderboard cache
 
-This data never leaves the browser. Clearing browser data removes it entirely.
+Local data is cleared when browser data is cleared. Leaderboard submissions are sent to the configured JSONBlob endpoint.
 
 ---
 
@@ -68,5 +71,5 @@ This data never leaves the browser. Clearing browser data removes it entirely.
 ### No Content Security Policy header
 Since the game is a local HTML file (or hosted on GitHub Pages), CSP headers are not set. If hosting on a custom domain, consider adding appropriate CSP headers.
 
-### Avatar image loading
-Team member avatars are loaded from `https://avatars.githubusercontent.com`. If this CDN is unreachable, the game still functions but cards will show placeholder images. A fallback timeout ensures the game starts within 5 seconds regardless.
+### Mascot image loading
+Mascot artwork is embedded as data URLs in `index.html`, so gameplay does not depend on a remote image host for character art.
