@@ -726,6 +726,7 @@
   // --- Audio (beeps + keyboard clacks) ---
   let audioCtx;
   let audioOn = true;
+  const MUSIC_VOLUME = 0.135;
   function ensureAudio(){
     if (!audioOn) return;
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1641,7 +1642,7 @@
     function introJingle() {
       if (!audioCtx) return;
       const t = audioCtx.currentTime;
-      const vol = 0.135;
+      const vol = MUSIC_VOLUME;
       function n(freq, start, dur, type) {
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
@@ -1751,7 +1752,7 @@
     function victoryJingle() {
       if (!audioCtx) return;
       const t = audioCtx.currentTime;
-      const vol = 0.1;
+      const vol = MUSIC_VOLUME;
       function note(freq, start, dur, type='square') {
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
