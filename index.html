@@ -212,8 +212,7 @@
     .card{position:absolute;inset:16px 0 0 0;padding:4px 6px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2px}
     .slot.active .card{display:flex}
 
-    .avatar{width:clamp(36px,6vw,54px);height:clamp(36px,6vw,54px);border-radius:14px;border:2px solid rgba(110,64,201,0.85);object-fit:contain;background:transparent;padding:0}
-    .slot.power .avatar{border-color:rgba(210,153,34,0.85)}
+    .avatar{width:clamp(36px,6vw,54px);height:clamp(36px,6vw,54px);border-radius:14px;object-fit:contain;background:transparent;padding:0}
     #typedAvatar,#typedAvatar2,#typedAvatar3,#typedAvatar4,#typedAvatar5,#typedAvatar6{border-radius:14px!important;object-fit:contain!important;background:transparent!important;padding:0!important}
     .who{font-size:14px;color:var(--purple2);letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:95%}
     .pr{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;max-width:96%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.3;text-align:center}
@@ -241,7 +240,7 @@
     .bossTop{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
     .bossTag{letter-spacing:4px;;font-size:16px;color:var(--purple2)}
     .bossMeta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .bossAvatar{width:72px;height:72px;border-radius:18px;border:3px solid rgba(163,113,247,0.95);object-fit:contain;background:transparent;padding:0}
+    .bossAvatar{width:72px;height:72px;border-radius:18px;object-fit:contain;background:transparent;padding:0}
     .bossName{color:var(--purple2);letter-spacing:1px;font-size:12px}
 
     .bossPR{margin-top:10px;color:var(--muted);font-size:14px;letter-spacing:1px}
@@ -339,32 +338,32 @@
         <!-- Typing animations with GitHub mascots -->
         <div id="homeMascotLines" style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:4px;margin-bottom:24px">
           <div class="mascotLine" style="font-size:clamp(.85rem,1.8vw,1rem);color:#8b949e;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(137,87,229,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText" style="color:#58a6ff;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#58a6ff"></span>
           </div>
           <div class="mascotLine" style="font-size:clamp(.85rem,1.8vw,1rem);color:#8b949e;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar2" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(88,166,255,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar2" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText2" style="color:#a371f7;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#a371f7"></span>
           </div>
           <div class="mascotLine" style="font-size:clamp(.85rem,1.8vw,1rem);color:#8b949e;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar3" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(63,185,80,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar3" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText3" style="color:#3fb950;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#3fb950"></span>
           </div>
           <div class="mascotLine" style="font-size:clamp(.85rem,1.8vw,1rem);color:#8b949e;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar4" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(210,153,34,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar4" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText4" style="color:#f0883e;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#f0883e"></span>
           </div>
           <div class="mascotLine" style="font-size:clamp(.85rem,1.8vw,1rem);color:#8b949e;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar5" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(248,81,73,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar5" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText5" style="color:#f85149;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#f85149"></span>
           </div>
           <div class="mascotLine" style="font-size:clamp(.85rem,1.8vw,1rem);color:#8b949e;display:flex;align-items:center;justify-content:center;gap:8px;min-height:2em;white-space:nowrap">
-            <img id="typedAvatar6" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(88,166,255,.5);object-fit:cover;display:none;flex-shrink:0" src="" alt="">
+            <img id="typedAvatar6" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:none;flex-shrink:0" src="" alt="">
             <span id="typedText6" style="color:#e6edf3;font-family:ui-monospace,monospace;font-size:1.15em"></span>
             <span class="cursor" style="background:#e6edf3"></span>
           </div>
