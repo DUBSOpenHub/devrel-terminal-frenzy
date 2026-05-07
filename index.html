@@ -2192,9 +2192,12 @@
   // Shuffle ALL phrases on every load — completely random order each time
   for (let i = TYPING_PHRASES_ALL.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [TYPING_PHRASES_ALL[i], TYPING_PHRASES_ALL[j]] = [TYPING_PHRASES_ALL[j], TYPING_PHRASES_ALL[i]]; }
   const TYPING_PHRASES = TYPING_PHRASES_ALL;
-  const HOME_MASCOT_SEQUENCE = Object.freeze(['mona', 'copilot', 'ducky', 'mona', 'copilot', 'ducky']);
-  for (let i = 1; i < HOME_MASCOT_SEQUENCE.length; i++) {
-    if (HOME_MASCOT_SEQUENCE[i] === HOME_MASCOT_SEQUENCE[i - 1]) {
+  const HOME_MASCOTS = Object.freeze(['mona', 'copilot', 'ducky']);
+  const HOME_MASCOT_START = Object.freeze(['mona', 'copilot', 'ducky', 'mona', 'copilot', 'ducky']);
+  let currentHomeMascots = [...HOME_MASCOT_START];
+  let lastHomeMascots = [...HOME_MASCOT_START];
+  for (let i = 1; i < HOME_MASCOT_START.length; i++) {
+    if (HOME_MASCOT_START[i] === HOME_MASCOT_START[i - 1]) {
       throw new Error('Home mascot rows cannot repeat the same character on adjacent lines');
     }
   }
@@ -2203,13 +2206,33 @@
     return acc;
   }, {});
   function homePhrase(lineIndex, phraseIndex) {
-    const who = HOME_MASCOT_SEQUENCE[lineIndex];
+    const who = currentHomeMascots[lineIndex];
+    if (!who) return null;
     const phrases = TYPING_PHRASES_BY_WHO[who] || TYPING_PHRASES;
     return phrases[phraseIndex % phrases.length];
   }
   function nextHomePhraseIndex(lineIndex, phraseIndex) {
-    const phrases = TYPING_PHRASES_BY_WHO[HOME_MASCOT_SEQUENCE[lineIndex]] || TYPING_PHRASES;
+    const who = lastHomeMascots[lineIndex] || HOME_MASCOT_START[lineIndex];
+    const phrases = TYPING_PHRASES_BY_WHO[who] || TYPING_PHRASES;
     return (phraseIndex + 1) % phrases.length;
+  }
+  function clearHomeMascotLine(lineIndex) {
+    currentHomeMascots[lineIndex] = null;
+  }
+  function chooseHomeMascotLine(lineIndex) {
+    const blocked = new Set([lastHomeMascots[lineIndex]]);
+    if (lineIndex > 0 && currentHomeMascots[lineIndex - 1]) blocked.add(currentHomeMascots[lineIndex - 1]);
+    if (lineIndex < currentHomeMascots.length - 1 && currentHomeMascots[lineIndex + 1]) blocked.add(currentHomeMascots[lineIndex + 1]);
+    const choices = HOME_MASCOTS.filter(who => !blocked.has(who));
+    if (!choices.length) return null;
+    const who = choices[Math.floor(Math.random() * choices.length)];
+    currentHomeMascots[lineIndex] = who;
+    lastHomeMascots[lineIndex] = who;
+    return who;
+  }
+  function readyHomePhrase(lineIndex, phraseIndex) {
+    if (!currentHomeMascots[lineIndex] && !chooseHomeMascotLine(lineIndex)) return null;
+    return homePhrase(lineIndex, phraseIndex);
   }
 
   // --- Typing animation with mascot artwork ---
@@ -2227,7 +2250,8 @@
 
   function typeLoop() {
     if (!typedEl) return;
-    const entry = homePhrase(0, phraseIdx);
+    const entry = readyHomePhrase(0, phraseIdx);
+    if (!entry) { setTimeout(typeLoop, 100 + Math.random() * 200); return; }
     const phrase = entry.text;
     if (!isDeleting) {
       if (charIdx === 0) showTypedAvatar(entry.who);
@@ -2245,6 +2269,7 @@
       if (charIdx <= 0) {
         isDeleting = false;
         showTypedAvatar(null);
+        clearHomeMascotLine(0);
         phraseIdx = nextHomePhraseIndex(0, phraseIdx);
         setTimeout(typeLoop, 100 + Math.random() * 300);
         return;
@@ -2253,7 +2278,7 @@
     }
   }
   // Show first phrase immediately, then start cycling
-  const firstWho = HOME_MASCOT_SEQUENCE[0];
+  const firstWho = HOME_MASCOT_START[0];
   if (firstWho && typedAvatar) {
     const firstPerson = DEVREL.find(p => p.name === firstWho);
     if (firstPerson) { typedAvatar.src = mascotPopupImage(firstPerson); typedAvatar.style.display = 'block'; }
@@ -2276,7 +2301,8 @@
 
   function typeLoop2() {
     if (!typedEl2) return;
-    const entry = homePhrase(1, phraseIdx2);
+    const entry = readyHomePhrase(1, phraseIdx2);
+    if (!entry) { setTimeout(typeLoop2, 100 + Math.random() * 200); return; }
     const phrase = entry.text;
     if (!isDeleting2) {
       if (charIdx2 === 0) showTypedAvatar2(entry.who);
@@ -2294,6 +2320,7 @@
       if (charIdx2 <= 0) {
         isDeleting2 = false;
         showTypedAvatar2(null);
+        clearHomeMascotLine(1);
         phraseIdx2 = nextHomePhraseIndex(1, phraseIdx2);
         setTimeout(typeLoop2, 100 + Math.random() * 300);
         return;
@@ -2302,7 +2329,7 @@
     }
   }
   // Start line 2 offset so they cross
-  const firstWho2 = HOME_MASCOT_SEQUENCE[1];
+  const firstWho2 = HOME_MASCOT_START[1];
   if (firstWho2 && typedAvatar2) {
     const fp2 = DEVREL.find(p => p.name === firstWho2);
     if (fp2) { typedAvatar2.src = mascotPopupImage(fp2); typedAvatar2.style.display = 'block'; }
@@ -2324,7 +2351,8 @@
 
   function typeLoop3() {
     if (!typedEl3) return;
-    const entry = homePhrase(2, phraseIdx3);
+    const entry = readyHomePhrase(2, phraseIdx3);
+    if (!entry) { setTimeout(typeLoop3, 100 + Math.random() * 200); return; }
     const phrase = entry.text;
     if (!isDeleting3) {
       if (charIdx3 === 0) showTypedAvatar3(entry.who);
@@ -2342,6 +2370,7 @@
       if (charIdx3 <= 0) {
         isDeleting3 = false;
         showTypedAvatar3(null);
+        clearHomeMascotLine(2);
         phraseIdx3 = nextHomePhraseIndex(2, phraseIdx3);
         setTimeout(typeLoop3, 100 + Math.random() * 300);
         return;
@@ -2349,7 +2378,7 @@
       setTimeout(typeLoop3, 8 + Math.random() * 14);
     }
   }
-  const firstWho3 = HOME_MASCOT_SEQUENCE[2];
+  const firstWho3 = HOME_MASCOT_START[2];
   if (firstWho3 && typedAvatar3) {
     const fp3 = DEVREL.find(p => p.name === firstWho3);
     if (fp3) { typedAvatar3.src = mascotPopupImage(fp3); typedAvatar3.style.display = 'block'; }
@@ -2371,7 +2400,8 @@
 
   function typeLoop4() {
     if (!typedEl4) return;
-    const entry = homePhrase(3, phraseIdx4);
+    const entry = readyHomePhrase(3, phraseIdx4);
+    if (!entry) { setTimeout(typeLoop4, 100 + Math.random() * 200); return; }
     const phrase = entry.text;
     if (!isDeleting4) {
       if (charIdx4 === 0) showTypedAvatar4(entry.who);
@@ -2389,6 +2419,7 @@
       if (charIdx4 <= 0) {
         isDeleting4 = false;
         showTypedAvatar4(null);
+        clearHomeMascotLine(3);
         phraseIdx4 = nextHomePhraseIndex(3, phraseIdx4);
         setTimeout(typeLoop4, 100 + Math.random() * 300);
         return;
@@ -2396,7 +2427,7 @@
       setTimeout(typeLoop4, 8 + Math.random() * 14);
     }
   }
-  const firstWho4 = HOME_MASCOT_SEQUENCE[3];
+  const firstWho4 = HOME_MASCOT_START[3];
   if (firstWho4 && typedAvatar4) {
     const fp4 = DEVREL.find(p => p.name === firstWho4);
     if (fp4) { typedAvatar4.src = mascotPopupImage(fp4); typedAvatar4.style.display = 'block'; }
@@ -2409,7 +2440,8 @@
   let phraseIdx5 = Math.floor(TYPING_PHRASES.length * 0.17), charIdx5 = 0, isDeleting5 = false;
   function typeLoop5() {
     if (!typedEl5) return;
-    const entry = homePhrase(4, phraseIdx5);
+    const entry = readyHomePhrase(4, phraseIdx5);
+    if (!entry) { setTimeout(typeLoop5, 100 + Math.random() * 200); return; }
     const phrase = entry.text;
     if (!isDeleting5) {
       if (charIdx5 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar5) { typedAvatar5.src = mascotPopupImage(p); typedAvatar5.style.display = 'block'; } else if (typedAvatar5) typedAvatar5.style.display = 'none'; }
@@ -2420,12 +2452,12 @@
     } else {
       charIdx5--;
       typedEl5.textContent = phrase.slice(0, charIdx5) || '\u00A0';
-      if (charIdx5 <= 0) { isDeleting5 = false; if (typedAvatar5) typedAvatar5.style.display = 'none'; phraseIdx5 = nextHomePhraseIndex(4, phraseIdx5); setTimeout(typeLoop5, 100 + Math.random() * 300); return; }
+      if (charIdx5 <= 0) { isDeleting5 = false; if (typedAvatar5) typedAvatar5.style.display = 'none'; clearHomeMascotLine(4); phraseIdx5 = nextHomePhraseIndex(4, phraseIdx5); setTimeout(typeLoop5, 100 + Math.random() * 300); return; }
       setTimeout(typeLoop5, 8 + Math.random() * 14);
     }
   }
   setTimeout(typeLoop5, 1600);
-  const fw5 = HOME_MASCOT_SEQUENCE[4];
+  const fw5 = HOME_MASCOT_START[4];
   if (fw5 && typedAvatar5) { const p5 = DEVREL.find(p => p.name === fw5); if (p5) { typedAvatar5.src = mascotPopupImage(p5); typedAvatar5.style.display = 'block'; } }
 
   // --- SIXTH typing line (sky blue, offset at 5/6) ---
@@ -2434,7 +2466,8 @@
   let phraseIdx6 = Math.floor(TYPING_PHRASES.length * 0.83), charIdx6 = 0, isDeleting6 = false;
   function typeLoop6() {
     if (!typedEl6) return;
-    const entry = homePhrase(5, phraseIdx6);
+    const entry = readyHomePhrase(5, phraseIdx6);
+    if (!entry) { setTimeout(typeLoop6, 100 + Math.random() * 200); return; }
     const phrase = entry.text;
     if (!isDeleting6) {
       if (charIdx6 === 0) { const p = DEVREL.find(d => d.name === entry.who); if (p && typedAvatar6) { typedAvatar6.src = mascotPopupImage(p); typedAvatar6.style.display = 'block'; } else if (typedAvatar6) typedAvatar6.style.display = 'none'; }
@@ -2445,12 +2478,12 @@
     } else {
       charIdx6--;
       typedEl6.textContent = phrase.slice(0, charIdx6) || '\u00A0';
-      if (charIdx6 <= 0) { isDeleting6 = false; if (typedAvatar6) typedAvatar6.style.display = 'none'; phraseIdx6 = nextHomePhraseIndex(5, phraseIdx6); setTimeout(typeLoop6, 100 + Math.random() * 300); return; }
+      if (charIdx6 <= 0) { isDeleting6 = false; if (typedAvatar6) typedAvatar6.style.display = 'none'; clearHomeMascotLine(5); phraseIdx6 = nextHomePhraseIndex(5, phraseIdx6); setTimeout(typeLoop6, 100 + Math.random() * 300); return; }
       setTimeout(typeLoop6, 8 + Math.random() * 14);
     }
   }
   setTimeout(typeLoop6, 2000);
-  const fw6 = HOME_MASCOT_SEQUENCE[5];
+  const fw6 = HOME_MASCOT_START[5];
   if (fw6 && typedAvatar6) { const p6 = DEVREL.find(p => p.name === fw6); if (p6) { typedAvatar6.src = mascotPopupImage(p6); typedAvatar6.style.display = 'block'; } }
 
   // --- Easter egg: click "Frenzy" for burst (Hoot-style) ---
