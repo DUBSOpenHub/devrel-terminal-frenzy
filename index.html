@@ -379,7 +379,7 @@
           <div class="hero-copy-stack">
             <div class="hero-copy-kicker">12 terminals, 60 seconds</div>
             <div class="hero-copy-line" style="color:#e6edf3">Help Mona, Copilot, and Ducky keep the terminal moving.</div>
-            <div class="hero-copy-sub">Clear requests fast, then type urgent commands when they appear.</div>
+            <div class="hero-copy-sub">Use the Copilot CLI to clear requests fast and win!</div>
           </div>
           <div class="instruction-grid">
             <div class="instruction-step">
@@ -711,8 +711,7 @@
     return person.displayName || person.name;
   }
   function requesterLabel(person){
-    const role = person.role || titleFor(person.name);
-    return escapeHtml(displayName(person)) + (role ? ' <span class="role">· ' + escapeHtml(role) + '</span>' : '');
+    return escapeHtml(displayName(person));
   }
   function mascotImage(person){
     const urls = person.urls && person.urls.length ? person.urls : [person.url];
