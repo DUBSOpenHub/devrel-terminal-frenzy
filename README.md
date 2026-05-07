@@ -1,10 +1,10 @@
 # 🎮 Terminal Frenzy
 
-[![Play Now](https://img.shields.io/badge/Play%20Now-GitHub%20Pages-7c3aed?style=for-the-badge&logo=github)](https://dubsopenhub.github.io/devrel-terminal-frenzy/)
+[![Play Now](https://img.shields.io/badge/Play%20Now-GitHub%20Pages-7c3aed?style=for-the-badge&logo=github)](https://dubsopenhub.github.io/terminal-frenzy/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Built with Copilot CLI](https://img.shields.io/badge/Built%20with-Copilot%20CLI-06b6d4.svg)](https://docs.github.com/en/copilot/github-copilot-in-the-cli)
 
-**A retro arcade game starring GitHub's mascot characters.** Clear requests from Mona, Copilot, and Ducky, survive urgent terminal prompts, and keep the pipeline green for 60 seconds.
+**Terminal Frenzy is a fast, mascot-powered Copilot CLI arcade challenge.** Clear 12 terminal requests from Mona, Copilot, and Ducky in 60 seconds, survive urgent command prompts, and keep the pipeline green.
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### 🌐 Browser (instant)
 
-**[Play on GitHub Pages →](https://dubsopenhub.github.io/devrel-terminal-frenzy/)**
+**[Play on GitHub Pages →](https://dubsopenhub.github.io/terminal-frenzy/)**
 
 ### 🎬 Game Preview
 
@@ -23,8 +23,8 @@
 
 ```bash
 # Clone and open
-git clone https://github.com/DUBSOpenHub/devrel-terminal-frenzy.git
-open devrel-terminal-frenzy/index.html
+git clone https://github.com/DUBSOpenHub/terminal-frenzy.git
+open terminal-frenzy/index.html
 ```
 
 Or just download and double-click `index.html` — it's a single file with zero dependencies.
@@ -38,7 +38,7 @@ Or just download and double-click `index.html` — it's a single file with zero 
 | **1** | Press the **key shown** on each mascot request card to clear it |
 | **2** | Type the **Copilot CLI command** when urgent requests appear |
 
-That's it. 60 seconds. How many can you clear?
+That's it: **12 terminals, 60 seconds**. How many can you clear?
 
 ### Scoring
 
@@ -64,7 +64,7 @@ That's it. 60 seconds. How many can you clear?
 
 ## 🐙 The Characters
 
-GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — now drive every card, urgent request, and animated title line. Mascot artwork is embedded directly in the single HTML file.
+GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — drive every card, urgent request, and animated title line. In-game cards show just the character name for a cleaner arcade feel.
 
 ---
 
@@ -74,6 +74,7 @@ GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — now driv
 - **~2,000 lines** of HTML, CSS, and JavaScript
 - **Web Audio API** — all sound effects synthesized in real-time
 - **Canvas** — Matrix rain background and particle effects
+- **GitHub-inspired typography** — Mona Sans styling with a clean Terminal Frenzy title
 - **GitHub mascot artwork** — embedded directly in `index.html`
 - **localStorage** — high score persistence across sessions
 - **Works offline** — mascot artwork ships inside the HTML file
@@ -83,7 +84,7 @@ GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — now driv
 ## 📁 Repository Structure
 
 ```
-devrel-terminal-frenzy/
+terminal-frenzy/
 ├── index.html          # The entire game (single file)
 ├── README.md           # This file
 ├── AGENTS.md           # AI agent architecture

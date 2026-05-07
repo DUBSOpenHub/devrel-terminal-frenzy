@@ -14,12 +14,12 @@ This repository contains a single-file HTML5 arcade game (`index.html`).
 - Keep everything in `index.html` — do not split into separate files
 - Test changes by opening the file directly in a browser (`open index.html`)
 - Check for JS syntax errors with: `node -e "const fs=require('fs');const h=fs.readFileSync('index.html','utf8');const m=h.match(/<script>([\s\S]*?)<\/script>/);try{new Function(m[1]);console.log('OK')}catch(e){console.log('ERROR:',e.message)}"`
-- The game features GitHub mascot characters — roster changes require updating the `DEVREL` array AND the `TYPING_PHRASES_ALL` array
+- The game features GitHub mascot characters — roster changes require updating the `MASCOTS` array AND the `TYPING_PHRASES_ALL` array
 - All user-facing text should use "urgent request" (not "boss" or "manager")
 - No `text-transform: uppercase` — use natural casing throughout
 
 ## Character roster
-The `DEVREL` array is a legacy constant name that now contains GitHub mascot character names, roles, and artwork URLs. The `TYPING_PHRASES_ALL` array contains mascot request phrases. Both must stay in sync.
+The `MASCOTS` array contains GitHub mascot character names and artwork URLs. The `TYPING_PHRASES_ALL` array contains mascot request phrases. Both must stay in sync.
 
 ## Hosted at
-- GitHub Pages: `https://dubsopenhub.github.io/devrel-terminal-frenzy/`
+- GitHub Pages: `https://dubsopenhub.github.io/terminal-frenzy/`
