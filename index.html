@@ -93,8 +93,18 @@
     .startline.show{display:block}
 
     .divider{width:80px;height:1px;background:linear-gradient(90deg,transparent,rgba(163,113,247,0.3),transparent);margin:20px auto}
-    .hero-copy-stack{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:16px}
-    .hero-copy-line{width:100%;font-size:clamp(15px,1.8vw,17px);font-weight:700;line-height:1.35;text-align:center;white-space:nowrap}
+    .hero-copy-stack{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:18px;padding:0 8px;text-align:center}
+    .hero-copy-kicker{color:#58a6ff;font-size:12px;font-weight:800;letter-spacing:.08em;line-height:1.2}
+    .hero-copy-line{width:100%;font-size:clamp(17px,2.1vw,21px);font-weight:800;line-height:1.25;white-space:nowrap}
+    .hero-copy-sub{max-width:560px;color:#8b949e;font-size:14px;font-weight:600;line-height:1.45}
+    .instruction-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .instruction-step{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:rgba(13,17,23,.46);border:1px solid rgba(137,87,229,.14);text-align:left}
+    .instruction-step:nth-child(2){border-color:rgba(88,166,255,.16);background:rgba(88,166,255,.045)}
+    .instruction-num{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8957e5,#6e40c9);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex:0 0 auto}
+    .instruction-step:nth-child(2) .instruction-num{background:linear-gradient(135deg,#a371f7,#58a6ff)}
+    .instruction-text{color:#8b949e;font-size:13px;line-height:1.45}
+    .instruction-text b{display:block;color:#e6edf3;font-size:14px;margin-bottom:2px}
+    .instruction-step:nth-child(2) .instruction-text b{color:#58a6ff}
     #homeMascotLines{height:284px;overflow:hidden;padding:0 28px}
     #homeMascotLines .mascotLine{--row-offset:0px;height:44px;min-height:44px;flex-shrink:0;width:calc(100% - 72px);max-width:620px;margin:0 auto;padding:0 4px;justify-content:center!important;overflow:visible;animation:mascotDrift 4.8s ease-in-out infinite}
     #homeMascotLines .mascotLine:nth-child(1){--row-offset:-26px;animation-delay:-.3s}
@@ -111,6 +121,7 @@
     }
     @media (max-width:720px){
       .hero-copy-line{white-space:normal}
+      .instruction-grid{grid-template-columns:1fr}
       #homeMascotLines{padding:0 12px}
       #homeMascotLines .mascotLine{width:calc(100% - 24px)}
       #homeMascotLines .mascotLine:nth-child(1){--row-offset:-10px}
@@ -366,18 +377,18 @@
         <div style="width:100%;max-width:680px;border:1px solid rgba(137,87,229,.15);border-radius:16px;background:linear-gradient(135deg,rgba(13,17,23,.7),rgba(22,27,34,.5));backdrop-filter:blur(16px);padding:24px 28px;margin-bottom:28px;position:relative;overflow:hidden">
           <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(137,87,229,.08);filter:blur(40px);pointer-events:none"></div>
           <div class="hero-copy-stack">
-            <div class="hero-copy-line" style="color:#e6edf3">Mona, Copilot, and Ducky just unlocked 12 Copilot CLI challenges.</div>
-            <div class="hero-copy-line" style="color:#e6edf3">Help them ship fast with the GitHub Copilot CLI.</div>
-            <div class="hero-copy-line" style="color:#58a6ff">You have sixty seconds to complete the terminal frenzy!</div>
+            <div class="hero-copy-kicker">12 Copilot CLI challenges · sixty seconds</div>
+            <div class="hero-copy-line" style="color:#e6edf3">Help Mona, Copilot, and Ducky keep the terminal moving.</div>
+            <div class="hero-copy-sub">Clear requests fast, then type urgent commands when they appear.</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:rgba(137,87,229,.06);border:1px solid rgba(137,87,229,.12)">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#8957e5,#6e40c9);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">1</div>
-              <div style="font-size:14px;color:#8b949e"><b style="color:#e6edf3">Press keys.</b> Clear requests and keep the queue moving.</div>
+          <div class="instruction-grid">
+            <div class="instruction-step">
+              <div class="instruction-num">1</div>
+              <div class="instruction-text"><b>Press keys.</b> Clear requests and keep the queue moving.</div>
             </div>
-            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:rgba(88,166,255,.05);border:1px solid rgba(163,113,247,.16)">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#a371f7,#58a6ff);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">2</div>
-              <div style="font-size:14px;color:#8b949e"><b style="color:#58a6ff">Type urgent commands.</b> Use the GitHub Copilot CLI to ship before time runs out.</div>
+            <div class="instruction-step">
+              <div class="instruction-num">2</div>
+              <div class="instruction-text"><b>Type urgent commands.</b> Ship with GitHub Copilot CLI before time runs out.</div>
             </div>
           </div>
         </div>
