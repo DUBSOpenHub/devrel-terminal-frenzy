@@ -689,9 +689,16 @@
   // --- Helpers ---
   const pick = arr => arr[(Math.random()*arr.length)|0];
   const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+  let homeSparkleTimer = null;
   function showScreen(id){
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[id].classList.add('active');
+    if (id === 'title') {
+      setTimeout(() => { if (state === 'title') scheduleHomeSparkle(); }, 0);
+    } else {
+      clearTimeout(homeSparkleTimer);
+      homeSparkleTimer = null;
+    }
   }
   function displayName(mascot){
     return mascot.displayName || mascot.name;
@@ -1287,6 +1294,27 @@
     setTimeout(() => storm.remove(), 1600);
   }
 
+  function homeCopilotSparkle() {
+    if (state !== 'title' || document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const target = document.getElementById('homeMascotLines') || screens.title;
+    const rect = target.getBoundingClientRect();
+    const cx = clamp(rect.left + rect.width * (0.25 + Math.random() * 0.5), 80, innerWidth - 80);
+    const cy = clamp(rect.top + rect.height * (0.2 + Math.random() * 0.55), 90, innerHeight - 140);
+    copilotBurst(cx, cy);
+    setTimeout(() => {
+      if (state === 'title' && !document.hidden) githubLogoBurst(cx, cy, 10);
+    }, 120);
+  }
+
+  function scheduleHomeSparkle(delay = 5000) {
+    clearTimeout(homeSparkleTimer);
+    if (state !== 'title') return;
+    homeSparkleTimer = setTimeout(() => {
+      if (state === 'title') homeCopilotSparkle();
+      scheduleHomeSparkle(12000 + Math.random() * 6000);
+    }, delay);
+  }
+
   function showFinalFrenzy(){
     const splash = document.createElement('div');
     splash.className = 'finalFrenzySplash';
@@ -1634,6 +1662,8 @@
     currentPlayer = handle;
     localStorage.setItem('terminal-frenzy-player', handle);
     ensureAudio();
+    clearTimeout(homeSparkleTimer);
+    homeSparkleTimer = null;
 
     // --- COUNTDOWN with intro jingle ---
     const cdOverlay = document.getElementById('countdown');
@@ -2133,6 +2163,7 @@
     });
   }
   fetchArcade();
+  scheduleHomeSparkle();
 
   document.getElementById('startBtn').addEventListener('click', () => {
     // Require handle
