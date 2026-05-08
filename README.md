@@ -35,8 +35,8 @@ Or just download and double-click `index.html` — it's a single file with zero 
 
 | Step | What to do |
 |------|-----------|
-| **1** | Press the **key shown** on each mascot request card to clear it |
-| **2** | Type the **Copilot CLI command** when urgent requests appear |
+| **1** | Press the **key shown** on each mascot request card, or tap the card on mobile |
+| **2** | Type the **Copilot CLI command** when urgent requests appear, or tap the urgent command card on mobile |
 
 That's it: **12 terminals, 60 seconds**. How many can you clear?
 
@@ -77,6 +77,7 @@ GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — drive ev
 - **GitHub-inspired typography** — Mona Sans styling with a clean Terminal Frenzy title
 - **GitHub mascot artwork** — embedded directly in `index.html`
 - **localStorage** — high score persistence across sessions
+- **Responsive controls** — keyboard on desktop, tap controls on mobile
 - **Works offline** — mascot artwork ships inside the HTML file
 
 ---
