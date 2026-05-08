@@ -16,7 +16,7 @@
 
 ### 🎬 Game Preview
 
-![Game Preview](preview.gif)
+![Game Preview](https://raw.githubusercontent.com/DUBSOpenHub/terminal-frenzy/main/preview.gif?v=e033efb)
 
 
 ### 💻 From your terminal
