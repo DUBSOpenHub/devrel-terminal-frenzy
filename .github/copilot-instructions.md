@@ -1,4 +1,4 @@
-# Copilot Instructions — Copilot CLI: Terminal Frenzy
+# Copilot Instructions — Copilot CLI Terminal Frenzy
 
 This repository contains a single-file HTML5 arcade game (`index.html`).
 

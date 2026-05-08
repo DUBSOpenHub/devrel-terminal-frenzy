@@ -1,14 +1,14 @@
-# 🎮 Copilot CLI: Terminal Frenzy
+# 🎮 Copilot CLI Terminal Frenzy
 
 [![Play Now](https://img.shields.io/badge/Play%20Now-GitHub%20Pages-7c3aed?style=for-the-badge&logo=github)](https://dubsopenhub.github.io/copilot-cli-terminal-frenzy/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Built with Copilot CLI](https://img.shields.io/badge/Built%20with-Copilot%20CLI-06b6d4.svg)](https://docs.github.com/en/copilot/github-copilot-in-the-cli)
 
-**Copilot CLI: Terminal Frenzy is a fast, mascot-powered Copilot CLI arcade challenge.** Clear 12 terminal requests from Mona, Copilot, and Ducky in 60 seconds, survive urgent command prompts, and keep the pipeline green.
+**Copilot CLI Terminal Frenzy is a fast, mascot-powered Copilot CLI arcade challenge.** Clear 12 terminal requests from Mona, Copilot, and Ducky in 60 seconds, survive urgent command prompts, and keep the pipeline green.
 
 ### 🎬 Game Preview
 
-[![Copilot CLI: Terminal Frenzy gameplay preview](https://raw.githubusercontent.com/DUBSOpenHub/copilot-cli-terminal-frenzy/main/preview.gif?v=mobile-preview)](https://raw.githubusercontent.com/DUBSOpenHub/copilot-cli-terminal-frenzy/main/preview.gif?v=mobile-preview)
+[![Copilot CLI Terminal Frenzy gameplay preview](https://raw.githubusercontent.com/DUBSOpenHub/copilot-cli-terminal-frenzy/main/preview.gif?v=mobile-preview)](https://raw.githubusercontent.com/DUBSOpenHub/copilot-cli-terminal-frenzy/main/preview.gif?v=mobile-preview)
 
 [Open the preview GIF directly →](https://raw.githubusercontent.com/DUBSOpenHub/copilot-cli-terminal-frenzy/main/preview.gif?v=mobile-preview)
 
@@ -75,7 +75,7 @@ GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — drive ev
 - **~2,000 lines** of HTML, CSS, and JavaScript
 - **Web Audio API** — all sound effects synthesized in real-time
 - **Canvas** — Matrix rain background and particle effects
-- **GitHub-inspired typography** — Mona Sans styling with a clean Copilot CLI: Terminal Frenzy title
+- **GitHub-inspired typography** — Mona Sans styling with a clean Copilot CLI Terminal Frenzy title
 - **GitHub mascot artwork** — embedded directly in `index.html`
 - **localStorage** — high score persistence across sessions
 - **Responsive controls** — keyboard on desktop, tap controls on mobile
