@@ -363,6 +363,7 @@
       .bossCmd{padding:10px}
       .bossCmd .line{font-size:clamp(16px,5.4vw,26px);line-height:1.45;word-break:break-word}
       .bossHint{font-size:11px;letter-spacing:1px}
+      #countdownTitle{font-size:clamp(2rem,10vw,3.5rem)!important;white-space:normal!important}
       #countdownText{white-space:normal!important;padding:0 20px}
       .start-btn{padding:14px 34px;font-size:clamp(15px,4.8vw,20px)}
     }
@@ -393,16 +394,16 @@
   <div id="game">
     <!-- TITLE -->
     <div id="title" class="screen active">
-      <div style="position:relative;z-index:1;max-width:680px;width:92vw;text-align:center;display:flex;flex-direction:column;align-items:center;padding:24px 0">
+      <div style="position:relative;z-index:1;max-width:920px;width:94vw;text-align:center;display:flex;flex-direction:column;align-items:center;padding:24px 0">
 
         <!-- Badge -->
-        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid rgba(137,87,229,.35);border-radius:100px;background:rgba(137,87,229,.08);font-size:13px;color:#ffffff;letter-spacing:.04em;margin-bottom:28px">
-          <span style="width:6px;height:6px;border-radius:50%;background:#3fb950;box-shadow:0 0 8px #3fb950;animation:pulse 2s infinite"></span>
+        <div style="display:inline-flex;align-items:center;gap:10px;padding:8px 20px;border:1px solid rgba(210,168,255,.7);border-radius:100px;background:rgba(137,87,229,.18);box-shadow:0 0 36px rgba(163,113,247,.32), inset 0 0 18px rgba(255,255,255,.05);font-size:clamp(14px,2vw,18px);font-weight:800;color:#ffffff;letter-spacing:.04em;margin-bottom:30px;text-shadow:0 0 18px rgba(255,255,255,.32)">
+          <span style="width:8px;height:8px;border-radius:50%;background:#3fb950;box-shadow:0 0 14px #3fb950,0 0 28px rgba(63,185,80,.65);animation:pulse 2s infinite"></span>
           Copilot CLI: Terminal Frenzy
         </div>
 
         <!-- Title -->
-        <h1 style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(2.5rem,8vw,5.5rem);font-weight:900;letter-spacing:-.03em;line-height:1;margin:0 0 16px;color:#ffffff;text-shadow:0 0 30px rgba(255,255,255,0.18)">Copilot CLI:<br>Terminal <span id="frenzyZap" style="cursor:pointer;color:inherit;-webkit-user-select:none;user-select:none">Frenzy</span></h1>
+        <h1 style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(3.6rem,11vw,8.5rem);font-weight:900;letter-spacing:-.055em;line-height:.9;margin:0 0 22px;background:linear-gradient(135deg,#ffffff 0%,#ffffff 22%,#d2a8ff 43%,#bc8cff 62%,#58a6ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 18px rgba(255,255,255,.35)) drop-shadow(0 0 50px rgba(163,113,247,.55))">Copilot CLI:<br>Terminal <span id="frenzyZap" style="cursor:pointer;color:inherit;-webkit-user-select:none;user-select:none">Frenzy</span></h1>
 
         <!-- Typing animations with GitHub mascots -->
         <div id="homeMascotLines" style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:4px;margin-bottom:24px">
@@ -592,9 +593,10 @@
     </div>
 
     <!-- COUNTDOWN -->
-    <div id="countdown" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(13,17,23,.95);display:none;flex-direction:column;align-items:center;justify-content:center">
-      <div id="countdownText" style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(1rem,2.5vw,1.5rem);font-weight:700;color:#bc8cff;letter-spacing:.02em;margin-bottom:24px;text-align:center;white-space:nowrap"></div>
-      <div id="countdownNum" style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(8rem,25vw,14rem);font-weight:900;background:linear-gradient(135deg,#ffffff,#bc8cff,#a371f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1"></div>
+    <div id="countdown" style="display:none;position:fixed;inset:0;z-index:500;background:radial-gradient(circle at 50% 28%,rgba(210,168,255,.24),transparent 34%),radial-gradient(circle at 18% 72%,rgba(88,166,255,.18),transparent 32%),linear-gradient(180deg,rgba(18,10,38,.98),rgba(13,17,23,.98));display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">
+      <div id="countdownTitle" style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(2.6rem,7.4vw,6rem);font-weight:900;line-height:.92;letter-spacing:-.055em;background:linear-gradient(135deg,#ffffff 0%,#ffffff 20%,#d2a8ff 45%,#bc8cff 65%,#58a6ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(255,255,255,.38)) drop-shadow(0 0 56px rgba(163,113,247,.65));max-width:min(980px,94vw);white-space:nowrap">Copilot CLI: Terminal Frenzy</div>
+      <div id="countdownText" style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(1.25rem,3.4vw,2.25rem);font-weight:900;color:#ffffff;letter-spacing:.02em;margin-top:20px;margin-bottom:10px;text-align:center;white-space:nowrap;max-width:min(760px,92vw);text-shadow:0 0 18px rgba(255,255,255,.38),0 0 36px rgba(188,140,255,.55)"></div>
+      <div id="countdownNum" style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(10rem,32vw,20rem);font-weight:900;background:linear-gradient(135deg,#ffffff 0%,#ffffff 18%,#d2a8ff 42%,#a371f7 72%,#58a6ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:.9;filter:drop-shadow(0 0 26px rgba(255,255,255,.42)) drop-shadow(0 0 70px rgba(163,113,247,.72))"></div>
     </div>
 
     <div id="toast"></div>
@@ -1798,11 +1800,11 @@
     introJingle();
 
     const steps = [
-      {text: 'Hands on the keys...', num: '5', delay: 1000},
-      {text: 'Clear the terminal challenges', num: '4', delay: 1000},
-      {text: 'Type the Copilot CLI commands', num: '3', delay: 1000},
-      {text: 'Help Mona, Copilot, and Ducky ship fast', num: '2', delay: 1000},
-      {text: 'Welcome to Copilot CLI: Terminal Frenzy!', num: '1', delay: 1000},
+      {text: 'Hands on the keys', num: '5', delay: 1000},
+      {text: 'Clear terminal requests', num: '4', delay: 1000},
+      {text: 'Type Copilot CLI commands', num: '3', delay: 1000},
+      {text: 'Help Mona, Copilot, and Ducky ship', num: '2', delay: 1000},
+      {text: 'Terminal Frenzy starts now', num: '1', delay: 1000},
       {text: '', num: 'GO!', delay: 500},
     ];
 
