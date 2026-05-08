@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google" content="notranslate" />
-  <title>Terminal Frenzy</title>
+  <title>Copilot CLI: Terminal Frenzy</title>
   <style>
     @font-face{
       font-family:'Mona Sans';
@@ -398,11 +398,11 @@
         <!-- Badge -->
         <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid rgba(137,87,229,.35);border-radius:100px;background:rgba(137,87,229,.08);font-size:13px;color:#ffffff;letter-spacing:.04em;margin-bottom:28px">
           <span style="width:6px;height:6px;border-radius:50%;background:#3fb950;box-shadow:0 0 8px #3fb950;animation:pulse 2s infinite"></span>
-          Terminal Frenzy
+          Copilot CLI: Terminal Frenzy
         </div>
 
         <!-- Title -->
-        <h1 style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(2.5rem,8vw,5.5rem);font-weight:900;letter-spacing:-.03em;line-height:1;margin:0 0 16px;color:#ffffff;text-shadow:0 0 30px rgba(255,255,255,0.18)">Terminal<br><span id="frenzyZap" style="cursor:pointer;color:inherit;-webkit-user-select:none;user-select:none">Frenzy</span></h1>
+        <h1 style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(2.5rem,8vw,5.5rem);font-weight:900;letter-spacing:-.03em;line-height:1;margin:0 0 16px;color:#ffffff;text-shadow:0 0 30px rgba(255,255,255,0.18)">Copilot CLI:<br>Terminal <span id="frenzyZap" style="cursor:pointer;color:inherit;-webkit-user-select:none;user-select:none">Frenzy</span></h1>
 
         <!-- Typing animations with GitHub mascots -->
         <div id="homeMascotLines" style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:4px;margin-bottom:24px">
@@ -512,7 +512,7 @@
         <div style="width:10px;height:10px;border-radius:50%;background:#f85149"></div>
         <div style="width:10px;height:10px;border-radius:50%;background:#d29922"></div>
         <div style="width:10px;height:10px;border-radius:50%;background:#3fb950"></div>
-        <span style="margin-left:8px;color:#6e7681;font-size:11px;letter-spacing:1px">🎮 Terminal Frenzy</span>
+        <span style="margin-left:8px;color:#6e7681;font-size:11px;letter-spacing:1px">🎮 Copilot CLI: Terminal Frenzy</span>
       </div>
       <div id="hud" style="border-left:1px solid rgba(48,54,61,.4);border-right:1px solid rgba(48,54,61,.4)">
         <div class="stat">SCORE <b id="score">0</b> <span style="color:var(--muted)">/ HIGH</span> <b id="highScore">0</b></div>
@@ -740,9 +740,14 @@
   }
 
   // --- Storage ---
-  const STORAGE_KEY = 'terminal-frenzy-v1';
+  const STORAGE_KEY = 'copilot-cli-terminal-frenzy-v1';
+  const LEGACY_STORAGE_KEY = 'terminal-frenzy-v1';
+  const PLAYER_KEY = 'copilot-cli-terminal-frenzy-player';
+  const LEGACY_PLAYER_KEY = 'terminal-frenzy-player';
+  const LB_KEY = 'copilot-cli-terminal-frenzy-arcade';
+  const LEGACY_LB_KEY = 'terminal-frenzy-arcade';
   function loadStore(){
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') || {}; }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY) || '{}') || {}; }
     catch { return {}; }
   }
   function saveStore(data){
@@ -809,7 +814,7 @@
     if (score < 1200) return 'Queue Wrangler';
     if (score < 2400) return 'CLI Speedrunner';
     if (score < 4000) return 'Merge Wizard';
-    if (score < 6500) return 'Terminal Frenzy Master';
+    if (score < 6500) return 'Copilot CLI Frenzy Master';
     return 'Copilot Singularity';
   }
 
@@ -1745,7 +1750,7 @@
       return;
     }
     currentPlayer = handle;
-    localStorage.setItem('terminal-frenzy-player', handle);
+    localStorage.setItem(PLAYER_KEY, handle);
     ensureAudio();
     clearTimeout(homeSparkleTimer);
     homeSparkleTimer = null;
@@ -1797,7 +1802,7 @@
       {text: 'Clear the terminal challenges', num: '4', delay: 1000},
       {text: 'Type the Copilot CLI commands', num: '3', delay: 1000},
       {text: 'Help Mona, Copilot, and Ducky ship fast', num: '2', delay: 1000},
-      {text: 'Welcome to Terminal Frenzy!', num: '1', delay: 1000},
+      {text: 'Welcome to Copilot CLI: Terminal Frenzy!', num: '1', delay: 1000},
       {text: '', num: 'GO!', delay: 500},
     ];
 
@@ -2066,7 +2071,7 @@
       }
       if (playerInput.value.trim()) {
         currentPlayer = playerInput.value.trim().replace(/^@/, '');
-        localStorage.setItem('terminal-frenzy-player', currentPlayer);
+        localStorage.setItem(PLAYER_KEY, currentPlayer);
       }
       startGame(false);
       clack();
@@ -2171,8 +2176,7 @@
 
   // Start button click
   // --- Player handle + Arcade Leaderboard ---
-  const LB_KEY = 'terminal-frenzy-arcade';
-  let currentPlayer = localStorage.getItem('terminal-frenzy-player') || '';
+  let currentPlayer = localStorage.getItem(PLAYER_KEY) || localStorage.getItem(LEGACY_PLAYER_KEY) || '';
   const playerInput = document.getElementById('playerHandle');
   const playerAvatar = document.getElementById('playerAvatar');
 
@@ -2198,7 +2202,7 @@
   async function fetchArcade() {
     // Load local scores first
     try {
-      const local = JSON.parse(localStorage.getItem(LB_KEY) || '[]');
+      const local = JSON.parse(localStorage.getItem(LB_KEY) || localStorage.getItem(LEGACY_LB_KEY) || '[]');
       if (local.length) arcadeScores = local;
     } catch {}
     // Try remote
@@ -2281,7 +2285,7 @@
       return;
     }
     currentPlayer = handle;
-    localStorage.setItem('terminal-frenzy-player', handle);
+    localStorage.setItem(PLAYER_KEY, handle);
     if (state === 'title' && imagesLoaded) { ensureAudio(); startGame(false); clack(); }
   });
 

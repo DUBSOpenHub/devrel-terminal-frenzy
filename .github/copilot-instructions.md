@@ -1,4 +1,4 @@
-# Copilot Instructions — Terminal Frenzy
+# Copilot Instructions — Copilot CLI: Terminal Frenzy
 
 This repository contains a single-file HTML5 arcade game (`index.html`).
 
@@ -22,4 +22,4 @@ This repository contains a single-file HTML5 arcade game (`index.html`).
 The `MASCOTS` array contains GitHub mascot character names and artwork URLs. The `TYPING_PHRASES_ALL` array contains mascot request phrases. Both must stay in sync.
 
 ## Hosted at
-- GitHub Pages: `https://dubsopenhub.github.io/terminal-frenzy/`
+- GitHub Pages: `https://dubsopenhub.github.io/copilot-cli-terminal-frenzy/`

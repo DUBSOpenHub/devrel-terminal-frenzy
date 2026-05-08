@@ -12,7 +12,7 @@
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Please report vulnerabilities via [GitHub Security Advisories](https://github.com/DUBSOpenHub/terminal-frenzy/security/advisories/new) or email the repository owner directly.
+Please report vulnerabilities via [GitHub Security Advisories](https://github.com/DUBSOpenHub/copilot-cli-terminal-frenzy/security/advisories/new) or email the repository owner directly.
 
 Include:
 - A description of the vulnerability and its potential impact
@@ -58,9 +58,11 @@ This is a **client-side only** HTML game with no server component and no authent
 ### localStorage Usage
 
 The game stores local gameplay data in `localStorage`:
-- `terminal-frenzy-v1` — high score and achievement data (JSON)
-- `terminal-frenzy-player` — the locally remembered player handle
-- `terminal-frenzy-arcade` — local leaderboard cache
+- `copilot-cli-terminal-frenzy-v1` — high score and achievement data (JSON)
+- `copilot-cli-terminal-frenzy-player` — the locally remembered player handle
+- `copilot-cli-terminal-frenzy-arcade` — local leaderboard cache
+
+Legacy `terminal-frenzy-*` keys are read when present so existing local scores and player handles can migrate naturally after the rename.
 
 Local data is cleared when browser data is cleared. Leaderboard submissions are sent to the configured JSONBlob endpoint.
 
