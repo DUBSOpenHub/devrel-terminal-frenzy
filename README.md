@@ -6,6 +6,12 @@
 
 **Terminal Frenzy is a fast, mascot-powered Copilot CLI arcade challenge.** Clear 12 terminal requests from Mona, Copilot, and Ducky in 60 seconds, survive urgent command prompts, and keep the pipeline green.
 
+### 🎬 Game Preview
+
+[![Terminal Frenzy gameplay preview](https://raw.githubusercontent.com/DUBSOpenHub/terminal-frenzy/main/preview.gif?v=mobile-preview)](https://raw.githubusercontent.com/DUBSOpenHub/terminal-frenzy/main/preview.gif?v=mobile-preview)
+
+[Open the preview GIF directly →](https://raw.githubusercontent.com/DUBSOpenHub/terminal-frenzy/main/preview.gif?v=mobile-preview)
+
 ---
 
 ## ▶ Play Now
@@ -13,11 +19,6 @@
 ### 🌐 Browser (instant)
 
 **[Play on GitHub Pages →](https://dubsopenhub.github.io/terminal-frenzy/)**
-
-### 🎬 Game Preview
-
-![Game Preview](https://raw.githubusercontent.com/DUBSOpenHub/terminal-frenzy/main/preview.gif?v=e033efb)
-
 
 ### 💻 From your terminal
 
