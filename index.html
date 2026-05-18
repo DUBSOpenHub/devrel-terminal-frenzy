@@ -73,6 +73,16 @@
     @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
     @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .home-frenzy-title{display:inline-block;transform-origin:center;animation:homeTitleFrenzy 10s ease-in-out infinite;will-change:transform,filter}
+    @keyframes homeTitleFrenzy{
+      0%,16%,100%{transform:translateX(0) rotate(0deg) scale(1);filter:none}
+      2%{transform:translateX(-2px) rotate(-1.8deg) scale(1.04);filter:drop-shadow(0 0 12px rgba(88,166,255,.42))}
+      4%{transform:translateX(3px) rotate(2.4deg) scale(1.08);filter:drop-shadow(0 0 18px rgba(163,113,247,.55))}
+      6%{transform:translateX(-4px) rotate(-2.6deg) scale(1.06)}
+      8%{transform:translateX(3px) rotate(1.7deg) scale(1.09)}
+      10%{transform:translateX(-2px) rotate(-.9deg) scale(1.03)}
+      13%{transform:translateX(0) rotate(.4deg) scale(1.01);filter:drop-shadow(0 0 10px rgba(163,113,247,.35))}
+    }
 
     .kbd{display:inline-flex;align-items:center;justify-content:center;min-width:22px;padding:3px 6px;margin:0 2px;border-radius:6px;border:1px solid var(--border);background:rgba(22,27,34,0.9);box-shadow:0 2px 0 rgba(0,0,0,0.35);font-weight:700}
     .kbd.p{border-color:rgba(110,64,201,0.7);box-shadow:0 0 0 1px rgba(110,64,201,0.35) inset, 0 2px 0 rgba(0,0,0,0.35);color:#d2a8ff}
@@ -378,6 +388,7 @@
     @media (prefers-reduced-motion: reduce){
       .cursor{animation:none;opacity:1}
       #timer.urgent{animation:none}
+      .home-frenzy-title{animation:none;transform:none}
     }
   </style>
 </head>
@@ -396,7 +407,7 @@
       <div style="position:relative;z-index:1;max-width:920px;width:94vw;text-align:center;display:flex;flex-direction:column;align-items:center;padding:24px 0">
 
         <!-- Title -->
-        <h1 style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(2.5rem,8vw,5.5rem);font-weight:900;letter-spacing:-.03em;line-height:1;margin:0 0 16px;color:#ffffff;text-shadow:0 0 24px rgba(255,255,255,.32),0 0 48px rgba(163,113,247,.45)">Copilot CLI<br>Terminal <span id="frenzyZap" style="cursor:pointer;color:inherit;-webkit-user-select:none;user-select:none">Frenzy</span></h1>
+        <h1 class="home-frenzy-title" style="font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(2.5rem,8vw,5.5rem);font-weight:900;letter-spacing:-.03em;line-height:1;margin:0 0 16px;color:#ffffff;text-shadow:0 0 24px rgba(255,255,255,.32),0 0 48px rgba(163,113,247,.45)">Copilot CLI<br>Terminal <span id="frenzyZap" style="cursor:pointer;color:inherit;-webkit-user-select:none;user-select:none">Frenzy</span></h1>
 
         <!-- Typing animations with GitHub mascots -->
         <div id="homeMascotLines" style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:4px;margin-bottom:24px">
