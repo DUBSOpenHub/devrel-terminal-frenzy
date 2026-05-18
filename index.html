@@ -162,8 +162,8 @@
     #timer{font-size:clamp(28px,6vw,44px);font-weight:900;min-width:72px;text-align:center;color:#58a6ff;text-shadow:0 0 10px rgba(88,166,255,0.32),0 0 22px rgba(163,113,247,0.22)}
     #timer.urgent{animation:panic 0.5s infinite;color:#a371f7;text-shadow:0 0 14px rgba(163,113,247,0.45),0 0 28px rgba(88,166,255,0.24)}
     @keyframes panic{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-    .play-side-timer{position:fixed;top:52%;z-index:20;pointer-events:none;font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(3.4rem,7vw,7rem);font-weight:900;line-height:.85;opacity:.52;text-shadow:0 0 18px rgba(88,166,255,.34),0 0 36px rgba(163,113,247,.28)}
-    .play-side-timer.urgent{opacity:.74;animation:panic 0.5s infinite;text-shadow:0 0 20px rgba(163,113,247,.48),0 0 42px rgba(88,166,255,.34)}
+    .play-side-timer{position:fixed;top:52%;z-index:80;pointer-events:none;font-family:'Mona Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(2.4rem,6.2vw,7rem);font-weight:900;line-height:.85;opacity:.68;text-shadow:0 0 18px rgba(88,166,255,.4),0 0 36px rgba(163,113,247,.32)}
+    .play-side-timer.urgent{opacity:.82;animation:panic 0.5s infinite;text-shadow:0 0 20px rgba(163,113,247,.5),0 0 42px rgba(88,166,255,.38)}
     .play-side-left{left:clamp(12px,3vw,46px);color:#58a6ff}
     .play-side-right{right:clamp(12px,3vw,46px);color:#a371f7}
 
@@ -380,9 +380,6 @@
       #countdownText{white-space:normal!important;padding:0 20px}
       .play-side-timer{display:none}
       .start-btn{padding:14px 34px;font-size:clamp(15px,4.8vw,20px)}
-    }
-    @media (max-width:1180px){
-      .play-side-timer{display:none}
     }
     @media (orientation:landscape) and (max-height:520px){
       #title > div{padding:8px 0 16px!important}
