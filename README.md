@@ -6,6 +6,8 @@
 
 **Copilot CLI Terminal Frenzy is a gamified awareness tool for the GitHub Copilot CLI.** Clear 12 terminal requests from Copilot, Mona, and Ducky in 60 seconds, survive urgent command prompts, and keep the pipeline green — learning real CLI commands while you play.
 
+It teaches the vocabulary of Copilot CLI (`gh pr review`, suggestions, approvals) while being genuinely fun and competitive.
+
 ### 🎬 Game Preview
 
 [![Copilot CLI Terminal Frenzy gameplay preview](https://raw.githubusercontent.com/DUBSOpenHub/copilot-cli-terminal-frenzy/main/preview.gif?v=20260508-0610)](https://raw.githubusercontent.com/DUBSOpenHub/copilot-cli-terminal-frenzy/main/preview.gif?v=20260508-0610)
