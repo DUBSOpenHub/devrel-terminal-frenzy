@@ -1208,18 +1208,6 @@
     const dur = getCardDurationMs();
     slots[idx] = {type:'pr', mascot, key, timeLeftMs: dur, maxTimeMs: dur, prTitle};
 
-    // cherry-pick effect: auto-clear new requests
-    if (effects.cherry > 0){
-      // let it render briefly, then approve with bonus
-      setTimeout(()=>{
-        if (state !== 'playing') return;
-        if (!slots[idx]) return;
-        if (slots[idx].type !== 'pr') return;
-        approveSlot(idx, {auto:true});
-        effects.cherry = Math.max(0, effects.cherry - 1);
-      }, 60);
-    }
-
     renderSlot(idx);
     sfxPop();
   }
@@ -1360,6 +1348,35 @@
     setTimeout(() => storm.remove(), 1800);
   }
 
+  function countdownCopilotBurst(stepIndex) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const storm = document.createElement('div');
+    storm.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:10000;overflow:hidden';
+    const cx = innerWidth / 2;
+    const cy = innerHeight / 2;
+    const count = 18;
+    const maxDist = Math.hypot(innerWidth, innerHeight) * 0.42;
+    for (let i = 0; i < count; i++) {
+      const logo = document.createElement('span');
+      logo.innerHTML = COPILOT_SVG;
+      logo.style.cssText = 'position:absolute;left:' + cx + 'px;top:' + cy + 'px;transform:translate(-50%,-50%) scale(0.25);opacity:0;color:' + BURST_COLORS[(i + stepIndex) % BURST_COLORS.length] + ';filter:drop-shadow(0 0 10px rgba(188,140,255,0.85));';
+      logo.style.fontSize = (1.2 + Math.random() * 1.9) + 'rem';
+      const angle = ((i / count) * Math.PI * 2) + stepIndex * 0.38;
+      const dist = 120 + Math.random() * maxDist;
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist;
+      const rot = Math.random() * 720 - 360;
+      storm.appendChild(logo);
+      logo.animate([
+        { opacity: 0, transform: 'translate(-50%,-50%) scale(0.25) rotate(0deg)' },
+        { opacity: 1, offset: 0.12 },
+        { opacity: 0, transform: 'translate(calc(-50% + ' + tx + 'px), calc(-50% + ' + ty + 'px)) scale(1.1) rotate(' + rot + 'deg)' }
+      ], { duration: 900 + Math.random() * 260, delay: Math.random() * 80, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' });
+    }
+    document.body.appendChild(storm);
+    setTimeout(() => storm.remove(), 1300);
+  }
+
   function githubLogoBurst(cx, cy, count=16) {
     const storm = document.createElement('div');
     storm.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9998;overflow:hidden';
@@ -1441,11 +1458,13 @@
 
     const base = 100;
     const turboMult = effects.turbo > 0 ? 2 : 1;
-    const bonus = opts.suggestion ? 80 : (opts.auto ? 40 : 0);
+    const cherryPick = !opts.suggestion && effects.cherry > 0;
+    const bonus = opts.suggestion ? 80 : (cherryPick ? 40 : 0);
     const pts = (base * mult * turboMult) + bonus;
     score += pts;
 
     pumpPipeline(10 + Math.min(12, mult*2));
+    if (cherryPick) effects.cherry = Math.max(0, effects.cherry - 1);
 
     const msg = el.querySelector('.result');
     msg.textContent = pick(APPROVE_MSGS);
@@ -1455,7 +1474,7 @@
     const pop = document.createElement('div');
     pop.className = 'scorepop';
     pop.style.color = (mult >= 6 || effects.turbo>0 || opts.suggestion) ? 'var(--gold)' : 'var(--green)';
-    pop.textContent = '+' + pts + (mult>1 ? ' x'+mult : '') + (effects.turbo>0 ? ' TURBO' : '') + (opts.suggestion ? ' TAB' : '') + (opts.auto ? ' PICK' : '');
+    pop.textContent = '+' + pts + (mult>1 ? ' x'+mult : '') + (effects.turbo>0 ? ' TURBO' : '') + (opts.suggestion ? ' TAB' : '') + (cherryPick ? ' PICK' : '');
     el.appendChild(pop);
     setTimeout(()=>pop.remove(), 750);
 
@@ -1507,7 +1526,7 @@
       toast('POWER-UP', 'git stash — timers frozen.');
     } else if (id === 'cherry'){
       effects.cherry = Math.min(6, effects.cherry + 3);
-      toast('POWER-UP', 'git cherry-pick — auto-clearing next requests.');
+      toast('POWER-UP', 'git cherry-pick — next 3 cleared requests get bonus.');
       const picks = (store._picks || 0) + 1;
       store._picks = picks;
       if (picks >= 3) unlock('cherry-pick-pro', 'Cherry Pick Pro!', 'Collected cherry-pick 3 times.');
@@ -1535,7 +1554,7 @@
       if (best >= 0){
         suggestion = {kind:'tab-approve', targetIdx: best, bonus: 80};
         const k = slots[best].key;
-        setTip(`<span class="cop">Copilot Suggestion:</span> Press <b>TAB</b> to auto-clear the next request (key: <span class="kbd p">${escapeHtml(k)}</span>) for bonus.`);
+        setTip(`<span class="cop">Copilot Suggestion:</span> Press <b>TAB</b> to accept the next request (key: <span class="kbd p">${escapeHtml(k)}</span>) for bonus.`);
       }
     }
   }
@@ -1803,10 +1822,10 @@
     introJingle();
 
     const steps = [
-      {text: 'Hands on the keys', num: '5', delay: 1000},
+      {text: 'Get ready', num: '5', delay: 1000},
       {text: 'Clear terminal requests', num: '4', delay: 1000},
       {text: 'Type Copilot CLI commands', num: '3', delay: 1000},
-      {text: 'Help Copilot, Mona, and Ducky ship!', num: '2', delay: 1000},
+      {text: 'Help Copilot, Mona, and Ducky ship fast!', num: '2', delay: 1000},
       {text: 'Terminal Frenzy starts now', num: '1', delay: 1000},
       {text: '', num: 'GO!', delay: 500},
     ];
@@ -1826,6 +1845,7 @@
       const s = steps[step];
       cdText.textContent = s.text;
       cdNum.textContent = s.num;
+      countdownCopilotBurst(step);
       cdNum.style.transform = 'scale(1.3)';
       cdNum.style.opacity = '1';
       cdNum.style.transition = 'none';
