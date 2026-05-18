@@ -48,7 +48,7 @@ Copilot CLI Terminal Frenzy is a single-file HTML5 arcade game built with AI age
 
 ## Data
 
-- **3 GitHub mascot characters** in the `MASCOTS` array (Mona, Copilot, and Ducky)
+- **3 GitHub mascot characters** in the `MASCOTS` array (Copilot, Mona, and Ducky)
 - **24 mascot typing phrases** in `TYPING_PHRASES_ALL` (shuffled on load)
 - **20 request title jokes** in `PR_TITLES`
 - **6 urgent request commands** in `BOSS_COMMANDS`
