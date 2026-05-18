@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Built with Copilot CLI](https://img.shields.io/badge/Built%20with-Copilot%20CLI-06b6d4.svg)](https://docs.github.com/en/copilot/github-copilot-in-the-cli)
 
-**Copilot CLI Terminal Frenzy is a fast, mascot-powered Copilot CLI arcade challenge.** Clear 12 terminal requests from Copilot, Mona, and Ducky in 60 seconds, survive urgent command prompts, and keep the pipeline green.
+**Copilot CLI Terminal Frenzy is a gamified awareness tool for the GitHub Copilot CLI.** Clear 12 terminal requests from Copilot, Mona, and Ducky in 60 seconds, survive urgent command prompts, and keep the pipeline green — learning real CLI commands while you play.
 
 ### 🎬 Game Preview
 
