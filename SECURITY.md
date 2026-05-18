@@ -41,7 +41,7 @@ This is a **client-side only** HTML game with no server component and no authent
 - Runs entirely in your browser tab
 
 ### What it does NOT do
-- ❌ No server, no backend, no game API calls (other than image and leaderboard requests)
+- ❌ No server, no backend, no game API calls (other than optional leaderboard requests)
 - ❌ No cookies, no tracking, no analytics
 - ❌ No user accounts or authentication
 - ❌ No analytics or behavioral tracking
@@ -52,7 +52,7 @@ This is a **client-side only** HTML game with no server component and no authent
 
 - All game logic is inline in a single HTML file
 - No external scripts are loaded
-- Mascot artwork is loaded with `crossOrigin="anonymous"` from GitHub's brand site
+- Mascot artwork is embedded as data URLs in `index.html`, so character art does not require remote image requests
 - Player handles and scores may be stored locally and submitted to the leaderboard endpoint
 
 ### localStorage Usage

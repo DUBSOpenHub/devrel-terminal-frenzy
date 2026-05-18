@@ -46,35 +46,35 @@ That's it: **12 terminals, 60 seconds**. How many can you clear?
 ### Scoring
 
 - ✅ **Clear a request** → points × your pipeline multiplier
-- ⭐ **Power-up cards** → double points, freeze timers, auto-clear requests
+- ⭐ **Power-up cards** → double points, freeze timers, bonus clears, or key highlights
 - 🔥 **Urgent requests** → type the shown Copilot CLI command for big bonuses
 - ❌ **Wrong key** → lose points and break your combo
 - 👑 **Final request** → Mona appears in the last 10 seconds. Type the full Copilot CLI command.
+- 🏆 **MVP teammate** → the end screen highlights the character you cleared the most requests for.
 
 ### Ranks
 
 | Score | Rank |
 |-------|------|
-| 0–399 | `$ exit 1` |
-| 400–999 | Junior Dev |
-| 1000–2499 | Senior Dev |
-| 2500–4999 | Staff Engineer |
-| 5000–7999 | Principal Engineer |
-| 8000–11999 | VP of Vibes |
-| 12000+ | 🤖 Copilot Singularity |
+| 0–399 | Terminal Rookie |
+| 400–1199 | Queue Wrangler |
+| 1200–2399 | CLI Speedrunner |
+| 2400–3999 | Merge Wizard |
+| 4000–6499 | Copilot CLI Frenzy Master |
+| 6500+ | Copilot Singularity |
 
 ---
 
 ## 🐙 The Characters
 
-GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — drive every card, urgent request, and animated title line. In-game cards show just the character name for a cleaner arcade feel.
+GitHub's mascot characters — **Mona**, **Copilot**, and **Ducky** — drive every card, urgent request, and animated title line. In-game cards use a shuffled round-robin rotation so one character does not dominate a round, and the end screen shows your MVP teammate with their requests-cleared count.
 
 ---
 
 ## 🛠️ Technical Details
 
 - **Single HTML file** — no build step, no dependencies, no server
-- **~2,000 lines** of HTML, CSS, and JavaScript
+- **~2,700 lines** of HTML, CSS, and JavaScript
 - **Web Audio API** — all sound effects synthesized in real-time
 - **Canvas** — Matrix rain background and particle effects
 - **GitHub-inspired typography** — Mona Sans styling with a clean Copilot CLI Terminal Frenzy title

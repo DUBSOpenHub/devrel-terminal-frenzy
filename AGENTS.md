@@ -23,7 +23,7 @@ Copilot CLI Terminal Frenzy is a single-file HTML5 arcade game built with AI age
 ┌─────────────────────┐
 │   Single HTML File   │
 │   index.html         │
-│   ~2,000 lines       │
+│   ~2,700 lines       │
 └─────────────────────┘
 ```
 
@@ -35,14 +35,15 @@ Copilot CLI Terminal Frenzy is a single-file HTML5 arcade game built with AI age
 | Web Audio synthesis | No external audio files needed |
 | Embedded mascot artwork | Character art ships inside the single HTML file |
 | localStorage only | No server, no accounts, no data collection |
-| 8-key KEYSET (A,S,D,F,J,K,L,;) | Home row keys for touch-typing ergonomics |
+| 12-key KEYSET (A,S,D,F,J,K,L,1,2,3,4,5) | Home-row plus number-row keys for fast arcade input |
 | Wrong-key penalty (5% score) | Prevents button-mashing exploit |
+| Shuffled mascot rotation | Keeps Mona, Copilot, and Ducky appearances balanced during each round |
 
 ## Game Components
 
 - **Title Screen** — 6-line typing animation with GitHub mascot characters, gradient orbs, frosted glass instruction card
 - **Play Screen** — 4×3 card grid, pipeline combo meter, timer, urgent request overlays
-- **Game Over** — Score, rank, stats, victory jingle
+- **Game Over** — Score, rank, stats, MVP teammate card, real Copilot CLI CTA, victory jingle
 - **Audio** — All synthesized via Web Audio API (beeps, buzzer, victory fanfare)
 - **Visuals** — Canvas matrix rain, CSS particles, gradient orbs, screen shake
 
@@ -51,5 +52,5 @@ Copilot CLI Terminal Frenzy is a single-file HTML5 arcade game built with AI age
 - **3 GitHub mascot characters** in the `MASCOTS` array (Copilot, Mona, and Ducky)
 - **24 mascot typing phrases** in `TYPING_PHRASES_ALL` (shuffled on load)
 - **20 request title jokes** in `PR_TITLES`
-- **6 urgent request commands** in `BOSS_COMMANDS`
+- **Progressive urgent request command pools** from easy through brutal Copilot CLI commands
 - **4 power-up types** in `POWERUPS`

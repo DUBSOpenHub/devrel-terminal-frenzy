@@ -3,7 +3,7 @@
 This repository contains a single-file HTML5 arcade game (`index.html`).
 
 ## Key facts
-- The entire game is one self-contained HTML file (~2,000 lines)
+- The entire game is one self-contained HTML file (~2,700 lines)
 - No build step, no dependencies, no server required
 - All styling is inline CSS, all logic is inline JavaScript
 - Sound effects are synthesized via Web Audio API (no audio files)
@@ -17,6 +17,8 @@ This repository contains a single-file HTML5 arcade game (`index.html`).
 - The game features GitHub mascot characters — roster changes require updating the `MASCOTS` array AND the `TYPING_PHRASES_ALL` array
 - All user-facing text should use "urgent request" (not "boss" or "manager")
 - No `text-transform: uppercase` — use natural casing throughout
+- Mascot appearances use a shuffled round-robin picker so Mona, Copilot, and Ducky stay balanced during play
+- The end-game screen includes an MVP teammate card with character name and requests-cleared count
 
 ## Character roster
 The `MASCOTS` array contains GitHub mascot character names and artwork URLs. The `TYPING_PHRASES_ALL` array contains mascot request phrases. Both must stay in sync.
